@@ -1,0 +1,71 @@
+{
+  "name": "@ulixee/noderdom",
+  "version": "1.4.2",
+  "description": "Library for converting WebIDLs to Typescript interfaces and classes",
+  "homepage": "https://github.com/ulixee/noderdom",
+  "author": "Data Liberation Foundation",
+  "contributors": [
+    "Caleb Clark",
+    "Blake Byrnes"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT",
+  "keywords": [
+    "w3c",
+    "dom",
+    "xml",
+    "parser",
+    "javascript",
+    "DOMParser",
+    "XMLSerializer"
+  ],
+  "scripts": {
+    "lint": "tslint --project ./",
+    "test": "yarn jest",
+    "build:awaited-dom": "./build-awaited-dom.sh",
+    "publish:awaited-dom": "./build-awaited-dom.sh && cd ./builds/awaited-dom && yarn publish",
+    "db:create": "ts-node ./db/scripts/create.ts",
+    "db:drop": "ts-node ./db/scripts/drop.ts",
+    "db:reset": "npm run db:drop && npm run db:create",
+    "step:0-import": "ts-node ./scripts/0-import/importDocsFromMDN.ts",
+    "step:0-compile": "ts-node ./scripts/1-process/compileOtherComponents.ts standard",
+    "step:1-db-alt": "ts-node ./scripts/1-process/dbGenerator/insertComponentFilters.ts",
+    "step:1-db": "ts-node ./scripts/1-process/dbGenerator/index.ts",
+    "step:1-customize": "ts-node ./scripts/1-process/customizer.ts",
+    "step:2-ts": "ts-node ./scripts/0-import/importComponentFiltersFromDb.ts awaited && ts-node ./scripts/1-process/compileAwaitedComponents.ts && ts-node ./scripts/2-finalize/generateDOM.ts awaited",
+    "step:2-docs": "ts-node ./scripts/2-finalize/generateDocs.ts awaited"
+  },
+  "dependencies": {
+    "@ulixee/js-path": "^2.0.0-alpha.18"
+  },
+  "devDependencies": {
+    "@types/node": "^13.1.7",
+    "@types/parse5": "^5.0.2",
+    "@types/webidl2": "^23.8.0",
+    "@types/jest": "^26.0.23",
+    "axios": "^0.21.2",
+    "better-sqlite3": "^7.5.3",
+    "jest": "^26.6.3",
+    "noderdom-detached": "git://github.com/ulixee/noderdom-detached.git#dist",
+    "prettier": "^1.19.1",
+    "ts-node": "^8.6.2",
+    "ts-jest": "^26.5.5",
+    "tslint": "^5.20.1",
+    "tslint-config-airbnb": "^5.11.2",
+    "tslint-config-prettier": "^1.18.0",
+    "tslint-config-standard": "^9.0.0",
+    "tslint-eslint-rules": "^5.4.0",
+    "tslint-jest": "^1.0.5",
+    "tslint-microsoft-contrib": "^6.2.0",
+    "tslint-no-circular-imports": "^0.7.0",
+    "tslint-plugin-prettier": "^2.1.0",
+    "typescript": "^5.0.4",
+    "webidl2": "^23.10.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/ulixee/noderdom"
+  }
+}
