@@ -1,0 +1,27 @@
+{
+  "scripts": {
+    "postinstall": "yarn workspace @ulixee/unblocked-agent-mitm-socket postinstall",
+    "dist": "lerna publish from-package"
+  },
+  "devDependencies": {
+    "@lerna-lite/version": "^3.9.1",
+    "@lerna-lite/publish": "^3.9.1"
+  },
+  "workspaces": {
+    "packages": [
+      "agent/*",
+      "client",
+      "commons",
+      "core",
+      "interfaces",
+      "js-path",
+      "net",
+      "playground",
+      "plugin-utils",
+      "plugins/*",
+      "real-user-agents",
+      "specification",
+      "timetravel"
+    ]
+  }
+}

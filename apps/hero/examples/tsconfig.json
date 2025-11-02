@@ -1,0 +1,11 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "module": "ES2021",
+    "esModuleInterop": false,
+    "skipDefaultLibCheck": true,
+    "skipLibCheck": true
+  },
+  "include": ["*.ts"],
+  "exclude": ["**/node_modules", "**/build"]
+}
