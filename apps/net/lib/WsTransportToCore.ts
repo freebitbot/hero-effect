@@ -1,33 +1,25 @@
-import IResolvablePromise from '@ulixee/commons/interfaces/IResolvablePromise';
-import TypeSerializer from '@ulixee/commons/lib/TypeSerializer';
-import * as WebSocket from 'ws';
-import EventSubscriber from '@ulixee/commons/lib/EventSubscriber';
-import Resolvable from '@ulixee/commons/lib/Resolvable';
 import { CanceledPromiseError } from '@ulixee/commons/interfaces/IPendingWaitEvent';
+import IResolvablePromise from '@ulixee/commons/interfaces/IResolvablePromise';
+import EventSubscriber from '@ulixee/commons/lib/EventSubscriber';
 import { TypedEventEmitter } from '@ulixee/commons/lib/eventUtils';
+import Resolvable from '@ulixee/commons/lib/Resolvable';
+import TypeSerializer from '@ulixee/commons/lib/TypeSerializer';
+import { toUrl } from '@ulixee/commons/lib/utils';
+import WebSocket = require('ws');
 import DisconnectedError from '../errors/DisconnectedError';
+import ITransport, { ITransportEvents } from '../interfaces/ITransport';
 import { isWsOpen, sendWsCloseUnexpectedError, wsSend } from './WsUtils';
-import ITransportToCore, { ITransportToCoreEvents } from '../interfaces/ITransportToCore';
-import IApiHandlers from '../interfaces/IApiHandlers';
-import ICoreRequestPayload from '../interfaces/ICoreRequestPayload';
-import ICoreResponsePayload from '../interfaces/ICoreResponsePayload';
-import ICoreEventPayload from '../interfaces/ICoreEventPayload';
 
-export default class WsTransportToCore<
-    ApiHandlers extends IApiHandlers = any,
-    EventSpec = any,
-    RequestPayload = ICoreRequestPayload<IApiHandlers, any>,
-    ResponsePayload = ICoreResponsePayload<IApiHandlers, any> | ICoreEventPayload<EventSpec, any>,
-  >
-  extends TypedEventEmitter<ITransportToCoreEvents<ApiHandlers, EventSpec, ResponsePayload>>
-  implements ITransportToCore<ApiHandlers, EventSpec, RequestPayload, ResponsePayload>
+export default class WsTransportToCore
+  extends TypedEventEmitter<ITransportEvents>
+  implements ITransport
 {
   public host: string;
 
   public isConnected = false;
   public isDisconnecting = false;
 
-  private connectPromise: IResolvablePromise<Error | null>;
+  private connectPromise: IResolvablePromise<void>;
   private webSocket: WebSocket;
   private events = new EventSubscriber();
   private readonly hostPromise: Promise<void>;
@@ -44,7 +36,7 @@ export default class WsTransportToCore<
     this.hostPromise = Promise.resolve(host).then(this.setHost);
   }
 
-  public async send(payload: RequestPayload): Promise<void> {
+  public async send(payload: any): Promise<void> {
     await this.connect();
 
     const message = TypeSerializer.stringify(payload);
@@ -67,7 +59,7 @@ export default class WsTransportToCore<
     this.isDisconnecting = true;
     this.emit('disconnected');
     this.isConnected = false;
-    this.events.close();
+    this.events.close('error');
     const webSocket = this.webSocket;
     this.webSocket = null;
     if (isWsOpen(webSocket)) {
@@ -80,29 +72,31 @@ export default class WsTransportToCore<
     return Promise.resolve();
   }
 
-  public async connect(): Promise<void> {
+  public async connect(timeoutMs?: number): Promise<void> {
     if (!this.connectPromise) {
       this.connectPromise = new Resolvable();
 
       await this.hostPromise;
-      const webSocket = new WebSocket(this.host);
+      const webSocket = new WebSocket(this.host, {
+        followRedirects: false,
+        handshakeTimeout: timeoutMs,
+      });
       this.events.group(
         'preConnect',
         this.events.once(webSocket, 'close', this.onConnectError),
         this.events.once(webSocket, 'error', this.onConnectError),
       );
       this.events.once(webSocket, 'open', () => {
+        this.events.once(webSocket, 'close', this.disconnect);
+        this.events.on(webSocket, 'error', this.disconnect);
         this.events.endGroup('preConnect');
         this.connectPromise.resolve();
       });
 
       this.webSocket = webSocket;
-      this.events.once(webSocket, 'close', this.disconnect);
-      this.events.once(webSocket, 'error', this.disconnect);
       this.events.on(webSocket, 'message', this.onMessage);
     }
-    const connectOrError = await this.connectPromise;
-    if (connectOrError) throw connectOrError;
+    await this.connectPromise;
     this.isConnected = true;
     this.emit('connected');
   }
@@ -113,15 +107,13 @@ export default class WsTransportToCore<
   }
 
   private onConnectError(error: Error): void {
-    if (error instanceof Error) this.connectPromise.resolve(error);
-    else this.connectPromise.resolve(new Error(`Error connecting to Websocket host -> ${error}`));
+    if (error instanceof Error) this.connectPromise.reject(error);
+    else
+      this.connectPromise.reject(new Error(`Error connecting to Websocket host -> ${error}`), true);
   }
 
   private setHost(host: string): void {
-    if (!host.includes('://')) {
-      this.host = `ws://${host}`;
-    } else {
-      this.host = host;
-    }
+    const url = toUrl(host);
+    this.host = url.href;
   }
 }
