@@ -1,0 +1,63 @@
+{
+  "name": "noderdom-detached",
+  "version": "0.3.2",
+  "description": "A W3C Standard XML/HTMl DOM for Node",
+  "homepage": "https://github.com/ulixee/noderdom-detached",
+  "author": {
+    "name": "Caleb Clark"
+  },
+  "license": "MIT",
+  "keywords": [
+    "w3c",
+    "dom",
+    "xml",
+    "parser",
+    "javascript",
+    "DOMParser",
+    "XMLSerializer"
+  ],
+  "scripts": {
+    "test": "NODE_ENV=test jest --runInBand",
+    "lint": "tslint --project ./",
+    "compile": "tsc --declaration",
+    "build": "./build.sh",
+    "prepublishOnly": "npm run lint && npm test"
+  },
+  "dependencies": {
+    "@types/parse5": "^5.0.2",
+    "@types/underscore": "^1.9.4",
+    "@types/w3c-xmlserializer": "^2.0.0",
+    "nwsapi": "^2.2.0",
+    "parse5": "^5.1.1",
+    "saxes": "^4.0.2",
+    "underscore": "^1.9.2",
+    "w3c-xmlserializer": "https://github.com/ulixee/w3c-xmlserializer.git"
+  },
+  "devDependencies": {
+    "@types/jest": "^24.9.1",
+    "@types/node": "^13.5.0",
+    "@types/webidl2": "^23.8.0",
+    "axios": "^0.19.2",
+    "jest": "^25.1.0",
+    "jest-environment-node": "^25.1.0",
+    "jest-junit": "^10.0.0",
+    "jest-summary-reporter": "^0.0.2",
+    "prettier": "^1.19.1",
+    "ts-jest": "^25.0.0",
+    "ts-node": "^8.6.2",
+    "tslint": "^6.0.0",
+    "tslint-config-airbnb": "^5.11.2",
+    "tslint-config-prettier": "^1.18.0",
+    "tslint-config-standard": "^9.0.0",
+    "tslint-eslint-rules": "^5.4.0",
+    "tslint-microsoft-contrib": "^6.2.0",
+    "tslint-no-circular-imports": "^0.7.0",
+    "tslint-plugin-prettier": "^2.1.0",
+    "typescript": "^3.7.5",
+    "webidl2": "^23.10.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/ulixee/noderdom-detached"
+  }
+}
