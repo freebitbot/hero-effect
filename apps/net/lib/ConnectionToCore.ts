@@ -23,98 +23,95 @@ export interface IConnectionToCoreEvents<IEventSpec> {
   event: { event: ICoreEventPayload<IEventSpec, any> };
 }
 
+export interface IConnectAction {
+  isCallingHook?: boolean;
+  hookMessageId?: string;
+  startTime: IUnixTime;
+  isAutomatic: boolean;
+  resolvable: IResolvablePromise<void>;
+  error?: Error;
+}
+
 export default class ConnectionToCore<
   TCoreApiHandlers extends IApiHandlers,
   TEventSpec,
 > extends TypedEventEmitter<IConnectionToCoreEvents<TEventSpec>> {
-  public connectPromise: IResolvablePromise<void>;
-  public disconnectPromise: Promise<void>;
-
-  public connectStartTime: IUnixTime;
-  public didAutoConnect = false;
-
-  public disconnectStartTime: IUnixTime;
-  public disconnectError: Error;
-  public get isConnectedToTransport(): boolean {
-    return this.transport.isConnected && this.connectPromise?.isResolved;
-  }
+  public static MinimumAutoReconnectMillis = 1000;
+  public connectAction: IConnectAction;
+  public disconnectAction: IConnectAction;
+  public autoReconnect = true;
 
   public hooks: {
-    afterConnectFn?: () => Promise<void>;
-    beforeDisconnectFn?: () => Promise<void>;
+    afterConnectFn?: (action: IConnectAction) => Promise<void>;
+    beforeDisconnectFn?: (action: IConnectAction) => Promise<void>;
+    afterDisconnectHook?: () => Promise<void>;
   } = {};
-
-  protected connectMessageId: string;
-  protected disconnectMessageId: string;
 
   protected pendingMessages = new PendingMessages<
     ICoreResponsePayload<TCoreApiHandlers, any>['data']
   >();
 
-  protected isConnectionTerminated: boolean;
   protected events = new EventSubscriber();
 
-  private isSendingConnect = false;
-  private isSendingDisconnect = false;
+  protected didCallConnectionTerminated = false;
+  protected lastDisconnectDate?: Date;
 
-  constructor(
-    public transport: ITransport,
-    skipConnect = false,
-  ) {
+  constructor(public transport: ITransport) {
     super();
+
     bindFunctions(this);
 
-    this.events.once(transport, 'disconnected', this.onConnectionTerminated.bind(this));
-    this.events.on(transport, 'message', this.onMessage.bind(this));
-
-    if (transport.isConnected && skipConnect) {
-      this.connectPromise = new Resolvable<void>();
-      this.connectPromise.resolve();
-    }
+    this.events.on(transport, 'disconnected', this.onConnectionTerminated);
+    this.events.on(transport, 'message', this.onMessage);
   }
 
-  public async connect(isAutoConnect = false, timeoutMs = 30e3): Promise<void> {
-    if (!this.connectPromise) {
-      this.didAutoConnect = isAutoConnect;
-      this.connectStartTime = Date.now();
-      this.connectPromise = new Resolvable();
-      try {
-        await this.transport.connect?.(timeoutMs);
+  public async connect(
+    options: {
+      timeoutMs?: number;
+      isAutoConnect?: boolean;
+      shouldAutoReconnect?: boolean;
+    } = {},
+  ): Promise<void> {
+    if (this.disconnectAction?.isCallingHook) {
+      return;
+    }
+    if (this.connectAction) return this.connectAction.resolvable.promise;
+    const { timeoutMs, isAutoConnect, shouldAutoReconnect } = options;
+    if (shouldAutoReconnect !== undefined) this.autoReconnect = shouldAutoReconnect;
 
-        // disconnected during connect
-        if (this.hasActiveSessions() && !!this.disconnectPromise && !this.didAutoConnect) {
-          throw new DisconnectedError(
-            this.transport.host,
-            `Disconnecting during initial connection handshake to ${this.transport.host}`,
-          );
-        }
+    const connectAction: IConnectAction = {
+      isAutomatic: isAutoConnect,
+      startTime: Date.now(),
+      resolvable: new Resolvable(),
+    };
+    this.disconnectAction = null;
 
-        // can be resolved if canceled by a disconnect
-        if (!this.connectPromise.isResolved && this.hooks.afterConnectFn) {
-          this.isSendingConnect = true;
-          await this.hooks.afterConnectFn();
-          this.isSendingConnect = false;
-        }
-        this.connectPromise.resolve();
-        this.emit('connected');
-
-        this.transport.isConnected = true;
-        this.transport.emit('connected');
-      } catch (err) {
-        this.connectPromise.reject(err, true);
-      }
+    try {
+      this.connectAction = connectAction;
+      await this.transport.connect?.(timeoutMs);
+      this.didCallConnectionTerminated = false;
+      await this.afterConnectHook();
+      connectAction.resolvable.resolve();
+      this.emit('connected');
+    } catch (err) {
+      delete this.connectAction;
+      connectAction.resolvable.reject(err, true);
     }
 
-    return this.connectPromise.promise;
+    return connectAction.resolvable.promise;
   }
 
   public async disconnect(fatalError?: Error): Promise<void> {
-    // user triggered disconnect sends a disconnect to Core
-    this.disconnectStartTime = Date.now();
-    this.disconnectError = fatalError;
-    if (this.disconnectPromise) return this.disconnectPromise;
-    const resolvable = new Resolvable<void>();
-    this.disconnectPromise = resolvable.promise;
+    this.autoReconnect = false;
+    if (this.disconnectAction) return this.disconnectAction.resolvable.promise;
+
+    const disconnectAction: IConnectAction = {
+      isAutomatic: false,
+      startTime: Date.now(),
+      resolvable: new Resolvable(),
+      error: fatalError,
+    };
+    this.disconnectAction = disconnectAction;
 
     try {
       const logid = log.stats('ConnectionToCore.Disconnecting', {
@@ -123,24 +120,20 @@ export default class ConnectionToCore<
       });
       this.pendingMessages.cancel(new DisconnectedError(this.transport.host));
 
-      this.isSendingDisconnect = true;
-      await this.hooks.beforeDisconnectFn?.();
-      this.isSendingDisconnect = false;
+      await this.beforeDisconnectHook();
 
-      await this.transport.disconnect?.();
-      this.transport.isConnected = false;
-      this.transport.emit('disconnected');
-      this.emit('disconnected');
+      this.transport.disconnect?.();
+      await this.onConnectionTerminated();
+      this.connectAction = null;
       log.stats('ConnectionToCore.Disconnected', {
         parentLogId: logid,
         host: this.transport.host,
         sessionId: null,
       });
-      this.connectPromise = null;
     } finally {
-      resolvable.resolve();
+      disconnectAction.resolvable.resolve();
     }
-    return this.disconnectPromise;
+    return disconnectAction.resolvable.promise;
   }
 
   public async sendRequest<T extends keyof TCoreApiHandlers & string>(
@@ -152,15 +145,19 @@ export default class ConnectionToCore<
     },
     timeoutMs?: number,
   ): Promise<ICoreResponsePayload<TCoreApiHandlers, T>['data']> {
-    const isConnect = this.isSendingConnect;
-    const isDisconnect = this.isSendingDisconnect;
-    if (!isConnect && !isDisconnect) {
-      await this.connect();
+    const activeConnectHook = this.connectAction?.isCallingHook && this.connectAction;
+    const activeDisconnectHook = this.disconnectAction?.isCallingHook && this.disconnectAction;
+    // if we are not connected, try to connect (except during a disconnect)
+    if (this.shouldAutoConnect()) {
+      await this.connect({ timeoutMs, isAutoConnect: true });
     }
 
-    const { promise, id } = this.pendingMessages.create(timeoutMs, isConnect || isDisconnect);
-    if (isConnect) this.connectMessageId = id;
-    if (isDisconnect) this.disconnectMessageId = id;
+    const { promise, id } = this.pendingMessages.create(
+      timeoutMs,
+      !!activeConnectHook || !!activeDisconnectHook,
+    );
+    if (activeConnectHook) activeConnectHook.hookMessageId = id;
+    if (activeDisconnectHook) activeDisconnectHook.hookMessageId = id;
 
     try {
       const [result] = await Promise.all([
@@ -174,13 +171,13 @@ export default class ConnectionToCore<
       return result;
     } catch (error) {
       this.pendingMessages.delete(id);
-      if (this.disconnectPromise && error instanceof CanceledPromiseError) {
+      if (this.disconnectAction && error instanceof CanceledPromiseError) {
         return;
       }
       throw error;
     } finally {
-      if (isConnect) this.connectMessageId = null;
-      if (isDisconnect) this.disconnectMessageId = null;
+      if (activeConnectHook) activeConnectHook.hookMessageId = null;
+      if (activeDisconnectHook) activeDisconnectHook.hookMessageId = null;
     }
   }
 
@@ -189,6 +186,17 @@ export default class ConnectionToCore<
    */
   public hasActiveSessions(): boolean {
     return false;
+  }
+
+  public shouldAutoConnect(): boolean {
+    if (!this.autoReconnect || !!this.connectAction) return false;
+    // if we're mid-disconnect, don't auto-reconnect
+    if (this.disconnectAction?.hookMessageId) return false;
+    if (!this.lastDisconnectDate) return true;
+    const reconnectMillis = (this.constructor as typeof ConnectionToCore)
+      .MinimumAutoReconnectMillis;
+    if (Number.isNaN(reconnectMillis)) return false;
+    return Date.now() - this.lastDisconnectDate.getTime() >= reconnectMillis;
   }
 
   protected onMessage(
@@ -206,7 +214,7 @@ export default class ConnectionToCore<
     if (message.data instanceof Error) {
       let responseError = message.data;
       const isDisconnected =
-        this.disconnectPromise ||
+        !!this.disconnectAction ||
         responseError.name === SessionClosedOrMissingError.name ||
         (responseError as any).isDisconnecting === true;
       delete (responseError as any).isDisconnecting;
@@ -225,26 +233,60 @@ export default class ConnectionToCore<
   }
 
   protected async onConnectionTerminated(): Promise<void> {
-    if (this.isConnectionTerminated) return;
-    this.isConnectionTerminated = true;
+    if (this.didCallConnectionTerminated) return;
+    this.lastDisconnectDate = new Date();
+    this.didCallConnectionTerminated = true;
     this.emit('disconnected');
 
-    if (this.connectMessageId) {
+    // clear all pending messages
+    if (this.connectAction?.hookMessageId) {
       this.onResponse({
-        responseId: this.connectMessageId,
-        data: !this.didAutoConnect ? new DisconnectedError(this.transport.host) : null,
+        responseId: this.connectAction.hookMessageId,
+        data: !this.connectAction.isAutomatic ? new DisconnectedError(this.transport.host) : null,
       });
     }
-    if (this.disconnectMessageId) {
+    this.connectAction = null;
+
+    if (this.disconnectAction?.hookMessageId) {
       this.onResponse({
-        responseId: this.disconnectMessageId,
+        responseId: this.disconnectAction.hookMessageId,
         data: null,
       });
     }
     this.pendingMessages.cancel(new DisconnectedError(this.transport.host));
-    this.isSendingDisconnect = true;
-    await this.hooks.beforeDisconnectFn?.();
-    this.isSendingDisconnect = false;
+
+    await this.hooks.afterDisconnectHook?.();
+  }
+
+  private async afterConnectHook(): Promise<void> {
+    if (this.disconnectAction) return;
+
+    const connectAction = this.connectAction;
+    if (!connectAction) return;
+    // don't run this if we're already connected
+    if (connectAction.resolvable.isResolved) return;
+    try {
+      connectAction.isCallingHook = true;
+      await this.hooks.afterConnectFn?.(connectAction);
+    } finally {
+      connectAction.isCallingHook = false;
+    }
+  }
+
+  private async beforeDisconnectHook(): Promise<void> {
+    const disconnectAction = this.disconnectAction;
+    if (!disconnectAction) return;
+    try {
+      disconnectAction.isCallingHook = true;
+      await this.hooks.beforeDisconnectFn?.(disconnectAction);
+    } catch (err) {
+      log.error('Error in beforeDisconnect hook', {
+        sessionId: null,
+        error: err,
+      });
+    } finally {
+      disconnectAction.isCallingHook = false;
+    }
   }
 }
 

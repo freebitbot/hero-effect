@@ -1,3 +1,5 @@
+import ITypeSerializer from '../interfaces/ITypeSerializer';
+
 const Types = {
   number: 'number',
   string: 'string',
@@ -14,6 +16,7 @@ const Types = {
   Map: 'Map',
   Set: 'Set',
   Error: 'Error',
+  URL: 'URL',
 };
 
 declare let Buffer;
@@ -121,6 +124,10 @@ export default class TypeSerializer {
       return { __type: Types.bigint, value: value.toString() };
     }
 
+    if (value instanceof URL) {
+      return { __type: Types.URL, value: value.toString() };
+    }
+
     if (value instanceof Date) {
       return { __type: Types.DateIso, value: value.toISOString() };
     }
@@ -171,30 +178,23 @@ export default class TypeSerializer {
         }
         return result;
       }
+    }
 
-      if (ArrayBuffer.isView(value)) {
-        const binary = Array.from(new Uint8Array(value.buffer, value.byteOffset, value.byteLength))
-          .map(byte => String.fromCharCode(byte))
-          .join('');
-        return {
-          __type: Types.ArrayBuffer64,
-          value: globalThis.btoa(binary),
-          args: {
-            arrayType: value[Symbol.toStringTag],
-            byteOffset: value.byteOffset,
-            byteLength: value.byteLength,
-          },
-        };
-      }
-      if (value instanceof ArrayBuffer) {
-        const binary = Array.from(new Uint8Array(value))
-          .map(byte => String.fromCharCode(byte))
-          .join('');
-        return {
-          __type: Types.ArrayBuffer64,
-          value: globalThis.btoa(binary),
-        };
-      }
+    if (ArrayBuffer.isView(value)) {
+      const buffer = new Uint8Array(value.buffer);
+      return {
+        __type: Types.ArrayBuffer64,
+        value: this.Uint8ArrayToBase64String(buffer),
+        arrayType: value[Symbol.toStringTag],
+      };
+    }
+
+    if (value instanceof ArrayBuffer) {
+      const buffer = new Uint8Array(value);
+      return {
+        __type: Types.ArrayBuffer64,
+        value: this.Uint8ArrayToBase64String(buffer),
+      };
     }
 
     if (type === 'object' && 'toJSON' in value) {
@@ -204,6 +204,32 @@ export default class TypeSerializer {
     return value;
   }
 
+  private static Uint8ArrayToBase64String(value: Uint8Array): string {
+    const str = Array.from(value)
+      .map(byte => String.fromCharCode(byte))
+      .join('');
+
+    // base64 is only here for backwards compatability, this migth be removed
+    // in the future. Also 'binary' is needed to support communication between
+    // chrome and nodejs: https://stackoverflow.com/questions/23097928/node-js-throws-btoa-is-not-defined-error
+    if (this.isNodejs) {
+      return Buffer.from(str, 'binary').toString('base64');
+    }
+    return globalThis.btoa(str);
+  }
+
+  private static base64StringToUint8Array(value: string): Uint8Array {
+    const str = this.isNodejs
+      ? Buffer.from(value, 'base64').toString('binary')
+      : globalThis.atob(value);
+
+    const uint8Array = new Uint8Array(new ArrayBuffer(str.length));
+    for (let i = 0; i < str.length; i++) {
+      uint8Array[i] = str.charCodeAt(i);
+    }
+    return uint8Array;
+  }
+
   private static reviver(stackMarker: string, key: string, entry: any): any {
     if (!entry || !entry.__type) return entry;
 
@@ -211,25 +237,21 @@ export default class TypeSerializer {
 
     if (type === Types.number || type === Types.string || type === Types.boolean) return value;
     if (type === Types.bigint) return BigInt(value);
+    if (type === Types.URL) return new URL(value);
     if (type === Types.NaN) return Number.NaN;
     if (type === Types.Infinity) return Number.POSITIVE_INFINITY;
     if (type === Types.NegativeInfinity) return Number.NEGATIVE_INFINITY;
     if (type === Types.DateIso) return new Date(value);
     if (type === Types.Buffer64 || type === Types.ArrayBuffer64) {
-      if (this.isNodejs) {
-        return Buffer.from(value, 'base64');
+      const buffer = this.base64StringToUint8Array(value);
+      if (!entry.arrayType) {
+        if (this.isNodejs) return Buffer.from(buffer);
+        // Chrome doesnt have buffer type in this case just dont parse it
+        // and leave as is. If needed you can still manually handle this
+        // case but its impossible for use here to know exactly what the goal is.
+        return entry;
       }
-
-      const decoded = globalThis.atob(value);
-      const uint8Array = new Uint8Array(new ArrayBuffer(decoded.length));
-      for (let i = 0; i < decoded.length; i++) {
-        uint8Array[i] = decoded.charCodeAt(i);
-      }
-      if (!entry.args) return uint8Array;
-
-      const { arrayType, byteOffset, byteLength } = entry.args;
-
-      return new globalThis[arrayType](uint8Array.buffer, byteOffset, byteLength);
+      return new globalThis[entry.arrayType](buffer.buffer);
     }
     if (type === Types.RegExp) return new RegExp(value[0], value[1]);
     if (type === Types.Map) {
@@ -275,3 +297,6 @@ export function registerSerializableErrorType(errorConstructor: {
 export const stringifiedTypeSerializerClass = `const Types = ${JSON.stringify(
   Types,
 )};\n${TypeSerializer.toString()}`;
+
+// Here to check if we correctly implement interface
+const _internal: ITypeSerializer = TypeSerializer;

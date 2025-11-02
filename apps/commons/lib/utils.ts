@@ -1,6 +1,8 @@
 import * as net from 'net';
+import { EventEmitter } from 'node:events';
 import IResolvablePromise from '../interfaces/IResolvablePromise';
 import Resolvable from './Resolvable';
+import { TypedEventEmitter } from './eventUtils';
 
 export function assert(value: unknown, message?: string, reject?): void {
   if (value) return;
@@ -22,7 +24,12 @@ export function toUrl(hostOrUrlFragment: string, defaultProtocol = 'ws:'): URL {
   return new URL(hostOrUrlFragment);
 }
 
-export function isPortInUse(port: number | string): Promise<boolean> {
+export async function isPortInUse(port: number | string): Promise<boolean> {
+  if (await isPortInUseOnHost(port, 'localhost')) return true;
+  return await isPortInUseOnHost(port, '::');
+}
+
+export function isPortInUseOnHost(port: number | string, host = 'localhost'): Promise<boolean> {
   return new Promise<boolean>((resolve, reject) => {
     const server = net.createServer();
 
@@ -46,7 +53,7 @@ export function isPortInUse(port: number | string): Promise<boolean> {
       server.close();
     };
 
-    server.listen(Number(port));
+    server.listen(Number(port), host);
   });
 }
 
@@ -78,7 +85,7 @@ export function pickRandom<T>(array: T[]): T {
   return array[Math.floor(Math.random() * array.length)];
 }
 
-const prototypeFunctionMap = new WeakMap<any, Set<PropertyKey>>();
+const prototypeFunctionMap = new Map<any, Set<PropertyKey>>();
 export function getObjectFunctionProperties(object: any): Set<PropertyKey> {
   if (prototypeFunctionMap.has(object)) return prototypeFunctionMap.get(object);
 
@@ -91,11 +98,7 @@ export function getObjectFunctionProperties(object: any): Set<PropertyKey> {
     if (
       descriptor &&
       typeof descriptor.value === 'function' &&
-      !descriptor.get &&
-      !descriptor.set &&
       descriptor.writable &&
-      !Object.prototype[key] &&
-      !Object[key] &&
       !isClass(descriptor.value)
     ) {
       functionKeys.add(key);
@@ -106,37 +109,25 @@ export function getObjectFunctionProperties(object: any): Set<PropertyKey> {
   return functionKeys;
 }
 
-const prototypeHierarchyCache = new WeakMap<object, any[]>();
-export function getPrototypeHierarchy(self: any): object[] {
-  const hierarchy: object[] = [];
-  let object = self;
-  do {
-    hierarchy.unshift(object);
-
-    if (prototypeHierarchyCache.has(object)) {
-      return prototypeHierarchyCache.get(object).concat(hierarchy);
-    }
-
-    object = Reflect.getPrototypeOf(object);
-  } while (object && object !== Object.prototype);
-
-  // don't put in the last item
-  for (let i = 0; i < hierarchy.length - 1; i += 1) {
-    const entry = hierarchy[i];
-    const ancestors = i > 0 ? hierarchy.slice(0, i) : [];
-    prototypeHierarchyCache.set(entry, ancestors);
-  }
-
-  return hierarchy;
-}
+const stoppingPoints = new Set([
+  EventEmitter.prototype,
+  Object.prototype,
+  Object,
+  Function.prototype,
+  TypedEventEmitter,
+]);
 
 export function bindFunctions(self: any): void {
-  const hierarchy = getPrototypeHierarchy(self);
-  for (const tier of hierarchy) {
-    const keys = getObjectFunctionProperties(tier);
-    for (const key of keys) {
+  let proto = Object.getPrototypeOf(self);
+  const keys = new Set();
+  while (proto && !stoppingPoints.has(proto)) {
+    for (const key of getObjectFunctionProperties(proto)) {
+      // ensure the last class to define the function is the one that gets bound
+      if (keys.has(key)) continue;
+      keys.add(key);
       self[key] = self[key].bind(self);
     }
+    proto = Object.getPrototypeOf(proto);
   }
 }
 
