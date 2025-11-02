@@ -1,0 +1,46 @@
+- title: Overview
+  items:
+    - Introduction
+    - Concepts
+    - Configuration
+    - Deployment
+    - Relationship with Argon
+
+- title: Basics
+  items:
+    - Datastore
+    - Table
+    - Extractor
+    - Crawler
+    - Passthrough Extractor
+    - Cloning
+    - Payments
+    - Extractor Context
+    - Input
+    - Output
+
+- title: Guides
+  items:
+    - Using Localchain
+    - Register a Domain
+    - Setup Datastore Payments
+    - Close Argon Blocks
+    - Querying Datastores
+
+- title: Advanced
+  items:
+    - Extractor Schemas
+    - Schema
+    - Databrokers
+    - Credits
+    - Plugins
+    - Hosted Services
+    - Storage Engines
+    - Hero Plugin
+    - Puppeteer Plugin
+
+- title: Help
+  items:
+    - Prerequisites
+    - How to upgrade
+    - Troubleshooting

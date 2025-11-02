@@ -1,0 +1,60 @@
+{
+  "scripts": {
+    "dist": "lerna publish from-package"
+  },
+  "devDependencies": {
+    "@lerna-lite/version": "^3.9.1",
+    "@lerna-lite/publish": "^3.9.1"
+  },
+  "workspaces": {
+    "packages": [
+      "desktop/*",
+      "datastore/*",
+      "datastore/plugins/*",
+      "cloud/*",
+      "sql/*",
+      "client/*",
+      "cli",
+      "schema",
+      "specification",
+      "utils"
+    ],
+    "nohoist": [
+      "**/babel-loader",
+      "**/electron-webpack",
+      "**/@electron",
+      "**/@electron/**",
+      "**/electron",
+      "**electron**",
+      "**/electron-*",
+      "**/electron-log",
+      "**/electron-builder",
+      "**/electron-webpack/**",
+      "**/electron-updater",
+      "**/electron-clipboard-ex",
+      "**/@ulixee/repo-tools",
+      "@ulixee/repo-tools",
+      "**/vite",
+      "**/vite-plugin-prismjs",
+      "**/vite/**",
+      "**/vite-svg-loader",
+      "**/vite-plugin-prismjs",
+      "**/vite-*",
+      "**/@vitejs/**",
+      "**/@vue/**",
+      "**/@vue/**/**",
+      "**/vue",
+      "**/vue-loader",
+      "**/vue-class-component",
+      "**/vue-router",
+      "**/vue-template-compiler",
+      "**/vue-class-component",
+      "**/@types/web",
+      "**/autoprefixer",
+      "**/postcss",
+      "**/tailwindcss",
+      "**/@nodelib",
+      "**/@nodelib/**"
+    ]
+  }
+}
