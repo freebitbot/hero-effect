@@ -1,0 +1,29 @@
+{
+  "compileOnSave": true,
+  "compilerOptions": {
+    "composite": true,
+    "incremental": true,
+    "target": "ES2021",
+    "module": "CommonJS",
+    "lib": ["ES2021", "DOM", "DOM.Iterable"],
+    "noImplicitAny": false,
+    "sourceMap": true,
+    "esModuleInterop": false,
+    "declaration": true,
+    "moduleResolution": "node",
+    "skipLibCheck": true,
+    "strictBindCallApply": true,
+    "resolveJsonModule": true,
+    "allowJs": true,
+    "skipDefaultLibCheck": true,
+    "downlevelIteration": true,
+    "preserveSymlinks": false,
+    "experimentalDecorators": true,
+    "noImplicitOverride": true
+  },
+  "exclude": [
+    "**/tsconfig*.json",
+    "node_modules",
+    "**/node_modules"
+  ]
+}
