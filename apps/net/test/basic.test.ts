@@ -18,7 +18,7 @@ beforeEach(() => {
 });
 
 test('it can transport over a direct connection (bridge)', async () => {
-  const bridge = new TransportBridge<typeof apiSpec>();
+  const bridge = new TransportBridge();
   new ConnectionToClient(bridge.transportToClient, apiSpec);
   const connectionToCore = new ConnectionToCore(bridge.transportToCore);
   await expect(
@@ -34,8 +34,8 @@ test('it can transport over a direct connection (bridge)', async () => {
 test('it can transport over websockets', async () => {
   const server = new Server({ port: 0 });
   try {
-    server.on('connection', (ws) => {
-      const transport = new WsTransportToClient(ws);
+    server.on('connection', (ws, req) => {
+      const transport = new WsTransportToClient(ws, req);
       new ConnectionToClient(transport, apiSpec);
     });
     const host = (await server.address()) as AddressInfo;
