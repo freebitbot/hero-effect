@@ -8,5 +8,10 @@
   },
   "peerDependencies": {
     "typescript": "^5"
+  },
+  "dependencies": {
+    "dependency-cruiser": "^17.2.0",
+    "ts-morph": "^27.0.2",
+    "typedoc": "^0.28.14"
   }
 }
