@@ -1,17 +1,45 @@
 {
-  "name": "hero-effect",
-  "module": "index.ts",
-  "type": "module",
-  "private": true,
-  "devDependencies": {
-    "@types/bun": "latest"
-  },
-  "peerDependencies": {
-    "typescript": "^5"
-  },
-  "dependencies": {
-    "dependency-cruiser": "^17.2.0",
-    "ts-morph": "^27.0.2",
-    "typedoc": "^0.28.14"
-  }
+	"name": "hero-effect",
+	"module": "index.ts",
+	"type": "module",
+	"private": true,
+	"devDependencies": {
+		"@types/bun": "latest"
+	},
+	"peerDependencies": {
+		"typescript": "^5"
+	},
+	"dependencies": {
+		"dependency-cruiser": "^17.2.0",
+		"ts-morph": "^27.0.2",
+		"typedoc": "^0.28.14"
+	},
+	"workspaces": [
+		"packages/apps/hero/agent/*",
+		"packages/apps/hero/browser-emulator-builder",
+		"packages/apps/hero/browser-profiler/*",
+		"packages/apps/hero/client",
+		"packages/apps/hero/commons",
+		"packages/apps/hero/core",
+		"packages/apps/hero/end-to-end",
+		"packages/apps/hero/interfaces",
+		"packages/apps/hero/js-path",
+		"packages/apps/hero/net",
+		"packages/apps/hero/playground",
+		"packages/apps/hero/plugin-utils",
+		"packages/apps/hero/plugins/*",
+		"packages/apps/hero/real-user-agents",
+		"packages/apps/hero/specification",
+		"packages/apps/hero/testing",
+		"packages/apps/hero/timetravel",
+		"packages/apps/hero/double-agent/analyze",
+		"packages/apps/hero/double-agent/analyze/plugins/*",
+		"packages/apps/hero/double-agent/collect",
+		"packages/apps/hero/double-agent/collect/plugins/*",
+		"packages/apps/hero/double-agent/collect-controller",
+		"packages/apps/hero/double-agent/config",
+		"packages/apps/hero/double-agent/runner",
+		"packages/apps/hero/double-agent/tls-server",
+		"packages/apps/hero/double-agent-stacks"
+	]
 }
