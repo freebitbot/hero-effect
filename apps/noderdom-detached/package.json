@@ -37,7 +37,7 @@
     "@types/jest": "^24.9.1",
     "@types/node": "^13.5.0",
     "@types/webidl2": "^23.8.0",
-    "axios": "^0.19.2",
+    "axios": "^0.30.2",
     "jest": "^25.1.0",
     "jest-environment-node": "^25.1.0",
     "jest-junit": "^10.0.0",
