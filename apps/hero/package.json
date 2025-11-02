@@ -46,7 +46,6 @@
 		"@ulixee/repo-tools": "^1.0.34",
 		"cross-env": "^7.0.3",
 		"decamelize": "^4.0.0",
-		"eslint": "^8.57.1",
 		"jest": "^29.7.0",
 		"json2md": "^1.7.0",
 		"lint-staged": "^15.2.10",
