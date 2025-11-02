@@ -1,6 +1,3 @@
 {
-  "private": false,
-  "scripts": {},
-  "devDependencies": {},
-  "workspaces": {}
+  "private": false
 }
