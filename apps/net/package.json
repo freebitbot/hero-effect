@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@ulixee/commons": "2.0.0-alpha.6",
-    "ws": "^7.4.6"
+    "ws": "^7.5.10"
   },
   "devDependencies": {
     "@commitlint/cli": "^12.0.1",
