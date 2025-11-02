@@ -303,12 +303,11 @@
     "@babel/helper-plugin-utils" "^7.17.12"
 
 "@babel/runtime-corejs3@^7.10.2":
-  version "7.18.0"
-  resolved "https://registry.yarnpkg.com/@babel/runtime-corejs3/-/runtime-corejs3-7.18.0.tgz#eed03023c5226b1e2b2ba32b8b6af5cb0518a6c7"
-  integrity sha512-G5FaGZOWORq9zthDjIrjib5XlcddeqLbIiDO3YQsut6j7aGf76xn0umUC/pA6+nApk3hQJF4JzLzg5PCl6ewJg==
+  version "7.28.4"
+  resolved "https://registry.yarnpkg.com/@babel/runtime-corejs3/-/runtime-corejs3-7.28.4.tgz#c25be39c7997ce2f130d70b9baecb8ed94df93fa"
+  integrity sha512-h7iEYiW4HebClDEhtvFObtPmIvrd1SSfpI9EhOeKk4CtIK/ngBWFpuhCzhdmRKtg71ylcue+9I6dv54XYO1epQ==
   dependencies:
-    core-js-pure "^3.20.2"
-    regenerator-runtime "^0.13.4"
+    core-js-pure "^3.43.0"
 
 "@babel/runtime@^7.10.2", "@babel/runtime@^7.16.3":
   version "7.18.0"
@@ -1588,10 +1587,10 @@ copyfiles@^2.4.1:
     untildify "^4.0.0"
     yargs "^16.1.0"
 
-core-js-pure@^3.20.2:
-  version "3.22.6"
-  resolved "https://registry.yarnpkg.com/core-js-pure/-/core-js-pure-3.22.6.tgz#463af79691fd9093e3f9548ef2e22be332814b8c"
-  integrity sha512-u5yG2VL6NKXz9BZHr9RAm6eWD1DTNjG7jJnJgLGR+Im0whdPcPXqwqxd+dcUrZvpvPan5KMgn/3pI+Q/aGqPOA==
+core-js-pure@^3.43.0:
+  version "3.46.0"
+  resolved "https://registry.yarnpkg.com/core-js-pure/-/core-js-pure-3.46.0.tgz#9bb80248584c6334bb54cd381b0f41c619ef1b43"
+  integrity sha512-NMCW30bHNofuhwLhYPt66OLOKTMbOhgTTatKVbaQC3KRHpTCiRIBYvtshr+NBYSnBxwAFhjW/RfJ0XbIjS16rw==
 
 core-util-is@~1.0.0:
   version "1.0.3"
