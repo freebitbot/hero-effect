@@ -1,0 +1,29 @@
+{
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "postinstall": "tsc --b --clean && npm run build",
+    "build": "tsc --b",
+    "env": "env $(cat .env | xargs)",
+    "mac": "npm run build && env $(cat .env | xargs) SYNC_OS_KEYS=mac,mac_arm64 SA_SHOW_REPLAY=false node ./scripts/syncVersions.js",
+    "win": "npm run build && env $(cat .env | xargs) SYNC_OS_KEYS=win32,win64 SA_SHOW_REPLAY=false node ./scripts/syncVersions.js",
+    "linux": "npm run build && env $(cat .env | xargs) SYNC_OS_KEYS=linux SA_SHOW_REPLAY=false node ./scripts/syncVersions.js"
+  },
+  "dependencies": {
+    "@actions/github": "^4.0.0",
+    "axios": "^1.7.7",
+    "tar": "^7.4.3",
+    "uuid": "^8.3.2",
+    "xml2js": "^0.4.23",
+    "plist": "^3.0.1"
+  },
+  "devDependencies": {
+    "@types/tar": "^4.0.4",
+    "typescript": "^5.6.2",
+    "@types/xml2js": "^0.4.8",
+    "prettier": "^2.2.1"
+  },
+  "workspaces": [
+    "packages/*"
+  ]
+}
