@@ -15,7 +15,13 @@
 		"typedoc": "^0.28.14"
 	},
 	"workspaces": [
-		"apps/hero/agent/*",
-		"apps/noderdom/builds/*"
+		"apps/datastore/*",
+		"apps/desktop/*",
+		"apps/double-agent/*",
+		"apps/examples/*",
+		"apps/platform/*",
+		"apps/plugins/*",
+		"apps/testing/*",
+		"apps/ulixee/*"
 	]
 }
