@@ -13,6 +13,6 @@
     "resolveJsonModule": true,
     "allowJs": true
   },
-  "include": ["scripts/**/*.ts", "packages/**/*.ts"],
+  "include": ["scripts/**/*.ts"],
   "exclude": ["node_modules", "assets", "downloads", "*.d.ts", "*.d.ts.map"]
 }
