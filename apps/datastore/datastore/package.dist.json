@@ -1,5 +1,0 @@
-{
-  "devDependencies": {
-    "@ulixee/datastore-packager": "workspace:*"
-  }
-}
