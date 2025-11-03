@@ -18,6 +18,7 @@
 		"apps/datastore/*",
 		"apps/desktop/*",
 		"apps/double-agent/*",
+		"apps/double-agent-plugins/*",
 		"apps/examples/*",
 		"apps/platform/*",
 		"apps/plugins/*",
