@@ -1,18 +1,18 @@
 {
-  "name": "@ulixee/unblocked-browser-profiler-dom-bridger",
-  "version": "2.0.0-alpha.34",
-  "main": "index.js",
-  "private": true,
-  "license": "MIT",
-  "scripts": {
-    "generateRawMappings": "node --inspect ../../build/browser-profiler/dom-bridger/scripts/generateRawMappings.js",
-    "generatePathPatterns": "node --inspect ../../build/browser-profiler/dom-bridger/scripts/generatePathPatterns.js",
-    "generate": "yarn generateRawMappings && yarn generatePathPatterns"
-  },
-  "dependencies": {
-    "@ulixee/commons": "2.0.0-alpha.34",
-    "@ulixee/unblocked-browser-profiler": "2.0.0-alpha.34",
-    "@ulixee/unblocked-specification": "2.0.0-alpha.34",
-    "lodash": "^4.17.20"
-  }
+	"name": "@ulixee/unblocked-browser-profiler-dom-bridger",
+
+	"main": "index.js",
+	"private": true,
+	"license": "MIT",
+	"scripts": {
+		"generateRawMappings": "node --inspect ../../build/browser-profiler/dom-bridger/scripts/generateRawMappings.js",
+		"generatePathPatterns": "node --inspect ../../build/browser-profiler/dom-bridger/scripts/generatePathPatterns.js",
+		"generate": "yarn generateRawMappings && yarn generatePathPatterns"
+	},
+	"dependencies": {
+		"@ulixee/commons": "workspace:*",
+		"@ulixee/unblocked-browser-profiler": "workspace:*",
+		"@ulixee/unblocked-specification": "workspace:*",
+		"lodash": "^4.17.20"
+	}
 }
