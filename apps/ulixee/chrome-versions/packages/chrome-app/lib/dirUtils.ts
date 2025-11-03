@@ -1,10 +1,10 @@
-import { promises as Fs } from 'fs';
+import { promises as Fs } from "node:fs";
 
 export async function existsAsync(path: string): Promise<boolean> {
-  try {
-    await Fs.access(path);
-    return true;
-  } catch (_) {
-    return false;
-  }
+	try {
+		await Fs.access(path);
+		return true;
+	} catch (_) {
+		return false;
+	}
 }
