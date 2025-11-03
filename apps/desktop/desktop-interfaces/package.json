@@ -1,16 +1,15 @@
 {
-  "name": "@ulixee/desktop-interfaces",
-  "version": "2.0.0-alpha.34",
-  "scripts": {},
-  "repository": "git@github.com:ulixee/platform.git",
-  "license": "MIT",
-  "dependencies": {
-    "@ulixee/hero-interfaces": "2.0.0-alpha.34",
-    "@ulixee/platform-specification": "2.0.0-alpha.34",
-    "@ulixee/unblocked-specification": "2.0.0-alpha.34",
-    "nanoid": "^3.3.11"
-  },
-  "devDependencies": {
-    "@argonprotocol/localchain": "~1.0"
-  }
+	"name": "@ulixee/desktop-interfaces",
+	"scripts": {},
+	"repository": "git@github.com:ulixee/platform.git",
+	"license": "MIT",
+	"dependencies": {
+		"@ulixee/hero-interfaces": "workspace:*",
+		"@ulixee/platform-specification": "workspace:*",
+		"@ulixee/unblocked-specification": "workspace:*",
+		"nanoid": "^3.3.11"
+	},
+	"devDependencies": {
+		"@argonprotocol/localchain": "~1.0"
+	}
 }

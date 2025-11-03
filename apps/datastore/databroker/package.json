@@ -1,38 +1,37 @@
 {
-  "name": "@ulixee/databroker",
-  "version": "2.0.0-alpha.34",
-  "main": "index.js",
-  "repository": "git@github.com:ulixee/platform.git",
-  "license": "MIT",
-  "bin": "./bin/cli.js",
-  "scripts": {
-    "start": "cd ../../build && yarn workspace @ulixee/databroker start",
-    "build": "yarn workspace @ulixee/databroker-admin build"
-  },
-  "exports": {
-    ".": {
-      "types": "./index.d.ts",
-      "import": "./index.mjs",
-      "require": "./index.cjs"
-    }
-  },
-  "dependencies": {
-    "@argonprotocol/localchain": "~1.0",
-    "@argonprotocol/mainchain": "~1.0",
-    "@ulixee/cloud": "2.0.0-alpha.34",
-    "@ulixee/commons": "2.0.0-alpha.34",
-    "@ulixee/datastore": "2.0.0-alpha.34",
-    "@ulixee/net": "2.0.0-alpha.34",
-    "@ulixee/platform-specification": "2.0.0-alpha.34",
-    "@ulixee/platform-utils": "2.0.0-alpha.34",
-    "better-sqlite3": "^11.1.2",
-    "commander": "^9.5.0",
-    "moment": "^2.29.4",
-    "nanoid": "^3.3.11"
-  },
-  "devDependencies": {
-    "@types/better-sqlite3": "^7.6.11",
-    "@ulixee/datastore-packager": "2.0.0-alpha.34",
-    "@ulixee/datastore-testing": "2.0.0-alpha.34"
-  }
+	"name": "@ulixee/databroker",
+	"main": "index.js",
+	"repository": "git@github.com:ulixee/platform.git",
+	"license": "MIT",
+	"bin": "./bin/cli.js",
+	"scripts": {
+		"start": "cd ../../build && yarn workspace @ulixee/databroker start",
+		"build": "yarn workspace @ulixee/databroker-admin build"
+	},
+	"exports": {
+		".": {
+			"types": "./index.d.ts",
+			"import": "./index.mjs",
+			"require": "./index.cjs"
+		}
+	},
+	"dependencies": {
+		"@argonprotocol/localchain": "~1.0",
+		"@argonprotocol/mainchain": "~1.0",
+		"@ulixee/cloud": "workspace:*",
+		"@ulixee/commons": "workspace:*",
+		"@ulixee/datastore": "workspace:*",
+		"@ulixee/net": "workspace:*",
+		"@ulixee/platform-specification": "workspace:*",
+		"@ulixee/platform-utils": "workspace:*",
+		"better-sqlite3": "^11.1.2",
+		"commander": "^9.5.0",
+		"moment": "^2.29.4",
+		"nanoid": "^3.3.11"
+	},
+	"devDependencies": {
+		"@types/better-sqlite3": "^7.6.11",
+		"@ulixee/datastore-packager": "workspace:*",
+		"@ulixee/datastore-testing": "workspace:*"
+	}
 }
