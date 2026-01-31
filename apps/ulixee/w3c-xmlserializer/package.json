@@ -13,7 +13,7 @@
 		"xml-name-validator": "^3.0.0"
 	},
 	"devDependencies": {
-		"eslint": "^6.8.0",
+		"eslint": "^9.26.0",
 		"jest": "^24.9.0",
 		"jsdom": "^15.2.1"
 	},
