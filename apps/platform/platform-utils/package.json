@@ -1,9 +1,0 @@
-{
-	"name": "@ulixee/platform-utils",
-
-	"description": "Common utilities for for Ulixee",
-	"license": "MIT",
-	"dependencies": {
-		"@ulixee/commons": "workspace:*"
-	}
-}
