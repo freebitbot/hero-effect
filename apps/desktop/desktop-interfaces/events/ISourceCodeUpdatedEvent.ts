@@ -1,4 +1,4 @@
 export default interface ISourceCodeUpdatedEvent {
-  source: string;
-  lines: string[];
+	source: string;
+	lines: string[];
 }

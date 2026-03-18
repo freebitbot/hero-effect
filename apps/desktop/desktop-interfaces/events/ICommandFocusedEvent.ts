@@ -1,3 +1,3 @@
 export default interface ICommandFocusedEvent {
-  commandId: number;
+	commandId: number;
 }

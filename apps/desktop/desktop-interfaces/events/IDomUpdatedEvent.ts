@@ -1,6 +1,6 @@
-import { IFrontendDomChangeEvent } from '@ulixee/hero-interfaces/IDomChangeEvent';
+import type { IFrontendDomChangeEvent } from "@ulixee/hero-interfaces/IDomChangeEvent";
 
 export default interface IDomUpdatedEvent {
-  paintEvents: IFrontendDomChangeEvent[][];
-  framesById: { [id: number]: { parentId: number; domNodeId: number } },
+	paintEvents: IFrontendDomChangeEvent[][];
+	framesById: { [id: number]: { parentId: number; domNodeId: number } };
 }
