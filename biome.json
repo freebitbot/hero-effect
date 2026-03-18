@@ -15,7 +15,8 @@
 			"!apps/testing/*",
 			"!**/tsconfig.json",
 			"!**/package.json",
-			"!apps/examples/*"
+			"!apps/examples/*",
+			"!apps/ulixee/noderdom/scripts/1-process/site/*"
 		]
 	},
 	"formatter": {
