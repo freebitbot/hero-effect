@@ -1,7 +1,7 @@
-import IRequestContext from '@double-agent/collect/interfaces/IRequestContext';
+import type IRequestContext from "@double-agent/collect/interfaces/IRequestContext";
 
 export default function uaPageScript(ctx: IRequestContext) {
-  return `
+	return `
 <script type="text/javascript">
 (function uaProbe() {
   const keys = [
@@ -15,7 +15,7 @@ export default function uaPageScript(ctx: IRequestContext) {
   ];
   try {
     const promise = navigator.userAgentData.getHighEntropyValues(keys).then(values => 
-      fetch('${ctx.buildUrl('/save')}', {
+      fetch('${ctx.buildUrl("/save")}', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify(values),
@@ -23,7 +23,7 @@ export default function uaPageScript(ctx: IRequestContext) {
     );
     window.pageQueue.push(promise);
   } catch(err) {
-    fetch('${ctx.buildUrl('/save')}', {
+    fetch('${ctx.buildUrl("/save")}', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: 'null',

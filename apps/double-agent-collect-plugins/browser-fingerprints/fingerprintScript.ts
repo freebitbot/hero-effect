@@ -1,7 +1,7 @@
-import IRequestContext from '@double-agent/collect/interfaces/IRequestContext';
+import type IRequestContext from "@double-agent/collect/interfaces/IRequestContext";
 
 export default function fingerprintScript(ctx: IRequestContext) {
-  return `
+	return `
 <script type="text/javascript">
 (() => {
   const browserIgnoredAttributes = ${JSON.stringify(browserIgnoredAttributes)};
@@ -36,7 +36,7 @@ export default function fingerprintScript(ctx: IRequestContext) {
           const browserHash = Fingerprint2.x64hash128(browserValues.join(''), 31);
           const sessionHash = Fingerprint2.x64hash128(sessionValues.join(''), 31);
   
-          fetch('${ctx.buildUrl('/save')}', {
+          fetch('${ctx.buildUrl("/save")}', {
             method: 'POST',
             body: JSON.stringify({
               originatedAt: '${ctx.url.pathname}',
@@ -68,16 +68,20 @@ export default function fingerprintScript(ctx: IRequestContext) {
 }
 
 const checkedOtherPlaces = [
-  'webdriver',
-  'hasLiedLanguages',
-  'hasLiedResolution',
-  'hasLiedOs',
-  'hasLiedBrowser',
+	"webdriver",
+	"hasLiedLanguages",
+	"hasLiedResolution",
+	"hasLiedOs",
+	"hasLiedBrowser",
 ];
 
-export const browserIgnoredAttributes = ['userAgent', 'platform', 'enumerateDevices'].concat(
-  checkedOtherPlaces,
-);
-export const sessionIgnoredAttributes = ['canvas', 'webgl', 'enumerateDevices'].concat(
-  checkedOtherPlaces,
-);
+export const browserIgnoredAttributes = [
+	"userAgent",
+	"platform",
+	"enumerateDevices",
+].concat(checkedOtherPlaces);
+export const sessionIgnoredAttributes = [
+	"canvas",
+	"webgl",
+	"enumerateDevices",
+].concat(checkedOtherPlaces);

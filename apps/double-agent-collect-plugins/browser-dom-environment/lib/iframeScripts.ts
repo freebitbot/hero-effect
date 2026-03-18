@@ -1,9 +1,11 @@
-import IRequestContext from '@double-agent/collect/interfaces/IRequestContext';
-import PageNames from '../interfaces/PageNames';
-import loadDomExtractorScript, { IDomExtractorPageMeta } from './loadDomExtractorScript';
+import type IRequestContext from "@double-agent/collect/interfaces/IRequestContext";
+import PageNames from "../interfaces/PageNames";
+import loadDomExtractorScript, {
+	type IDomExtractorPageMeta,
+} from "./loadDomExtractorScript";
 
 export function waitForIframe() {
-  return `
+	return `
 <script type=text/javascript>
      const promise = new Promise(resolve => {
          window.addEventListener('message', event => {
@@ -18,15 +20,15 @@ export function waitForIframe() {
 }
 
 export function iframePage(ctx: IRequestContext) {
-  const pageMeta: IDomExtractorPageMeta = {
-    saveToUrl: ctx.buildUrl('/save'),
-    pageUrl: ctx.url.href,
-    pageHost: ctx.url.host,
-    pageName: ctx.url.searchParams.get('page-name') ?? PageNames.IFrameDom,
-  };
-  ctx.res.setHeader('Content-Type', 'text/html');
+	const pageMeta: IDomExtractorPageMeta = {
+		saveToUrl: ctx.buildUrl("/save"),
+		pageUrl: ctx.url.href,
+		pageHost: ctx.url.host,
+		pageName: ctx.url.searchParams.get("page-name") ?? PageNames.IFrameDom,
+	};
+	ctx.res.setHeader("Content-Type", "text/html");
 
-  const html = `<!doctype html><html><body>
+	const html = `<!doctype html><html><body>
     <h5>IFrame DOM Test</h5>
     <script type="text/javascript">
     ${loadDomExtractorScript()};
@@ -35,5 +37,5 @@ export function iframePage(ctx: IRequestContext) {
     });
     </script>
   </body></html>`;
-  ctx.res.end(html);
+	ctx.res.end(html);
 }
