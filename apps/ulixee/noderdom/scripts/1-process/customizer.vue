@@ -218,281 +218,303 @@ option inactive-->
 </template>
 
 <script lang="ts">
-import * as Vue from 'vue';
-import IChoiceMeta from './customizer/IChoiceMeta';
-import Axios from 'axios';
+import Axios from "axios";
+import * as Vue from "vue";
+import type IChoiceMeta from "./customizer/IChoiceMeta";
 
 enum DomType {
-  awaited = 'awaited',
-  detached = 'detached',
-  standard = 'standard',
+	awaited = "awaited",
+	detached = "detached",
+	standard = "standard",
 }
 
 interface IKlassExtra {
-  hasEnabledProperties: boolean;
-  hasEnabledMethods: boolean;
-  activelyReferencedBy: Set<string>;
-  activeDependencies: Set<string>;
-  hiddenPropertyCount: number;
-  hiddenMethodCount: number;
-  unhideHiddenProperties: boolean;
-  unhideHiddenMethods: boolean;
+	hasEnabledProperties: boolean;
+	hasEnabledMethods: boolean;
+	activelyReferencedBy: Set<string>;
+	activeDependencies: Set<string>;
+	hiddenPropertyCount: number;
+	hiddenMethodCount: number;
+	unhideHiddenProperties: boolean;
+	unhideHiddenMethods: boolean;
 }
 
 export default Vue.defineComponent({
-  name: 'Customizer',
-  components: {},
-  setup() {
-    const klasses = Vue.ref<any[]>([]);
-    const klassesByName = Vue.ref<{ [name: string]: any }>({});
-    const isSaving = Vue.ref(false);
-    const hadErrorSaving = Vue.ref(false);
-    const domType = Vue.ref<DomType.awaited | DomType.detached>(DomType.awaited);
-    const choicesMetaMap = Vue.ref<{ [domType: string]: { [name: string]: IChoiceMeta } }>({
-      detached: {},
-      awaited: {},
-    });
-    const coreKlasses = Vue.ref([]);
-    const enabledCount = Vue.computed(() => {
-      let enabledCount: number = 0;
-      if (klasses.value)
-        for (const { meta } of klasses.value) {
-          if (meta.isEnabled) enabledCount += 1;
-        }
-      return enabledCount;
-    });
+	name: "Customizer",
+	components: {},
+	setup() {
+		const klasses = Vue.ref<any[]>([]);
+		const klassesByName = Vue.ref<{ [name: string]: any }>({});
+		const isSaving = Vue.ref(false);
+		const hadErrorSaving = Vue.ref(false);
+		const domType = Vue.ref<DomType.awaited | DomType.detached>(
+			DomType.awaited,
+		);
+		const choicesMetaMap = Vue.ref<{
+			[domType: string]: { [name: string]: IChoiceMeta };
+		}>({
+			detached: {},
+			awaited: {},
+		});
+		const coreKlasses = Vue.ref([]);
+		const enabledCount = Vue.computed(() => {
+			let enabledCount: number = 0;
+			if (klasses.value)
+				for (const { meta } of klasses.value) {
+					if (meta.isEnabled) enabledCount += 1;
+				}
+			return enabledCount;
+		});
 
-    return {
-      enabledCount,
-      klasses,
-      klassesByName,
-      isSaving,
-      hadErrorSaving,
-      domType,
-      choicesMetaMap,
-      coreKlasses,
-    };
-  },
-  methods: {
-    scrollToTop() {
-      window.scrollTo(0, 0);
-    },
+		return {
+			enabledCount,
+			klasses,
+			klassesByName,
+			isSaving,
+			hadErrorSaving,
+			domType,
+			choicesMetaMap,
+			coreKlasses,
+		};
+	},
+	methods: {
+		scrollToTop() {
+			window.scrollTo(0, 0);
+		},
 
-    isActiveDependency(name: string) {
-      const { meta } = this.klassesByName[name];
-      return !!(meta && meta.isEnabled);
-    },
+		isActiveDependency(name: string) {
+			const { meta } = this.klassesByName[name];
+			return !!(meta && meta.isEnabled);
+		},
 
-    isActiveDependent(name: string) {
-      const { meta } = this.klassesByName[name];
-      return !!(meta && meta.isEnabled);
-    },
+		isActiveDependent(name: string) {
+			const { meta } = this.klassesByName[name];
+			return !!(meta && meta.isEnabled);
+		},
 
-    isActiveReferencedBy(klass: any, reference: string) {
-      klass.extra.activelyReferencedBy.has(reference);
-    },
+		isActiveReferencedBy(klass: any, reference: string) {
+			klass.extra.activelyReferencedBy.has(reference);
+		},
 
-    toggleEnableKlass(klass: any) {
-      if (klass.meta.isCore) return;
-      if (klass.meta.isEnabled && !this.klassHasActiveItems(klass)) {
-        klass.meta.isEnabled = false;
-        klass.meta.isHidden = true;
-      } else {
-        klass.meta.isEnabled = true;
-        klass.meta.isHidden = false;
-      }
-    },
+		toggleEnableKlass(klass: any) {
+			if (klass.meta.isCore) return;
+			if (klass.meta.isEnabled && !this.klassHasActiveItems(klass)) {
+				klass.meta.isEnabled = false;
+				klass.meta.isHidden = true;
+			} else {
+				klass.meta.isEnabled = true;
+				klass.meta.isHidden = false;
+			}
+		},
 
-    toggleHideKlass(klass: any) {
-      if (klass.meta.isEnabled) return;
-      klass.meta.isHidden = !klass.meta.isHidden;
-    },
+		toggleHideKlass(klass: any) {
+			if (klass.meta.isEnabled) return;
+			klass.meta.isHidden = !klass.meta.isHidden;
+		},
 
-    toggleHideItem(item: any) {
-      const type = item.meta.itemType.charAt(0).toUpperCase() + item.meta.itemType.slice(1);
-      if (item.meta.isHidden) {
-        item.meta.isHidden = false;
-        item.klass.extra[`hidden${type}Count`] -= 1;
-      } else if (!item.meta.isEnabled && !item.meta.isWritable) {
-        item.meta.isHidden = true;
-        item.klass.extra[`hidden${type}Count`] += 1;
-      }
-    },
+		toggleHideItem(item: any) {
+			const type =
+				item.meta.itemType.charAt(0).toUpperCase() +
+				item.meta.itemType.slice(1);
+			if (item.meta.isHidden) {
+				item.meta.isHidden = false;
+				item.klass.extra[`hidden${type}Count`] -= 1;
+			} else if (!item.meta.isEnabled && !item.meta.isWritable) {
+				item.meta.isHidden = true;
+				item.klass.extra[`hidden${type}Count`] += 1;
+			}
+		},
 
-    toggleHideProperties(klass: any) {
-      klass.extra.unhideHiddenProperties = !klass.extra.unhideHiddenProperties;
-    },
+		toggleHideProperties(klass: any) {
+			klass.extra.unhideHiddenProperties = !klass.extra.unhideHiddenProperties;
+		},
 
-    toggleHideMethods(klass: any) {
-      klass.extra.unhideHiddenProperties = !klass.extra.unhideHiddenProperties;
-    },
+		toggleHideMethods(klass: any) {
+			klass.extra.unhideHiddenProperties = !klass.extra.unhideHiddenProperties;
+		},
 
-    toggleItem(event: any, item: any) {
-      try {
-        const id = event.target.id;
-        const type = id.replace(`${item.name}:`, '');
-        if (type === 'true') {
-          item.meta.isEnabled = true;
-        } else if (type === 'false') {
-          item.meta.isEnabled = false;
-        } else if (type === 'writable') {
-          item.meta.isWritable = !item.meta.isWritable;
-        }
-        if (type === 'abstract') {
-          item.meta.isEnabled = true;
-          item.meta.isAbstract = true;
-        } else if (item.meta.hasOwnProperty('isAbstract')) {
-          item.meta.isAbstract = false;
-        }
-        this.calcKlassStatus(item.klass);
-      } catch (error) {
-        console.log(error);
-      }
-    },
+		toggleItem(event: any, item: any) {
+			try {
+				const id = event.target.id;
+				const type = id.replace(`${item.name}:`, "");
+				if (type === "true") {
+					item.meta.isEnabled = true;
+				} else if (type === "false") {
+					item.meta.isEnabled = false;
+				} else if (type === "writable") {
+					item.meta.isWritable = !item.meta.isWritable;
+				}
+				if (type === "abstract") {
+					item.meta.isEnabled = true;
+					item.meta.isAbstract = true;
+				} else if (Object.hasOwn(item.meta, "isAbstract")) {
+					item.meta.isAbstract = false;
+				}
+				this.calcKlassStatus(item.klass);
+			} catch (error) {
+				console.log(error);
+			}
+		},
 
-    calcKlassStatus(klass: any) {
-      let hasEnabledProperties = false;
-      let hasEnabledMethods = false;
-      let hiddenPropertyCount = 0;
-      let hiddenMethodCount = 0;
-      const references: string[] = [];
-      const activeReferences: string[] = [];
+		calcKlassStatus(klass: any) {
+			let hasEnabledProperties = false;
+			let hasEnabledMethods = false;
+			let hiddenPropertyCount = 0;
+			let hiddenMethodCount = 0;
+			const references: string[] = [];
+			const activeReferences: string[] = [];
 
-      klass.properties.forEach((p: any) => {
-        references.push(...p.customTypes);
-        if (p.meta.isHidden) hiddenPropertyCount += 1;
-        if (!p.meta.isEnabled) return;
-        hasEnabledProperties = true;
-        activeReferences.push(...p.customTypes);
-      });
+			klass.properties.forEach((p: any) => {
+				references.push(...p.customTypes);
+				if (p.meta.isHidden) hiddenPropertyCount += 1;
+				if (!p.meta.isEnabled) return;
+				hasEnabledProperties = true;
+				activeReferences.push(...p.customTypes);
+			});
 
-      klass.methods.forEach((m: any) => {
-        references.push(...m.customTypes);
-        if (m.meta.isHidden) hiddenMethodCount += 1;
-        if (!m.meta.isEnabled) return;
-        hasEnabledMethods = true;
-        activeReferences.push(...m.customTypes);
-      });
+			klass.methods.forEach((m: any) => {
+				references.push(...m.customTypes);
+				if (m.meta.isHidden) hiddenMethodCount += 1;
+				if (!m.meta.isEnabled) return;
+				hasEnabledMethods = true;
+				activeReferences.push(...m.customTypes);
+			});
 
-      klass.extra.hasEnabledProperties = hasEnabledProperties;
-      klass.extra.hasEnabledMethods = hasEnabledMethods;
-      klass.extra.hiddenPropertyCount = hiddenPropertyCount;
-      klass.extra.hiddenMethodCount = hiddenMethodCount;
-      klass.meta.isEnabled = klass.meta.isEnabled || this.klassHasActiveItems(klass);
-      this.updateReferences(klass, new Set(references), new Set(activeReferences));
-    },
+			klass.extra.hasEnabledProperties = hasEnabledProperties;
+			klass.extra.hasEnabledMethods = hasEnabledMethods;
+			klass.extra.hiddenPropertyCount = hiddenPropertyCount;
+			klass.extra.hiddenMethodCount = hiddenMethodCount;
+			klass.meta.isEnabled =
+				klass.meta.isEnabled || this.klassHasActiveItems(klass);
+			this.updateReferences(
+				klass,
+				new Set(references),
+				new Set(activeReferences),
+			);
+		},
 
-    klassHasActiveItems(klass: any): boolean {
-      const { isCore } = klass.meta;
-      const { activelyReferencedBy, hasEnabledProperties, hasEnabledMethods } = klass.extra;
-      const hasActiveReferences = !!activelyReferencedBy.size;
-      return isCore || hasEnabledProperties || hasEnabledMethods || hasActiveReferences;
-    },
+		klassHasActiveItems(klass: any): boolean {
+			const { isCore } = klass.meta;
+			const { activelyReferencedBy, hasEnabledProperties, hasEnabledMethods } =
+				klass.extra;
+			const hasActiveReferences = !!activelyReferencedBy.size;
+			return (
+				isCore ||
+				hasEnabledProperties ||
+				hasEnabledMethods ||
+				hasActiveReferences
+			);
+		},
 
-    updateReferences(referencingKlass: any, references: Set<string>, activeReferences: Set<string>) {
-      references.forEach(reference => {
-        const referencedKlass = this.klassesByName[reference];
-        if (!referencedKlass) {
-          // console.log(`COULD NOT FIND ${reference}`);
-          return;
-        }
-        const { activelyReferencedBy } = referencedKlass.extra;
-        if (activeReferences.has(reference)) {
-          activelyReferencedBy.add(referencingKlass.name);
-          this.klassHasActiveItems(referencedKlass);
-        } else if (activelyReferencedBy.has(reference)) {
-          activelyReferencedBy.delete(referencingKlass.name);
-          this.klassHasActiveItems(referencedKlass);
-        }
-        referencedKlass.meta.isEnabled = this.klassHasActiveItems(referencedKlass);
-      });
-    },
+		updateReferences(
+			referencingKlass: any,
+			references: Set<string>,
+			activeReferences: Set<string>,
+		) {
+			references.forEach((reference) => {
+				const referencedKlass = this.klassesByName[reference];
+				if (!referencedKlass) {
+					// console.log(`COULD NOT FIND ${reference}`);
+					return;
+				}
+				const { activelyReferencedBy } = referencedKlass.extra;
+				if (activeReferences.has(reference)) {
+					activelyReferencedBy.add(referencingKlass.name);
+					this.klassHasActiveItems(referencedKlass);
+				} else if (activelyReferencedBy.has(reference)) {
+					activelyReferencedBy.delete(referencingKlass.name);
+					this.klassHasActiveItems(referencedKlass);
+				}
+				referencedKlass.meta.isEnabled =
+					this.klassHasActiveItems(referencedKlass);
+			});
+		},
 
-    async saveSelection() {
-      if (this.isSaving) return;
-      const metasByName: any = {};
-      this.isSaving = true;
-      this.klasses.forEach(klass => {
-        metasByName[klass.name] = klass.meta;
-        klass.properties.forEach(p => (metasByName[p.name] = p.meta));
-        klass.methods.forEach(m => (metasByName[m.name] = m.meta));
-      });
+		async saveSelection() {
+			if (this.isSaving) return;
+			const metasByName: any = {};
+			this.isSaving = true;
+			this.klasses.forEach((klass) => {
+				metasByName[klass.name] = klass.meta;
+				klass.properties.forEach((p) => (metasByName[p.name] = p.meta));
+				klass.methods.forEach((m) => (metasByName[m.name] = m.meta));
+			});
 
-      const params = { domType: this.domType, metasByName };
-      try {
-        await Axios.post('/choices', params);
-      } catch (error) {
-        console.log('ERROR SAVING: ', error);
-        this.hadErrorSaving = true;
-        setTimeout(() => (this.hadErrorSaving = false), 5000);
-      }
-      this.isSaving = false;
-    },
+			const params = { domType: this.domType, metasByName };
+			try {
+				await Axios.post("/choices", params);
+			} catch (error) {
+				console.log("ERROR SAVING: ", error);
+				this.hadErrorSaving = true;
+				setTimeout(() => (this.hadErrorSaving = false), 5000);
+			}
+			this.isSaving = false;
+		},
 
-    createKlassExtra(): IKlassExtra {
-      return {
-        hasEnabledProperties: false,
-        hasEnabledMethods: false,
-        activelyReferencedBy: new Set(),
-        activeDependencies: new Set(),
-        hiddenPropertyCount: 0,
-        hiddenMethodCount: 0,
-        unhideHiddenProperties: false,
-        unhideHiddenMethods: false,
-      };
-    },
+		createKlassExtra(): IKlassExtra {
+			return {
+				hasEnabledProperties: false,
+				hasEnabledMethods: false,
+				activelyReferencedBy: new Set(),
+				activeDependencies: new Set(),
+				hiddenPropertyCount: 0,
+				hiddenMethodCount: 0,
+				unhideHiddenProperties: false,
+				unhideHiddenMethods: false,
+			};
+		},
 
-    refreshBuildData() {
-      const metaByName = this.choicesMetaMap[this.domType];
+		refreshBuildData() {
+			const metaByName = this.choicesMetaMap[this.domType];
 
-      for (const klass of this.klasses) {
-        klass.extra = this.createKlassExtra();
-        klass.meta = metaByName[klass.name];
-        for (const property of klass.properties) {
-          property.meta = metaByName[property.name];
-        }
-        for (const method of klass.methods) {
-          method.meta = metaByName[method.name];
-        }
-      }
+			for (const klass of this.klasses) {
+				klass.extra = this.createKlassExtra();
+				klass.meta = metaByName[klass.name];
+				for (const property of klass.properties) {
+					property.meta = metaByName[property.name];
+				}
+				for (const method of klass.methods) {
+					method.meta = metaByName[method.name];
+				}
+			}
 
-      for (const klass of this.klasses) {
-        this.calcKlassStatus(klass);
-      }
-    },
-  },
+			for (const klass of this.klasses) {
+				this.calcKlassStatus(klass);
+			}
+		},
+	},
 
-  async mounted() {
-    const {
-      data: { klasses, choicesMetaMap },
-    } = await Axios.get('/data');
-    const metaByName = choicesMetaMap[this.domType];
+	async mounted() {
+		const {
+			data: { klasses, choicesMetaMap },
+		} = await Axios.get("/data");
+		const metaByName = choicesMetaMap[this.domType];
 
-    for (const klass of klasses) {
-      klass.extra = this.createKlassExtra();
-      klass.meta = metaByName[klass.name];
+		for (const klass of klasses) {
+			klass.extra = this.createKlassExtra();
+			klass.meta = metaByName[klass.name];
 
-      for (const property of klass.properties) {
-        property.klass = klass;
-        property.meta = metaByName[property.name];
-      }
-      for (const method of klass.methods) {
-        method.klass = klass;
-        method.meta = metaByName[method.name];
-      }
-      if (klass.meta.isCore) {
-        this.coreKlasses.push(klass);
-      }
-      this.klassesByName[klass.name] = klass;
-    }
+			for (const property of klass.properties) {
+				property.klass = klass;
+				property.meta = metaByName[property.name];
+			}
+			for (const method of klass.methods) {
+				method.klass = klass;
+				method.meta = metaByName[method.name];
+			}
+			if (klass.meta.isCore) {
+				this.coreKlasses.push(klass);
+			}
+			this.klassesByName[klass.name] = klass;
+		}
 
-    Object.assign(this.klasses, klasses);
-    Object.assign(this.choicesMetaMap, choicesMetaMap);
+		Object.assign(this.klasses, klasses);
+		Object.assign(this.choicesMetaMap, choicesMetaMap);
 
-    for (const klass of this.klasses) {
-      this.calcKlassStatus(klass);
-    }
-  },
+		for (const klass of this.klasses) {
+			this.calcKlassStatus(klass);
+		}
+	},
 });
 </script>
 

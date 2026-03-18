@@ -1,4 +1,4 @@
-import { createApp } from 'vue';
-import App from './customizer.vue';
+import { createApp } from "vue";
+import App from "./customizer.vue";
 
-createApp(App).mount('#app');
+createApp(App).mount("#app");

@@ -1,4 +1,4 @@
-import * as Fs from "fs";
+import * as Fs from "node:fs";
 import Components from "./Components";
 import type IComponentFilters from "./interfaces/IComponentFilters";
 import type { IComponentFilter } from "./interfaces/IComponentFilters";
