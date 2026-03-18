@@ -1,34 +1,6 @@
 {
 	"name": "@ulixee/desktop-core",
-	"main": "index.js",
 	"repository": "git@github.com:ulixee/platform.git",
-	"license": "MIT",
-	"dependencies": {
-		"@ulixee/commons": "workspace:*",
-		"@ulixee/datastore": "workspace:*",
-		"@ulixee/datastore-plugins-hero": "workspace:*",
-		"@ulixee/default-browser-emulator": "workspace:*",
-		"@ulixee/desktop-interfaces": "workspace:*",
-		"@ulixee/hero": "workspace:*",
-		"@ulixee/hero-interfaces": "workspace:*",
-		"@ulixee/hero-plugin-utils": "workspace:*",
-		"@ulixee/hero-timetravel": "workspace:*",
-		"@ulixee/net": "workspace:*",
-		"@ulixee/platform-specification": "workspace:*",
-		"@ulixee/unblocked-agent": "workspace:*",
-		"@ulixee/unblocked-specification": "workspace:*",
-		"fuse.js": "^6.5.3",
-		"nanoid": "^3.3.11",
-		"ws": "^8.18.0"
-	},
-	"peerDependencies": {
-		"@ulixee/datastore-core": "workspace:*",
-		"@ulixee/hero-core": "workspace:*"
-	},
-	"devDependencies": {
-		"@types/chrome": "^0.0.154",
-		"@ulixee/datastore-core": "workspace:*",
-		"@ulixee/datastore-testing": "workspace:*",
-		"linkedom": "^0.14.11"
-	}
+	"main": "index.js",
+	"license": "MIT"
 }
