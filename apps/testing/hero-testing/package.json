@@ -1,6 +1,0 @@
-{
-	"name": "@ulixee/hero-testing",
-	"main": "index.js",
-	"description": "Helpers and stubs for testing",
-	"private": true
-}

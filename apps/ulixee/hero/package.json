@@ -1,6 +1,5 @@
 {
 	"name": "@ulixee/hero",
-
 	"description": "The client interface for Hero",
 	"exports": {
 		".": {
@@ -30,7 +29,6 @@
 		"linkedom": "^0.14.11"
 	},
 	"devDependencies": {
-		"@ulixee/hero-core": "workspace:*",
-		"@ulixee/hero-testing": "workspace:*"
+		"@ulixee/hero-core": "workspace:*"
 	}
 }
