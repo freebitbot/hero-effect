@@ -1,16 +1,17 @@
-import ITypedEventEmitter from '@ulixee/commons/interfaces/ITypedEventEmitter';
+import type ITypedEventEmitter from "@ulixee/commons/interfaces/ITypedEventEmitter";
 
-export default interface ITransport extends ITypedEventEmitter<ITransportEvents> {
-  host?: string;
-  remoteId?: string;
-  isConnected: boolean;
-  connect?(timeoutMs?: number): Promise<void>;
-  disconnect?(fatalError?: Error): void;
-  send(message: any): Promise<void>;
+export default interface ITransport
+	extends ITypedEventEmitter<ITransportEvents> {
+	host?: string;
+	remoteId?: string;
+	isConnected: boolean;
+	connect?(timeoutMs?: number): Promise<void>;
+	disconnect?(fatalError?: Error): void;
+	send(message: any): Promise<void>;
 }
 
 export interface ITransportEvents {
-  message: any;
-  disconnected: Error | null;
-  connected: void;
+	message: any;
+	disconnected: Error | null;
+	connected: void;
 }

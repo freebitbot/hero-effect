@@ -1,9 +1,10 @@
-import IApiHandlers, { IApiSpec } from './IApiHandlers';
+import type IApiHandlers from "./IApiHandlers";
+import type { IApiSpec } from "./IApiHandlers";
 
 export default interface ICoreResponsePayload<
-  ApiHandlers extends IApiHandlers,
-  Api extends keyof IApiSpec<ApiHandlers>,
+	ApiHandlers extends IApiHandlers,
+	Api extends keyof IApiSpec<ApiHandlers>,
 > {
-  responseId: string;
-  data: IApiSpec<ApiHandlers>[Api]['result'];
+	responseId: string;
+	data: IApiSpec<ApiHandlers>[Api]["result"];
 }
