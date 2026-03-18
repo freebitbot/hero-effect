@@ -1,5 +1,5 @@
 enum DeviceCategory {
-  desktop = 'desktop',
+	desktop = "desktop",
 }
 
 export default DeviceCategory;

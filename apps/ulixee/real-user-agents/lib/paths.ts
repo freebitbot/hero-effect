@@ -1,22 +1,22 @@
-import * as Path from 'path';
+import * as Path from "path";
 
-const Paths = require('../paths.json');
+const Paths = require("../paths.json");
 
 let PathsLocal;
 try {
-  // eslint-disable-next-line import/no-unresolved
-  PathsLocal = require('../paths.local.json');
+	// eslint-disable-next-line import/no-unresolved
+	PathsLocal = require("../paths.local.json");
 } catch {
-  PathsLocal = {};
+	PathsLocal = {};
 }
 
 const PathsMerged = {
-  ...Paths,
-  ...PathsLocal,
+	...Paths,
+	...PathsLocal,
 };
 
-export const dataDir = Path.resolve(__dirname, '..', PathsMerged.data);
+export const dataDir = Path.resolve(__dirname, "..", PathsMerged.data);
 
 export function getDataFilePath(path: string): string {
-  return Path.join(dataDir, path);
+	return Path.join(dataDir, path);
 }

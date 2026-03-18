@@ -1,18 +1,20 @@
-import '@ulixee/commons/lib/SourceMapSupport';
-import { Agent } from '@ulixee/unblocked-agent';
-import { readFileAsJson } from '@ulixee/commons/lib/fileUtils';
-import * as Fs from 'fs';
-import { getDataFilePath } from '../lib/paths';
+import "@ulixee/commons/lib/SourceMapSupport";
+import { readFileAsJson } from "@ulixee/commons/lib/fileUtils";
+import { Agent } from "@ulixee/unblocked-agent";
+import * as Fs from "fs";
+import { getDataFilePath } from "../lib/paths";
 
 export default async function importMacOsVersions(): Promise<void> {
-  const agent = new Agent({ options: { disableMitm: true } });
-  try {
-    const page = await agent.newPage();
-    await page.goto('https://en.wikipedia.org/wiki/Darwin_%28operating_system%29#Release_history');
-    await page.waitForLoad('DomContentLoaded');
-    const versions = await page.mainFrame.evaluate<
-      { darwinVersion: string; macOsVersion: string }[]
-    >(`(() => {
+	const agent = new Agent({ options: { disableMitm: true } });
+	try {
+		const page = await agent.newPage();
+		await page.goto(
+			"https://en.wikipedia.org/wiki/Darwin_%28operating_system%29#Release_history",
+		);
+		await page.waitForLoad("DomContentLoaded");
+		const versions = await page.mainFrame.evaluate<
+			{ darwinVersion: string; macOsVersion: string }[]
+		>(`(() => {
     const results = [];
     let headerKeys = [];
     let savedCols = [];
@@ -60,25 +62,27 @@ export default async function importMacOsVersions(): Promise<void> {
     }
     return results;
   })()`);
-    const filePath = getDataFilePath('os-mappings/darwinToMacOsVersionMap.json');
-    const existing = await readFileAsJson<{ [osId: string]: string }>(filePath);
-    for (const { darwinVersion, macOsVersion } of versions) {
-      existing[darwinVersion] = macOsVersion;
-    }
-    const sorted = Object.fromEntries(
-      Object.entries(existing).sort(([a], [b]) => {
-        const aParts = a.split('.');
-        const bParts = b.split('.');
-        for (let i = 0; i < Math.max(aParts.length, bParts.length); i += 1) {
-          const aValue = Number(aParts[i] ?? 0);
-          const bValue = Number(bParts[i] ?? 0);
-          if (aValue !== bValue) return aValue - bValue;
-        }
-        return 0;
-      }),
-    );
-    await Fs.promises.writeFile(filePath, JSON.stringify(sorted, null, 2));
-  } finally {
-    await agent.close();
-  }
+		const filePath = getDataFilePath(
+			"os-mappings/darwinToMacOsVersionMap.json",
+		);
+		const existing = await readFileAsJson<{ [osId: string]: string }>(filePath);
+		for (const { darwinVersion, macOsVersion } of versions) {
+			existing[darwinVersion] = macOsVersion;
+		}
+		const sorted = Object.fromEntries(
+			Object.entries(existing).sort(([a], [b]) => {
+				const aParts = a.split(".");
+				const bParts = b.split(".");
+				for (let i = 0; i < Math.max(aParts.length, bParts.length); i += 1) {
+					const aValue = Number(aParts[i] ?? 0);
+					const bValue = Number(bParts[i] ?? 0);
+					if (aValue !== bValue) return aValue - bValue;
+				}
+				return 0;
+			}),
+		);
+		await Fs.promises.writeFile(filePath, JSON.stringify(sorted, null, 2));
+	} finally {
+		await agent.close();
+	}
 }
