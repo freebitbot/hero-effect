@@ -1,4 +1,4 @@
 {
-  "emulator-data": "./data",
-  "root": "."
+	"emulator-data": "./data",
+	"root": "."
 }
