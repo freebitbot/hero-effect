@@ -1,7 +1,13 @@
 {
 	"name": "@ulixee/cloud",
-
-	"description": "The Ulixee Cloud is an out-of-the box tool to host and deploy Ulixee Datastores and Hero scripts. It allows you to easily create a paid API service.",
+	"dependencies": {
+		"@ulixee/commons": "workspace:*",
+		"@ulixee/hero-core": "workspace:*",
+		"@ulixee/hero-interfaces": "workspace:*",
+		"@ulixee/net": "workspace:*",
+		"commander": "^9.5.0",
+		"ws": "^8.18.0"
+	},
 	"exports": {
 		".": {
 			"types": "./index.d.ts",
@@ -18,25 +24,10 @@
 		}
 	},
 	"bin": "./bin/cli.js",
+	"description": "The Ulixee Cloud is an out-of-the box tool to host and deploy Ulixee Datastores and Hero scripts. It allows you to easily create a paid API service.",
 	"scripts": {
 		"start": "node bin/cli.js start",
 		"start:alive": "node -r @ulixee/desktop-core/register bin/cli.js start",
 		"preversion": "node ../../build/cloud/main/scripts/gatherEnvSettings.js"
-	},
-	"dependencies": {
-		"@ulixee/commons": "workspace:*",
-		"@ulixee/datastore-core": "workspace:*",
-		"@ulixee/datastore-plugins-hero-core": "workspace:*",
-		"@ulixee/desktop-core": "workspace:*",
-		"@ulixee/hero-core": "workspace:*",
-		"@ulixee/hero-interfaces": "workspace:*",
-		"@ulixee/net": "workspace:*",
-		"@ulixee/platform-specification": "workspace:*",
-		"@ulixee/platform-utils": "workspace:*",
-		"commander": "^9.5.0",
-		"ws": "^8.18.0"
-	},
-	"devDependencies": {
-		"@ulixee/datastore-testing": "workspace:*"
 	}
 }
