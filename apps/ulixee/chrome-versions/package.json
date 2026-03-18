@@ -3,7 +3,6 @@
 	"name": "@ulixee/chrome-versions",
 	"private": true,
 	"scripts": {
-		"postinstall": "tsc --b --clean && bun run build",
 		"build": "tsc --b",
 		"env": "env $(cat .env | xargs)",
 		"mac": "bun run build && env $(cat .env | xargs) SYNC_OS_KEYS=mac,mac_arm64 SA_SHOW_REPLAY=false bun ./scripts/syncVersions.js",
