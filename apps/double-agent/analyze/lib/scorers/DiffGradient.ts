@@ -1,3 +1,3 @@
-import BaseScorer from './BaseScorer';
+import BaseScorer from "./BaseScorer";
 
 export default class DiffGradient extends BaseScorer {}

@@ -1,21 +1,25 @@
-import BaseCheck, { CheckType, ICheckIdentity, ICheckMeta } from './BaseCheck';
+import BaseCheck, {
+	CheckType,
+	type ICheckIdentity,
+	type ICheckMeta,
+} from "./BaseCheck";
 
 export default class DecimalLengthCheck extends BaseCheck {
-  public readonly prefix = 'DECL';
-  public readonly type = CheckType.Individual;
+	public readonly prefix = "DECL";
+	public readonly type = CheckType.Individual;
 
-  private readonly length: number;
+	private readonly length: number;
 
-  constructor(identity: ICheckIdentity, meta: ICheckMeta, length: number) {
-    super(identity, meta);
-    this.length = length;
-  }
+	constructor(identity: ICheckIdentity, meta: ICheckMeta, length: number) {
+		super(identity, meta);
+		this.length = length;
+	}
 
-  public get signature(): string {
-    return `${this.id}:${this.length}`;
-  }
+	public get signature(): string {
+		return `${this.id}:${this.length}`;
+	}
 
-  public get args(): any[] {
-    return [this.length];
-  }
+	public get args(): any[] {
+		return [this.length];
+	}
 }

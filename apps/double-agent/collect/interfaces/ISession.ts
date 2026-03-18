@@ -1,14 +1,14 @@
-import IRequestDetails from './IRequestDetails';
-import IUserIdentifiers from './IUserIdentifier';
-import IAsset from './IAsset';
+import type IAsset from "./IAsset";
+import type IRequestDetails from "./IRequestDetails";
+import type IUserIdentifiers from "./IUserIdentifier";
 
 export default interface ISession {
-  requests: IRequestDetails[];
-  identifiers: IUserIdentifiers[];
-  assetsNotLoaded: IAsset[];
-  expectedAssets: (IAsset & { fromUrl?: string })[];
-  pluginsRun: Set<string>;
-  userAgentString: string;
-  expectedUserAgentString: string;
-  id: string;
+	requests: IRequestDetails[];
+	identifiers: IUserIdentifiers[];
+	assetsNotLoaded: IAsset[];
+	expectedAssets: (IAsset & { fromUrl?: string })[];
+	pluginsRun: Set<string>;
+	userAgentString: string;
+	expectedUserAgentString: string;
+	id: string;
 }

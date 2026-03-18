@@ -1,20 +1,24 @@
-import { URL } from 'url';
-import { IncomingMessage, ServerResponse } from 'http';
-import * as http2 from 'http2';
-import IRequestDetails from './IRequestDetails';
-import Session from '../lib/Session';
-import { DomainType } from '../lib/DomainUtils';
-import BaseServer from '../servers/BaseServer';
-import { IPluginPage } from '../lib/Plugin';
+import type { IncomingMessage, ServerResponse } from "http";
+import type * as http2 from "http2";
+import type { URL } from "url";
+import type { DomainType } from "../lib/DomainUtils";
+import type { IPluginPage } from "../lib/Plugin";
+import type Session from "../lib/Session";
+import type BaseServer from "../servers/BaseServer";
+import type IRequestDetails from "./IRequestDetails";
 
 export default interface IRequestContext {
-  server: BaseServer;
-  req: IncomingMessage | http2.Http2ServerRequest;
-  res: ServerResponse | http2.Http2ServerResponse;
-  url: URL;
-  requestDetails: IRequestDetails;
-  session: Session;
-  page: IPluginPage;
-  nextPageLink: string;
-  buildUrl: (path: string, domainType?: keyof typeof DomainType, protocol?: string) => string;
+	server: BaseServer;
+	req: IncomingMessage | http2.Http2ServerRequest;
+	res: ServerResponse | http2.Http2ServerResponse;
+	url: URL;
+	requestDetails: IRequestDetails;
+	session: Session;
+	page: IPluginPage;
+	nextPageLink: string;
+	buildUrl: (
+		path: string,
+		domainType?: keyof typeof DomainType,
+		protocol?: string,
+	) => string;
 }

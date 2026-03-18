@@ -1,7 +1,7 @@
-import { URL } from 'url';
+import type { URL } from "url";
 
 export default interface IDetectionDomains {
-  main: URL;
-  external?: URL;
-  subdomain?: URL;
+	main: URL;
+	external?: URL;
+	subdomain?: URL;
 }
