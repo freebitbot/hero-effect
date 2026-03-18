@@ -1,3 +1,3 @@
-import TypedEventEmitter from './TypedEventEmitter';
+import TypedEventEmitter from "./TypedEventEmitter";
 
 export { TypedEventEmitter };
