@@ -1,10 +1,10 @@
-import IItemInputOutput from '../interfaces/IItemInputOutput';
+import type IItemInputOutput from "../interfaces/IItemInputOutput";
 
 export default interface ITypes
-  extends Record<
-    string,
-    {
-      extractors: Record<string, IItemInputOutput>;
-      tables: Record<string, IItemInputOutput>;
-    }
-  > {}
+	extends Record<
+		string,
+		{
+			extractors: Record<string, IItemInputOutput>;
+			tables: Record<string, IItemInputOutput>;
+		}
+	> {}

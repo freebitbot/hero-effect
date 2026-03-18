@@ -146,81 +146,86 @@
 </template>
 
 <script lang="ts">
-import * as Vue from 'vue';
-import Moment from 'moment';
-import { docpageConfigPromise, serverDetailsPromise } from '../main';
-import Prism from '../components/Prism.vue';
-import Fields from '../components/Fields.vue';
-import Navbar from '../layouts/Navbar.vue';
-import { formatCurrency, getCredit } from '../lib/Utils';
+import Moment from "moment";
+import * as Vue from "vue";
+import Fields from "../components/Fields.vue";
+import Prism from "../components/Prism.vue";
+import Navbar from "../layouts/Navbar.vue";
+import { formatCurrency, getCredit } from "../lib/Utils";
+import { docpageConfigPromise, serverDetailsPromise } from "../main";
 
 export default Vue.defineComponent({
-  components: {
-    Prism,
-    Fields,
-    Navbar,
-  },
-  async setup() {
-    const config = await docpageConfigPromise;
+	components: {
+		Prism,
+		Fields,
+		Navbar,
+	},
+	async setup() {
+		const config = await docpageConfigPromise;
 
-    document.title = `${config.name} - Ulixee Datastore`;
-    const { tablesByName, extractorsByName, crawlersByName, defaultExample } = config;
-    const prices: number[] = [];
-    for (const item of [
-      ...Object.values(tablesByName ?? {}),
-      ...Object.values(extractorsByName ?? {}),
-      ...Object.values(crawlersByName ?? {}),
-    ] as any[]) {
-      for (const price of item.prices) {
-        prices.push(price.basePrice);
-      }
-    }
-    for (const [key, arg] of Object.entries(defaultExample.args)) {
-      if (typeof arg === 'object' && 'func' in arg) {
-        let result: Moment.Moment;
-        if (arg.func === 'add') {
-          result = Moment().add(arg.quantity, arg.units);
-        } else if (arg.func === 'subtract') {
-          result = Moment().subtract(arg.quantity, arg.units);
-        } else {
-          continue;
-        }
-        const entity =
-          defaultExample.type === 'crawler'
-            ? crawlersByName[defaultExample.name]
-            : extractorsByName[defaultExample.name];
-        const field = entity.schema?.input[key];
-        if (!field) continue;
-        if (field?.format === 'date') defaultExample.args[key] = result.format('YYYY-MM-DD');
-        else if (field?.format === 'time') defaultExample.args[key] = result.format('HH:mm');
-        else defaultExample.args[key] = result.toDate() as any;
-      }
-    }
+		document.title = `${config.name} - Ulixee Datastore`;
+		const { tablesByName, extractorsByName, crawlersByName, defaultExample } =
+			config;
+		const prices: number[] = [];
+		for (const item of [
+			...Object.values(tablesByName ?? {}),
+			...Object.values(extractorsByName ?? {}),
+			...Object.values(crawlersByName ?? {}),
+		] as any[]) {
+			for (const price of item.prices) {
+				prices.push(price.basePrice);
+			}
+		}
+		for (const [key, arg] of Object.entries(defaultExample.args)) {
+			if (typeof arg === "object" && "func" in arg) {
+				let result: Moment.Moment;
+				if (arg.func === "add") {
+					result = Moment().add(arg.quantity, arg.units);
+				} else if (arg.func === "subtract") {
+					result = Moment().subtract(arg.quantity, arg.units);
+				} else {
+					continue;
+				}
+				const entity =
+					defaultExample.type === "crawler"
+						? crawlersByName[defaultExample.name]
+						: extractorsByName[defaultExample.name];
+				const field = entity.schema?.input[key];
+				if (!field) continue;
+				if (field?.format === "date")
+					defaultExample.args[key] = result.format("YYYY-MM-DD");
+				else if (field?.format === "time")
+					defaultExample.args[key] = result.format("HH:mm");
+				else defaultExample.args[key] = result.toDate() as any;
+			}
+		}
 
-    const { ipAddress, port } = await serverDetailsPromise;
-    const avgPricePerQuery =
-      prices.length === 0
-        ? 0
-        : prices.reduce((total, price) => total + price, 0) / prices.length / 1_000_000;
+		const { ipAddress, port } = await serverDetailsPromise;
+		const avgPricePerQuery =
+			prices.length === 0
+				? 0
+				: prices.reduce((total, price) => total + price, 0) /
+					prices.length /
+					1_000_000;
 
-    const createdAt = Moment(config.createdAt);
-    const yesterday = Moment().subtract(1, 'day');
-    const lastUsedAt = yesterday.isBefore(createdAt) ? createdAt : yesterday;
-    return {
-      config,
-      createdAt,
-      lastUsedAt,
-      ipAddress,
-      port,
-      defaultExample,
-      tables: Object.values(tablesByName || {}),
-      extractors: Object.values(extractorsByName || {}),
-      crawlers: Object.values(crawlersByName || {}),
-      avgPricePerQuery: formatCurrency(avgPricePerQuery as number),
-      exampleType: Vue.ref('client'),
-      authString: getCredit(),
-    };
-  },
+		const createdAt = Moment(config.createdAt);
+		const yesterday = Moment().subtract(1, "day");
+		const lastUsedAt = yesterday.isBefore(createdAt) ? createdAt : yesterday;
+		return {
+			config,
+			createdAt,
+			lastUsedAt,
+			ipAddress,
+			port,
+			defaultExample,
+			tables: Object.values(tablesByName || {}),
+			extractors: Object.values(extractorsByName || {}),
+			crawlers: Object.values(crawlersByName || {}),
+			avgPricePerQuery: formatCurrency(avgPricePerQuery as number),
+			exampleType: Vue.ref("client"),
+			authString: getCredit(),
+		};
+	},
 });
 </script>
 

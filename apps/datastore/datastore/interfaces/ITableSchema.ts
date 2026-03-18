@@ -1,4 +1,4 @@
-import { ExtractSchemaType, ISchemaAny } from '@ulixee/schema';
+import { ExtractSchemaType, type ISchemaAny } from "@ulixee/schema";
 
 export { ExtractSchemaType };
 

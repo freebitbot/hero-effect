@@ -22,54 +22,56 @@
 </template>
 
 <script lang="ts">
-import * as Vue from 'vue';
-import { PropType } from 'vue';
-import { IAnySchemaJson } from '@ulixee/schema/interfaces/ISchemaJson';
+import type { IAnySchemaJson } from "@ulixee/schema/interfaces/ISchemaJson";
+import type { PropType } from "vue";
+import * as Vue from "vue";
 
 export default Vue.defineComponent({
-  name: 'Field',
-  components: {},
-  props: {
-    name: {
-      default: '',
-    },
-    field: {
-      type: Object as PropType<IAnySchemaJson>,
-      default: () => ({}) as IAnySchemaJson,
-    },
-  },
-  setup(props) {
-    const nestedFields: [string, IAnySchemaJson][] = [];
-    if (props.field?.typeName === 'array') {
-      if (props.field.element.typeName === 'object') {
-        for (const [name, field] of Object.entries(props.field.element.fields)) {
-          nestedFields.push([name, field]);
-        }
-      } else {
-        props.field.typeName = `${props.field.element.typeName}[]`;
-      }
-    } else if (props.field?.typeName === 'record') {
-      if (props.field.keys) nestedFields.push(['keys', props.field.keys]);
-      nestedFields.push(['values', props.field.values]);
-    } else if (props.field?.typeName === 'object') {
-      for (const [name, field] of Object.entries(props.field.fields)) {
-        nestedFields.push([name, field]);
-      }
-    }
-    return {
-      attributes: Vue.ref(
-        Object.keys(props.field).filter(
-          x =>
-            x !== 'description' &&
-            x !== 'typeName' &&
-            x !== 'element' &&
-            x !== 'field' &&
-            x !== 'optional',
-        ),
-      ),
-      nestedFields: Vue.ref(nestedFields),
-    };
-  },
+	name: "Field",
+	components: {},
+	props: {
+		name: {
+			default: "",
+		},
+		field: {
+			type: Object as PropType<IAnySchemaJson>,
+			default: () => ({}) as IAnySchemaJson,
+		},
+	},
+	setup(props) {
+		const nestedFields: [string, IAnySchemaJson][] = [];
+		if (props.field?.typeName === "array") {
+			if (props.field.element.typeName === "object") {
+				for (const [name, field] of Object.entries(
+					props.field.element.fields,
+				)) {
+					nestedFields.push([name, field]);
+				}
+			} else {
+				props.field.typeName = `${props.field.element.typeName}[]`;
+			}
+		} else if (props.field?.typeName === "record") {
+			if (props.field.keys) nestedFields.push(["keys", props.field.keys]);
+			nestedFields.push(["values", props.field.values]);
+		} else if (props.field?.typeName === "object") {
+			for (const [name, field] of Object.entries(props.field.fields)) {
+				nestedFields.push([name, field]);
+			}
+		}
+		return {
+			attributes: Vue.ref(
+				Object.keys(props.field).filter(
+					(x) =>
+						x !== "description" &&
+						x !== "typeName" &&
+						x !== "element" &&
+						x !== "field" &&
+						x !== "optional",
+				),
+			),
+			nestedFields: Vue.ref(nestedFields),
+		};
+	},
 });
 </script>
 

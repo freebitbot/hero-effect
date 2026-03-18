@@ -1,395 +1,421 @@
-import { assert, toUrl } from '@ulixee/commons/lib/utils';
-import { IApiSpec } from '@ulixee/net/interfaces/IApiHandlers';
-import ICoreResponsePayload from '@ulixee/net/interfaces/ICoreResponsePayload';
-import IUnixTime from '@ulixee/net/interfaces/IUnixTime';
-import { IDatastoreApis } from '@ulixee/platform-specification/datastore';
-import IDatastoreManifest from '@ulixee/platform-specification/types/IDatastoreManifest';
-import { ISchemaAny } from '@ulixee/schema';
-import { SqlParser } from '@ulixee/sql-engine';
-import ConnectionFactory from '../connections/ConnectionFactory';
-import ConnectionToDatastoreCore from '../connections/ConnectionToDatastoreCore';
-import IDatastoreComponents, {
-  TCrawlers,
-  TExtractors,
-  TTables,
-} from '../interfaces/IDatastoreComponents';
-import IDatastoreHostLookup, { IDatastoreHost } from '../interfaces/IDatastoreHostLookup';
-import IDatastoreMetadata from '../interfaces/IDatastoreMetadata';
-import IExtractorRunOptions from '../interfaces/IExtractorRunOptions';
-import IPaymentService from '../interfaces/IPaymentService';
-import IQueryOptions from '../interfaces/IQueryOptions';
-import IStorageEngine from '../interfaces/IStorageEngine';
-import SqliteStorageEngine from '../storage-engines/SqliteStorageEngine';
-import type Crawler from './Crawler';
-import CreditsTable from './CreditsTable';
-import DatastoreApiClient from './DatastoreApiClient';
-import DatastoreLookup from './DatastoreLookup';
-import Extractor from './Extractor';
-import type PassthroughExtractor from './PassthroughExtractor';
-import PassthroughTable from './PassthroughTable';
-import Table from './Table';
+import { assert, toUrl } from "@ulixee/commons/lib/utils";
+import type { IApiSpec } from "@ulixee/net/interfaces/IApiHandlers";
+import type ICoreResponsePayload from "@ulixee/net/interfaces/ICoreResponsePayload";
+import type IUnixTime from "@ulixee/net/interfaces/IUnixTime";
+import type { IDatastoreApis } from "@ulixee/platform-specification/datastore";
+import type IDatastoreManifest from "@ulixee/platform-specification/types/IDatastoreManifest";
+import type { ISchemaAny } from "@ulixee/schema";
+import { SqlParser } from "@ulixee/sql-engine";
+import ConnectionFactory from "../connections/ConnectionFactory";
+import type ConnectionToDatastoreCore from "../connections/ConnectionToDatastoreCore";
+import type IDatastoreComponents from "../interfaces/IDatastoreComponents";
+import type {
+	TCrawlers,
+	TExtractors,
+	TTables,
+} from "../interfaces/IDatastoreComponents";
+import type IDatastoreHostLookup from "../interfaces/IDatastoreHostLookup";
+import type { IDatastoreHost } from "../interfaces/IDatastoreHostLookup";
+import type IDatastoreMetadata from "../interfaces/IDatastoreMetadata";
+import type IExtractorRunOptions from "../interfaces/IExtractorRunOptions";
+import type IPaymentService from "../interfaces/IPaymentService";
+import type IQueryOptions from "../interfaces/IQueryOptions";
+import type IStorageEngine from "../interfaces/IStorageEngine";
+import SqliteStorageEngine from "../storage-engines/SqliteStorageEngine";
+import type Crawler from "./Crawler";
+import CreditsTable from "./CreditsTable";
+import DatastoreApiClient from "./DatastoreApiClient";
+import DatastoreLookup from "./DatastoreLookup";
+import Extractor from "./Extractor";
+import type PassthroughExtractor from "./PassthroughExtractor";
+import type PassthroughTable from "./PassthroughTable";
+import Table from "./Table";
 
-const pkg = require('../package.json');
+const pkg = require("../package.json");
 
 let lastInstanceId = 0;
 
 export default class DatastoreInternal<
-  TTable extends TTables = TTables,
-  TExtractor extends TExtractors = TExtractors,
-  TCrawler extends TCrawlers = TCrawlers,
-  TComponents extends IDatastoreComponents<TTable, TExtractor, TCrawler> = IDatastoreComponents<
-    TTable,
-    TExtractor,
-    TCrawler
-  >,
+	TTable extends TTables = TTables,
+	TExtractor extends TExtractors = TExtractors,
+	TCrawler extends TCrawlers = TCrawlers,
+	TComponents extends IDatastoreComponents<
+		TTable,
+		TExtractor,
+		TCrawler
+	> = IDatastoreComponents<TTable, TExtractor, TCrawler>,
 > {
-  #connectionToCore: ConnectionToDatastoreCore;
-  #isClosingPromise: Promise<void>;
+	#connectionToCore: ConnectionToDatastoreCore;
+	#isClosingPromise: Promise<void>;
 
-  public storageEngine: IStorageEngine;
-  public manifest: IDatastoreManifest;
-  public remotePaymentService: IPaymentService;
-  public readonly metadata: IDatastoreMetadata;
-  public instanceId: string;
-  public components: TComponents;
-  public readonly extractors: TExtractor = {} as any;
-  public readonly tables: TTable = {} as any;
-  public readonly crawlers: TCrawler = {} as any;
-  public readonly affiliateId: string;
+	public storageEngine: IStorageEngine;
+	public manifest: IDatastoreManifest;
+	public remotePaymentService: IPaymentService;
+	public readonly metadata: IDatastoreMetadata;
+	public instanceId: string;
+	public components: TComponents;
+	public readonly extractors: TExtractor = {} as any;
+	public readonly tables: TTable = {} as any;
+	public readonly crawlers: TCrawler = {} as any;
+	public readonly affiliateId: string;
 
-  public get remoteDatastores(): TComponents['remoteDatastores'] {
-    return this.components.remoteDatastores;
-  }
+	public get remoteDatastores(): TComponents["remoteDatastores"] {
+		return this.components.remoteDatastores;
+	}
 
-  public get authenticateIdentity(): TComponents['authenticateIdentity'] {
-    return this.components.authenticateIdentity;
-  }
+	public get authenticateIdentity(): TComponents["authenticateIdentity"] {
+		return this.components.authenticateIdentity;
+	}
 
-  public get connectionToCore(): ConnectionToDatastoreCore {
-    if (!this.#connectionToCore) {
-      this.#connectionToCore = ConnectionFactory.createConnection();
-    }
-    return this.#connectionToCore;
-  }
+	public get connectionToCore(): ConnectionToDatastoreCore {
+		if (!this.#connectionToCore) {
+			this.#connectionToCore = ConnectionFactory.createConnection();
+		}
+		return this.#connectionToCore;
+	}
 
-  public set connectionToCore(connectionToCore: ConnectionToDatastoreCore) {
-    this.#connectionToCore = connectionToCore;
-  }
+	public set connectionToCore(connectionToCore: ConnectionToDatastoreCore) {
+		this.#connectionToCore = connectionToCore;
+	}
 
-  public get onCreated(): TComponents['onCreated'] {
-    return this.components.onCreated;
-  }
+	public get onCreated(): TComponents["onCreated"] {
+		return this.components.onCreated;
+	}
 
-  public get onVersionMigrated(): TComponents['onVersionMigrated'] {
-    return this.components.onVersionMigrated;
-  }
+	public get onVersionMigrated(): TComponents["onVersionMigrated"] {
+		return this.components.onVersionMigrated;
+	}
 
-  constructor(components: TComponents) {
-    lastInstanceId++;
-    this.instanceId = `${process.pid}-${lastInstanceId}`;
-    this.components = components;
+	constructor(components: TComponents) {
+		lastInstanceId++;
+		this.instanceId = `${process.pid}-${lastInstanceId}`;
+		this.components = components;
 
-    const names: Set<string> = new Set();
-    for (const [name, extractor] of Object.entries(components.extractors || [])) {
-      if (names.has(name)) {
-        throw new Error(`${name} already exists in this datastore`);
-      }
-      this.attachExtractor(extractor, name);
-      names.add(name);
-    }
-    for (const [name, table] of Object.entries(components.tables || [])) {
-      if (names.has(name)) {
-        throw new Error(`${name} already exists in this datastore`);
-      }
-      this.attachTable(table, name);
-      names.add(name);
-    }
-    this.attachTable(new CreditsTable());
+		const names: Set<string> = new Set();
+		for (const [name, extractor] of Object.entries(
+			components.extractors || [],
+		)) {
+			if (names.has(name)) {
+				throw new Error(`${name} already exists in this datastore`);
+			}
+			this.attachExtractor(extractor, name);
+			names.add(name);
+		}
+		for (const [name, table] of Object.entries(components.tables || [])) {
+			if (names.has(name)) {
+				throw new Error(`${name} already exists in this datastore`);
+			}
+			this.attachTable(table, name);
+			names.add(name);
+		}
+		this.attachTable(new CreditsTable());
 
-    for (const [name, crawler] of Object.entries(components.crawlers || [])) {
-      if (names.has(name)) {
-        throw new Error(`${name} already exists in this datastore`);
-      }
-      this.attachCrawler(crawler, name);
-      names.add(name);
-    }
+		for (const [name, crawler] of Object.entries(components.crawlers || [])) {
+			if (names.has(name)) {
+				throw new Error(`${name} already exists in this datastore`);
+			}
+			this.attachCrawler(crawler, name);
+			names.add(name);
+		}
 
-    this.affiliateId = components.affiliateId;
-    this.metadata = this.createMetadata();
-  }
+		this.affiliateId = components.affiliateId;
+		this.metadata = this.createMetadata();
+	}
 
-  public async bind(config: IDatastoreBinding): Promise<DatastoreInternal> {
-    const { manifest, storageEngine, connectionToCore, apiClientLoader, datastoreHostLookup } =
-      config ?? {};
-    this.manifest = manifest;
-    this.storageEngine = storageEngine;
-    if (!this.storageEngine) {
-      this.storageEngine = new SqliteStorageEngine();
-      await this.storageEngine.create(this as any);
-    }
-    this.storageEngine.bind(this);
-    this.connectionToCore = connectionToCore;
-    if (apiClientLoader) this.apiClientLoader = apiClientLoader;
-    if (datastoreHostLookup)
-      this.getHostInfo = datastoreHostLookup.getHostInfo.bind(datastoreHostLookup);
-    this.remotePaymentService = config.remotePaymentService;
-    return this;
-  }
+	public async bind(config: IDatastoreBinding): Promise<DatastoreInternal> {
+		const {
+			manifest,
+			storageEngine,
+			connectionToCore,
+			apiClientLoader,
+			datastoreHostLookup,
+		} = config ?? {};
+		this.manifest = manifest;
+		this.storageEngine = storageEngine;
+		if (!this.storageEngine) {
+			this.storageEngine = new SqliteStorageEngine();
+			await this.storageEngine.create(this as any);
+		}
+		this.storageEngine.bind(this);
+		this.connectionToCore = connectionToCore;
+		if (apiClientLoader) this.apiClientLoader = apiClientLoader;
+		if (datastoreHostLookup)
+			this.getHostInfo =
+				datastoreHostLookup.getHostInfo.bind(datastoreHostLookup);
+		this.remotePaymentService = config.remotePaymentService;
+		return this;
+	}
 
-  public sendRequest<T extends keyof IDatastoreApis & string>(
-    payload: {
-      command: T;
-      args: IApiSpec<IDatastoreApis>[T]['args'];
-      commandId?: number;
-      startTime?: IUnixTime;
-    },
-    timeoutMs?: number,
-  ): Promise<ICoreResponsePayload<IDatastoreApis, T>['data']> {
-    return this.connectionToCore.sendRequest(payload, timeoutMs);
-  }
+	public sendRequest<T extends keyof IDatastoreApis & string>(
+		payload: {
+			command: T;
+			args: IApiSpec<IDatastoreApis>[T]["args"];
+			commandId?: number;
+			startTime?: IUnixTime;
+		},
+		timeoutMs?: number,
+	): Promise<ICoreResponsePayload<IDatastoreApis, T>["data"]> {
+		return this.connectionToCore.sendRequest(payload, timeoutMs);
+	}
 
-  public async queryInternal<TResultType = any[]>(
-    sql: string,
-    boundValues?: any[],
-    options?: IQueryOptions,
-    callbacks: IQueryInternalCallbacks = {},
-  ): Promise<TResultType> {
-    boundValues ??= [];
-    const sqlParser = new SqlParser(sql);
-    const inputSchemas: { [extractorName: string]: ISchemaAny } = {};
-    for (const [key, extractor] of Object.entries(this.extractors)) {
-      if (extractor.schema) inputSchemas[key] = extractor.schema.input;
-    }
-    for (const [key, crawler] of Object.entries(this.crawlers)) {
-      if (crawler.schema) inputSchemas[key] = crawler.schema.input;
-    }
-    const inputByFunctionName = sqlParser.extractFunctionCallInputs(boundValues);
-    const entityCalls = sqlParser.extractCalls();
+	public async queryInternal<TResultType = any[]>(
+		sql: string,
+		boundValues?: any[],
+		options?: IQueryOptions,
+		callbacks: IQueryInternalCallbacks = {},
+	): Promise<TResultType> {
+		boundValues ??= [];
+		const sqlParser = new SqlParser(sql);
+		const inputSchemas: { [extractorName: string]: ISchemaAny } = {};
+		for (const [key, extractor] of Object.entries(this.extractors)) {
+			if (extractor.schema) inputSchemas[key] = extractor.schema.input;
+		}
+		for (const [key, crawler] of Object.entries(this.crawlers)) {
+			if (crawler.schema) inputSchemas[key] = crawler.schema.input;
+		}
+		const inputByFunctionName =
+			sqlParser.extractFunctionCallInputs(boundValues);
+		const entityCalls = sqlParser.extractCalls();
 
-    const functionCalls = Object.keys(inputByFunctionName);
+		const functionCalls = Object.keys(inputByFunctionName);
 
-    if (callbacks.beforeQuery) {
-      await callbacks.beforeQuery({ sqlParser, entityCalls });
-    }
+		if (callbacks.beforeQuery) {
+			await callbacks.beforeQuery({ sqlParser, entityCalls });
+		}
 
-    const virtualEntitiesByName: {
-      [name: string]: { records: Record<string, any>[]; parameters?: Record<string, any> };
-    } = {};
+		const virtualEntitiesByName: {
+			[name: string]: {
+				records: Record<string, any>[];
+				parameters?: Record<string, any>;
+			};
+		} = {};
 
-    for (const name of functionCalls) {
-      const parameters = inputByFunctionName[name];
-      virtualEntitiesByName[name] = { parameters, records: [] };
-      const func = this.extractors[name] ?? this.crawlers[name];
+		for (const name of functionCalls) {
+			const parameters = inputByFunctionName[name];
+			virtualEntitiesByName[name] = { parameters, records: [] };
+			const func = this.extractors[name] ?? this.crawlers[name];
 
-      virtualEntitiesByName[name].records = await func.runInternal(
-        { ...options, input: parameters },
-        callbacks,
-      );
-    }
+			virtualEntitiesByName[name].records = await func.runInternal(
+				{ ...options, input: parameters },
+				callbacks,
+			);
+		}
 
-    for (const tableName of sqlParser.tableNames) {
-      if (!this.storageEngine.virtualTableNames.has(tableName)) continue;
+		for (const tableName of sqlParser.tableNames) {
+			if (!this.storageEngine.virtualTableNames.has(tableName)) continue;
 
-      virtualEntitiesByName[tableName] = { records: [] };
+			virtualEntitiesByName[tableName] = { records: [] };
 
-      const sqlInputs = sqlParser.extractTableQuery(tableName, boundValues);
-      virtualEntitiesByName[tableName].records = await this.tables[tableName].queryInternal(
-        sqlInputs.sql,
-        sqlInputs.args,
-        options,
-        callbacks,
-      );
-    }
+			const sqlInputs = sqlParser.extractTableQuery(tableName, boundValues);
+			virtualEntitiesByName[tableName].records = await this.tables[
+				tableName
+			].queryInternal(sqlInputs.sql, sqlInputs.args, options, callbacks);
+		}
 
-    return await this.storageEngine.query(
-      sqlParser,
-      boundValues,
-      options,
-      virtualEntitiesByName,
-      callbacks,
-    );
-  }
+		return await this.storageEngine.query(
+			sqlParser,
+			boundValues,
+			options,
+			virtualEntitiesByName,
+			callbacks,
+		);
+	}
 
-  public async getRemoteApiClient(
-    remoteSource: string,
-  ): Promise<{ client: DatastoreApiClient; datastoreHost: IDatastoreHost }> {
-    // need lookup
-    const remoteDatastore = this.remoteDatastores[remoteSource];
+	public async getRemoteApiClient(
+		remoteSource: string,
+	): Promise<{ client: DatastoreApiClient; datastoreHost: IDatastoreHost }> {
+		// need lookup
+		const remoteDatastore = this.remoteDatastores[remoteSource];
 
-    assert(remoteDatastore, `A remote datastore source could not be found for ${remoteSource}`);
+		assert(
+			remoteDatastore,
+			`A remote datastore source could not be found for ${remoteSource}`,
+		);
 
-    try {
-      const datastoreHost =
-        DatastoreLookup.parseDatastoreIpHost(toUrl(remoteDatastore)) ??
-        (await this.getHostInfo(remoteDatastore));
+		try {
+			const datastoreHost =
+				DatastoreLookup.parseDatastoreIpHost(toUrl(remoteDatastore)) ??
+				(await this.getHostInfo(remoteDatastore));
 
-      const client = this.apiClientLoader(datastoreHost.host);
-      return { client, datastoreHost };
-    } catch (error) {
-      throw new Error(
-        'A valid url was not supplied for this remote datastore. Format should be ulx://<host>/<datastoreID>@v<datastoreVersion>',
-      );
-    }
-  }
+			const client = this.apiClientLoader(datastoreHost.host);
+			return { client, datastoreHost };
+		} catch (error) {
+			throw new Error(
+				"A valid url was not supplied for this remote datastore. Format should be ulx://<host>/<datastoreID>@v<datastoreVersion>",
+			);
+		}
+	}
 
-  public close(): Promise<void> {
-    return (this.#isClosingPromise ??= new Promise((resolve, reject) => {
-      this.#connectionToCore?.disconnect().then(resolve, reject);
-    }));
-  }
+	public close(): Promise<void> {
+		return (this.#isClosingPromise ??= new Promise((resolve, reject) => {
+			this.#connectionToCore?.disconnect().then(resolve, reject);
+		}));
+	}
 
-  public attachExtractor(
-    extractor: Extractor,
-    nameOverride?: string,
-    isAlreadyAttachedToDatastore?: boolean,
-  ): void {
-    const isExtractor = extractor instanceof Extractor;
-    const name = nameOverride || extractor.name;
-    if (!name) throw new Error(`Extractor requires a name`);
-    if (!isExtractor) throw new Error(`${name} must be an instance of Extractor`);
-    if (this.extractors[name]) throw new Error(`Extractor already exists with name: ${name}`);
+	public attachExtractor(
+		extractor: Extractor,
+		nameOverride?: string,
+		isAlreadyAttachedToDatastore?: boolean,
+	): void {
+		const isExtractor = extractor instanceof Extractor;
+		const name = nameOverride || extractor.name;
+		if (!name) throw new Error(`Extractor requires a name`);
+		if (!isExtractor)
+			throw new Error(`${name} must be an instance of Extractor`);
+		if (this.extractors[name])
+			throw new Error(`Extractor already exists with name: ${name}`);
 
-    if (!isAlreadyAttachedToDatastore) extractor.attachToDatastore(this, name);
-    (this.extractors as any)[name] = extractor;
-  }
+		if (!isAlreadyAttachedToDatastore) extractor.attachToDatastore(this, name);
+		(this.extractors as any)[name] = extractor;
+	}
 
-  public attachCrawler(
-    crawler: Crawler,
-    nameOverride?: string,
-    isAlreadyAttachedToDatastore?: boolean,
-  ): void {
-    // NOTE: can't check instanceof Crawler because it creates a dependency loop
-    const isCrawler = crawler instanceof Extractor && crawler.extractorType === 'crawler';
-    const name = nameOverride || crawler.name;
-    if (!name) throw new Error(`Crawler requires a name`);
-    if (!isCrawler) throw new Error(`${name} must be an instance of Crawler`);
-    if (this.crawlers[name]) throw new Error(`Crawler already exists with name: ${name}`);
+	public attachCrawler(
+		crawler: Crawler,
+		nameOverride?: string,
+		isAlreadyAttachedToDatastore?: boolean,
+	): void {
+		// NOTE: can't check instanceof Crawler because it creates a dependency loop
+		const isCrawler =
+			crawler instanceof Extractor && crawler.extractorType === "crawler";
+		const name = nameOverride || crawler.name;
+		if (!name) throw new Error(`Crawler requires a name`);
+		if (!isCrawler) throw new Error(`${name} must be an instance of Crawler`);
+		if (this.crawlers[name])
+			throw new Error(`Crawler already exists with name: ${name}`);
 
-    if (!isAlreadyAttachedToDatastore) crawler.attachToDatastore(this, name);
-    (this.crawlers as any)[name] = crawler;
-  }
+		if (!isAlreadyAttachedToDatastore) crawler.attachToDatastore(this, name);
+		(this.crawlers as any)[name] = crawler;
+	}
 
-  public attachTable(
-    table: Table,
-    nameOverride?: string,
-    isAlreadyAttachedToDatastore?: boolean,
-  ): void {
-    const isTable = table instanceof Table;
-    const name = nameOverride || table.name;
-    if (!name) throw new Error(`Table requires a name`);
-    if (!isTable) throw new Error(`${name || 'table'} must be an instance of Table`);
-    if (this.tables[name]) throw new Error(`Table already exists with name: ${name}`);
+	public attachTable(
+		table: Table,
+		nameOverride?: string,
+		isAlreadyAttachedToDatastore?: boolean,
+	): void {
+		const isTable = table instanceof Table;
+		const name = nameOverride || table.name;
+		if (!name) throw new Error(`Table requires a name`);
+		if (!isTable)
+			throw new Error(`${name || "table"} must be an instance of Table`);
+		if (this.tables[name])
+			throw new Error(`Table already exists with name: ${name}`);
 
-    if (!isAlreadyAttachedToDatastore) table.attachToDatastore(this, name);
-    (this.tables as any)[name] = table;
-  }
+		if (!isAlreadyAttachedToDatastore) table.attachToDatastore(this, name);
+		(this.tables as any)[name] = table;
+	}
 
-  protected getHostInfo(_datastoreUrl: string): Promise<IDatastoreHost> {
-    throw new Error('No zone record host lookup has been injected');
-  }
+	protected getHostInfo(_datastoreUrl: string): Promise<IDatastoreHost> {
+		throw new Error("No zone record host lookup has been injected");
+	}
 
-  protected apiClientLoader(host: string): DatastoreApiClient {
-    return new DatastoreApiClient(host);
-  }
+	protected apiClientLoader(host: string): DatastoreApiClient {
+		return new DatastoreApiClient(host);
+	}
 
-  private createMetadata(): IDatastoreMetadata {
-    const {
-      version,
-      id,
-      name,
-      description,
-      payment,
-      domain,
-      affiliateId,
-      remoteDatastores,
-      remoteDatastoreEmbeddedCredits,
-      adminIdentities,
-      storageEngineHost,
-    } = this.components;
+	private createMetadata(): IDatastoreMetadata {
+		const {
+			version,
+			id,
+			name,
+			description,
+			payment,
+			domain,
+			affiliateId,
+			remoteDatastores,
+			remoteDatastoreEmbeddedCredits,
+			adminIdentities,
+			storageEngineHost,
+		} = this.components;
 
-    const metadata: IDatastoreMetadata = {
-      version,
-      id,
-      name,
-      description,
-      affiliateId,
-      payment,
-      domain,
-      remoteDatastores,
-      remoteDatastoreEmbeddedCredits,
-      adminIdentities,
-      storageEngineHost,
-      coreVersion: pkg.version,
-      tablesByName: {},
-      extractorsByName: {},
-      crawlersByName: {},
-    };
-    metadata.remoteDatastoreEmbeddedCredits ??= {};
+		const metadata: IDatastoreMetadata = {
+			version,
+			id,
+			name,
+			description,
+			affiliateId,
+			payment,
+			domain,
+			remoteDatastores,
+			remoteDatastoreEmbeddedCredits,
+			adminIdentities,
+			storageEngineHost,
+			coreVersion: pkg.version,
+			tablesByName: {},
+			extractorsByName: {},
+			crawlersByName: {},
+		};
+		metadata.remoteDatastoreEmbeddedCredits ??= {};
 
-    for (const [extractorName, extractor] of Object.entries(this.extractors)) {
-      const passThrough = extractor as unknown as PassthroughExtractor<any, any>;
-      metadata.extractorsByName[extractorName] = {
-        name: extractor.name,
-        description: extractor.description,
-        corePlugins: extractor.corePlugins ?? {},
-        schema: extractor.schema,
-        basePrice: extractor.basePrice,
-        remoteSource: passThrough?.remoteSource,
-        remoteExtractor: passThrough?.remoteExtractor,
-        remoteDatastoreId: passThrough?.remoteDatastoreId,
-        remoteDatastoreVersion: passThrough?.remoteVersion,
-      };
-    }
+		for (const [extractorName, extractor] of Object.entries(this.extractors)) {
+			const passThrough = extractor as unknown as PassthroughExtractor<
+				any,
+				any
+			>;
+			metadata.extractorsByName[extractorName] = {
+				name: extractor.name,
+				description: extractor.description,
+				corePlugins: extractor.corePlugins ?? {},
+				schema: extractor.schema,
+				basePrice: extractor.basePrice,
+				remoteSource: passThrough?.remoteSource,
+				remoteExtractor: passThrough?.remoteExtractor,
+				remoteDatastoreId: passThrough?.remoteDatastoreId,
+				remoteDatastoreVersion: passThrough?.remoteVersion,
+			};
+		}
 
-    for (const [crawlerName, crawler] of Object.entries(this.crawlers)) {
-      metadata.crawlersByName[crawlerName] = {
-        name: crawler.name,
-        description: crawler.description,
-        corePlugins: crawler.corePlugins ?? {},
-        schema: crawler.schema,
-        basePrice: crawler.basePrice,
-      };
-    }
+		for (const [crawlerName, crawler] of Object.entries(this.crawlers)) {
+			metadata.crawlersByName[crawlerName] = {
+				name: crawler.name,
+				description: crawler.description,
+				corePlugins: crawler.corePlugins ?? {},
+				schema: crawler.schema,
+				basePrice: crawler.basePrice,
+			};
+		}
 
-    for (const [extractorName, table] of Object.entries(this.tables ?? {})) {
-      const passThrough = table as unknown as PassthroughTable<any, any>;
-      metadata.tablesByName[extractorName] = {
-        name: table.name,
-        description: table.description,
-        isPublic: table.isPublic !== false,
-        schema: table.schema,
-        basePrice: table.basePrice,
-        remoteSource: passThrough?.remoteSource,
-        remoteTable: passThrough?.remoteTable,
-        remoteDatastoreId: passThrough?.remoteDatastoreId,
-        remoteDatastoreVersion: passThrough?.remoteVersion,
-      };
-    }
+		for (const [extractorName, table] of Object.entries(this.tables ?? {})) {
+			const passThrough = table as unknown as PassthroughTable<any, any>;
+			metadata.tablesByName[extractorName] = {
+				name: table.name,
+				description: table.description,
+				isPublic: table.isPublic !== false,
+				schema: table.schema,
+				basePrice: table.basePrice,
+				remoteSource: passThrough?.remoteSource,
+				remoteTable: passThrough?.remoteTable,
+				remoteDatastoreId: passThrough?.remoteDatastoreId,
+				remoteDatastoreVersion: passThrough?.remoteVersion,
+			};
+		}
 
-    return metadata;
-  }
+		return metadata;
+	}
 }
 
 export interface IDatastoreBinding {
-  connectionToCore?: ConnectionToDatastoreCore;
-  storageEngine?: IStorageEngine;
-  manifest?: IDatastoreManifest;
-  datastoreHostLookup?: IDatastoreHostLookup;
-  apiClientLoader?: (host: string) => DatastoreApiClient;
-  remotePaymentService?: IPaymentService;
+	connectionToCore?: ConnectionToDatastoreCore;
+	storageEngine?: IStorageEngine;
+	manifest?: IDatastoreManifest;
+	datastoreHostLookup?: IDatastoreHostLookup;
+	apiClientLoader?: (host: string) => DatastoreApiClient;
+	remotePaymentService?: IPaymentService;
 }
 
 export interface IQueryInternalCallbacks {
-  beforeQuery?(args: { sqlParser: SqlParser; entityCalls: string[] }): Promise<void>;
-  onFunction?<TOutput = any[], TSchema = any>(
-    name: string,
-    options: IExtractorRunOptions<TSchema>,
-    run: (options: IExtractorRunOptions<TSchema>) => Promise<TOutput>,
-  ): Promise<TOutput>;
-  onPassthroughTable?<TOutput = any[]>(
-    name: string,
-    options: IQueryOptions,
-    run: (options: IQueryOptions) => Promise<TOutput>,
-  ): Promise<TOutput>;
-  beforeStorageEngine?(options: IQueryOptions): IQueryOptions;
+	beforeQuery?(args: {
+		sqlParser: SqlParser;
+		entityCalls: string[];
+	}): Promise<void>;
+	onFunction?<TOutput = any[], TSchema = any>(
+		name: string,
+		options: IExtractorRunOptions<TSchema>,
+		run: (options: IExtractorRunOptions<TSchema>) => Promise<TOutput>,
+	): Promise<TOutput>;
+	onPassthroughTable?<TOutput = any[]>(
+		name: string,
+		options: IQueryOptions,
+		run: (options: IQueryOptions) => Promise<TOutput>,
+	): Promise<TOutput>;
+	beforeStorageEngine?(options: IQueryOptions): IQueryOptions;
 }

@@ -1,21 +1,21 @@
-import cjsImport from './index.js';
+import cjsImport from "./index.js";
 
 const {
-  HeroExtractorPlugin,
-  Observable,
-  Datastore,
-  Extractor,
-  Crawler,
-  PassthroughExtractor,
-  Schema,
+	HeroExtractorPlugin,
+	Observable,
+	Datastore,
+	Extractor,
+	Crawler,
+	PassthroughExtractor,
+	Schema,
 } = cjsImport;
 
 export {
-  HeroExtractorPlugin,
-  Observable,
-  Datastore,
-  Extractor,
-  Crawler,
-  PassthroughExtractor,
-  Schema,
+	Crawler,
+	Datastore,
+	Extractor,
+	HeroExtractorPlugin,
+	Observable,
+	PassthroughExtractor,
+	Schema,
 };

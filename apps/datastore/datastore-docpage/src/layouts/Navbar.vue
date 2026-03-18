@@ -27,15 +27,15 @@
 </template>
 
 <script lang="ts">
-import DatastoreIcon from '@/assets/icons/datastore.svg';
-import { getCredit } from '@/lib/Utils';
-import * as Vue from 'vue';
+import * as Vue from "vue";
+import DatastoreIcon from "@/assets/icons/datastore.svg";
+import { getCredit } from "@/lib/Utils";
 
 export default Vue.defineComponent({
-  components: { DatastoreIcon },
-  setup() {
-    const hasCredit = !!getCredit();
-    return { freeCredits: Vue.ref(hasCredit) };
-  },
+	components: { DatastoreIcon },
+	setup() {
+		const hasCredit = !!getCredit();
+		return { freeCredits: Vue.ref(hasCredit) };
+	},
 });
 </script>

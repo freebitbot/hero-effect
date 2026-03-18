@@ -1,20 +1,20 @@
-import IDatastoreMetadata from '@ulixee/datastore/interfaces/IDatastoreMetadata';
+import type IDatastoreMetadata from "@ulixee/datastore/interfaces/IDatastoreMetadata";
 
 export interface IFetchMetaMessage {
-  action: 'fetchMeta';
-  scriptPath: string;
+	action: "fetchMeta";
+	scriptPath: string;
 }
 
 export type IMessage = IFetchMetaMessage;
 
 export interface IFetchMetaResponseData extends IDatastoreMetadata {
-  tableSeedlingsByName: {
-    [name: string]: Record<string, any>;
-  };
+	tableSeedlingsByName: {
+		[name: string]: Record<string, any>;
+	};
 }
 
 export type IResponseData = IFetchMetaResponseData;
 
 export interface IResponse {
-  data: IResponseData | Error;
+	data: IResponseData | Error;
 }

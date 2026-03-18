@@ -27,28 +27,28 @@
 </template>
 
 <script lang="ts">
-import { getCredit } from '@/lib/Utils';
-import * as Vue from 'vue';
-import Prism from '../components/Prism.vue';
-import Navbar from '../layouts/Navbar.vue';
-import { docpageConfigPromise, serverDetailsPromise } from '../main';
+import * as Vue from "vue";
+import { getCredit } from "@/lib/Utils";
+import Prism from "../components/Prism.vue";
+import Navbar from "../layouts/Navbar.vue";
+import { docpageConfigPromise, serverDetailsPromise } from "../main";
 
 export default Vue.defineComponent({
-  components: {
-    Prism,
-    Navbar,
-  },
-  async setup() {
-    const config = await docpageConfigPromise;
-    const { ipAddress, port } = await serverDetailsPromise;
+	components: {
+		Prism,
+		Navbar,
+	},
+	async setup() {
+		const config = await docpageConfigPromise;
+		const { ipAddress, port } = await serverDetailsPromise;
 
-    return {
-      config,
-      ipAddress,
-      port,
-      authString: getCredit(),
-    };
-  },
+		return {
+			config,
+			ipAddress,
+			port,
+			authString: getCredit(),
+		};
+	},
 });
 </script>
 
