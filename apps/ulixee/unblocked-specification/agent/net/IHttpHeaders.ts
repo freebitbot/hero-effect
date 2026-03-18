@@ -1,3 +1,3 @@
 export default interface IHttpHeaders {
-  [name: string]: string | string[];
+	[name: string]: string | string[];
 }

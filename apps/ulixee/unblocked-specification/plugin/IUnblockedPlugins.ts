@@ -1,5 +1,5 @@
-import IUnblockedPlugin from './IUnblockedPlugin';
+import type IUnblockedPlugin from "./IUnblockedPlugin";
 
 export default interface IUnblockedPlugins extends Required<IUnblockedPlugin> {
-  hook(plugin: IUnblockedPlugin): void;
+	hook(plugin: IUnblockedPlugin): void;
 }

@@ -1,34 +1,37 @@
-import { URL } from 'url';
-import type ITypedEventEmitter from '@ulixee/commons/interfaces/ITypedEventEmitter';
-import { IPage } from './IPage';
-import { IWorker } from './IWorker';
-import IBrowser from './IBrowser';
-import { IBrowserContextHooks } from '../hooks/IBrowserHooks';
-import { ICookie } from '../net/ICookie';
-import IInteractHooks from '../hooks/IInteractHooks';
+import type ITypedEventEmitter from "@ulixee/commons/interfaces/ITypedEventEmitter";
+import type { URL } from "url";
+import type { IBrowserContextHooks } from "../hooks/IBrowserHooks";
+import type IInteractHooks from "../hooks/IInteractHooks";
+import type { ICookie } from "../net/ICookie";
+import type IBrowser from "./IBrowser";
+import type { IPage } from "./IPage";
+import type { IWorker } from "./IWorker";
 
-export default interface IBrowserContext extends ITypedEventEmitter<IBrowserContextEvents> {
-  id: string;
-  browserId: string;
-  browser: IBrowser;
-  isIncognito: boolean;
-  pagesById: Map<string, IPage>;
-  workersById: Map<string, IWorker>;
-  hooks: IBrowserContextHooks & IInteractHooks;
+export default interface IBrowserContext
+	extends ITypedEventEmitter<IBrowserContextEvents> {
+	id: string;
+	browserId: string;
+	browser: IBrowser;
+	isIncognito: boolean;
+	pagesById: Map<string, IPage>;
+	workersById: Map<string, IWorker>;
+	hooks: IBrowserContextHooks & IInteractHooks;
 
-  newPage(): Promise<IPage>;
-  close(): Promise<void>;
+	newPage(): Promise<IPage>;
+	close(): Promise<void>;
 
-  getCookies(url?: URL): Promise<ICookie[]>;
-  addCookies(
-    cookies: (Omit<ICookie, 'expires'> & { expires?: string | Date | number })[],
-    origins?: string[],
-  ): Promise<void>;
+	getCookies(url?: URL): Promise<ICookie[]>;
+	addCookies(
+		cookies: (Omit<ICookie, "expires"> & {
+			expires?: string | Date | number;
+		})[],
+		origins?: string[],
+	): Promise<void>;
 }
 
 export interface IBrowserContextEvents {
-  page: { page: IPage };
-  worker: { worker: IWorker };
-  close: void;
-  'all-pages-closed': void;
+	page: { page: IPage };
+	worker: { worker: IWorker };
+	close: void;
+	"all-pages-closed": void;
 }

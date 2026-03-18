@@ -1,6 +1,8 @@
-import IHttpSocketConnectOptions from './IHttpSocketConnectOptions';
-import IHttpSocketWrapper from './IHttpSocketWrapper';
+import type IHttpSocketConnectOptions from "./IHttpSocketConnectOptions";
+import type IHttpSocketWrapper from "./IHttpSocketWrapper";
 
 export default interface IHttpSocketAgent {
-  createSocketConnection(options: IHttpSocketConnectOptions): Promise<IHttpSocketWrapper>;
+	createSocketConnection(
+		options: IHttpSocketConnectOptions,
+	): Promise<IHttpSocketWrapper>;
 }
