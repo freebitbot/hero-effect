@@ -1,10 +1,10 @@
-import { IPathStep } from './IJsPath';
+import type { IPathStep } from "./IJsPath";
 
 export default interface IJsPathError {
-  error: string;
-  pathState: {
-    step: IPathStep;
-    index: number;
-    querySelectorMatches?: number[];
-  };
+	error: string;
+	pathState: {
+		step: IPathStep;
+		index: number;
+		querySelectorMatches?: number[];
+	};
 }
