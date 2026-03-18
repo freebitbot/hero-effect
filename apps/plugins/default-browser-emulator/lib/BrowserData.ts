@@ -1,8 +1,8 @@
+import * as Fs from "node:fs";
 import getLocalOperatingSystemMeta from "@ulixee/real-user-agents/lib/getLocalOperatingSystemMeta";
 import { convertMacOsVersionString } from "@ulixee/real-user-agents/lib/OsUtils";
 import { findClosestVersionMatch } from "@ulixee/real-user-agents/lib/VersionUtils";
 import type IUserAgentOption from "@ulixee/unblocked-specification/plugin/IUserAgentOption";
-import * as Fs from "fs";
 import type IBrowserData from "../interfaces/IBrowserData";
 import type {
 	IDataBrowserConfig,

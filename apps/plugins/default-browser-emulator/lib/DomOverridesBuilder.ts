@@ -1,8 +1,8 @@
+import * as fs from "node:fs";
 import TypeSerializer, {
 	stringifiedTypeSerializerClass,
 } from "@ulixee/commons/lib/TypeSerializer";
 import type { IFrame } from "@ulixee/unblocked-specification/agent/browser/IFrame";
-import * as fs from "fs";
 import type IBrowserEmulatorConfig from "../interfaces/IBrowserEmulatorConfig";
 import type { InjectedScript } from "../interfaces/IBrowserEmulatorConfig";
 import type INewDocumentInjectedScript from "../interfaces/INewDocumentInjectedScript";
@@ -97,7 +97,7 @@ export default class DomOverridesBuilder {
   }
 
   ${stringifiedTypeSerializerClass};
-  
+
   const utilsInput = {
     sourceUrl: '${injectedSourceUrl}',
     targetType: '${type}',
@@ -108,7 +108,7 @@ export default class DomOverridesBuilder {
   const utils = main(utilsInput);
 
   const baseScriptInput = {...utilsInput, utils, TypeSerializer};
-  
+
   (function newDocumentScript(selfOverride) {
     const originalSelf = self;
     if (selfOverride) self = selfOverride;

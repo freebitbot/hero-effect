@@ -26,19 +26,19 @@ export default class BrowserEngineOptions {
 				if (this.browserIdsNeedingDataFiles.has(id) || this.getInstalled(id)) {
 					throw new Error(
 						`The Default Browser Engine specified in your environment does not have Emulation Data Files installed.:\n\n
-            
+
 ----------- update to the latest data files using ----------
-        
+
          npx @ulixee/default-browser-emulator update-unblocked-emulators
-        
+
 ------------------------------------------------------------`,
 					);
 				}
 				throw new Error(`The Default Browser Engine specified in your environment is not installed\n\n
 -------- reinstall the browser in your working directory -------
-        
+
                 npm install @ulixee/${defaultBrowserId}
-        
+
 ----------------------------------------------------------------
       `);
 			}
@@ -62,8 +62,8 @@ export default class BrowserEngineOptions {
 
 			if (!this.dataLoader.isInstalledBrowser(`as-${engine.id}`)) {
 				this.browserIdsNeedingDataFiles.add(engine.id);
-				console.warn(`[@ulixee/hero] You have a Chrome Browser Engine installed without accompanying data files needed to emulate Operating Systems & Headed operation. 
-          
+				console.warn(`[@ulixee/hero] You have a Chrome Browser Engine installed without accompanying data files needed to emulate Operating Systems & Headed operation.
+
 You must install data files for "${engine.id}" to support emulating the browser.`);
 				continue;
 			}

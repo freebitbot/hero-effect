@@ -1,3 +1,4 @@
+import { URL } from "node:url";
 import type { IBoundLog } from "@ulixee/commons/interfaces/ILog";
 import type IResolvablePromise from "@ulixee/commons/interfaces/IResolvablePromise";
 import type SameSiteContext from "@ulixee/commons/interfaces/SameSiteContext";
@@ -15,7 +16,6 @@ import {
 	getPublicSuffix,
 	permuteDomain,
 } from "tough-cookie";
-import { URL } from "url";
 import { InjectedScript } from "../../interfaces/IBrowserEmulatorConfig";
 import DomOverridesBuilder from "../DomOverridesBuilder";
 

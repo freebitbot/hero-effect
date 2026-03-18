@@ -1,6 +1,6 @@
+import * as Fs from "node:fs";
+import * as Path from "node:path";
 import type IUserAgentOption from "@ulixee/unblocked-specification/plugin/IUserAgentOption";
-import * as Fs from "fs";
-import * as Path from "path";
 import type {
 	IDataBrowserEngineOptions,
 	IDataCore,
