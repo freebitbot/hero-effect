@@ -1,48 +1,56 @@
-import { IPage } from '@ulixee/unblocked-specification/agent/browser/IPage';
-import * as fs from 'fs';
-import { ISelectorMap } from '@ulixee/desktop-interfaces/ISelectorMap';
-import highlightConfig from './highlightConfig';
-import ChromeAliveWindowController from '../ChromeAliveWindowController';
+import type { ISelectorMap } from "@ulixee/desktop-interfaces/ISelectorMap";
+import type { IPage } from "@ulixee/unblocked-specification/agent/browser/IPage";
+import * as fs from "fs";
+import type ChromeAliveWindowController from "../ChromeAliveWindowController";
+import highlightConfig from "./highlightConfig";
 
-const installSymbol = Symbol.for('@ulixee/generateSelectorMap');
+const installSymbol = Symbol.for("@ulixee/generateSelectorMap");
 export default class ElementsModule {
-  constructor(private chromeAliveWindowController: ChromeAliveWindowController) {}
+	constructor(
+		private chromeAliveWindowController: ChromeAliveWindowController,
+	) {}
 
-  public async onNewPage(page: IPage): Promise<any> {
-    await page.devtoolsSession.send('DOM.enable');
-    await page.devtoolsSession.send('Overlay.enable');
-  }
+	public async onNewPage(page: IPage): Promise<any> {
+		await page.devtoolsSession.send("DOM.enable");
+		await page.devtoolsSession.send("Overlay.enable");
+	}
 
-  public async highlightNode(id: { backendNodeId?: number; objectId?: string }): Promise<void> {
-    await this.chromeAliveWindowController.activePage?.devtoolsSession.send(
-      'Overlay.highlightNode',
-      {
-        highlightConfig,
-        ...id,
-      },
-    );
-  }
+	public async highlightNode(id: {
+		backendNodeId?: number;
+		objectId?: string;
+	}): Promise<void> {
+		await this.chromeAliveWindowController.activePage?.devtoolsSession.send(
+			"Overlay.highlightNode",
+			{
+				highlightConfig,
+				...id,
+			},
+		);
+	}
 
-  public async hideHighlight(): Promise<void> {
-    await this.chromeAliveWindowController.activePage?.devtoolsSession.send(
-      'Overlay.hideHighlight',
-    );
-  }
+	public async hideHighlight(): Promise<void> {
+		await this.chromeAliveWindowController.activePage?.devtoolsSession.send(
+			"Overlay.hideHighlight",
+		);
+	}
 
-  public async generateQuerySelector(id: {
-    backendNodeId?: number;
-    objectId?: string;
-  }): Promise<ISelectorMap> {
-    const frame = this.chromeAliveWindowController.activePage.mainFrame;
-    const chromeObjectId =
-      id.objectId ?? (await frame.resolveDevtoolsNodeId(id.backendNodeId, false));
-    if (!frame[installSymbol]) {
-      await frame.evaluate(injectedScript, { isolateFromWebPageEnvironment: false });
-      frame[installSymbol] = true;
-    }
-    return await frame.evaluateOnNode<ISelectorMap>(
-      chromeObjectId,
-      `(() => {
+	public async generateQuerySelector(id: {
+		backendNodeId?: number;
+		objectId?: string;
+	}): Promise<ISelectorMap> {
+		const frame = this.chromeAliveWindowController.activePage.mainFrame;
+		const chromeObjectId =
+			id.objectId ??
+			(await frame.resolveDevtoolsNodeId(id.backendNodeId, false));
+		if (!frame[installSymbol]) {
+			await frame.evaluate(injectedScript, {
+				isolateFromWebPageEnvironment: false,
+			});
+			frame[installSymbol] = true;
+		}
+		return await frame.evaluateOnNode<ISelectorMap>(
+			chromeObjectId,
+			`(() => {
       const context = generateSelectorMap(this)
       return {
         target: {
@@ -57,15 +65,15 @@ export default class ElementsModule {
         nodePath: context.nodePath,
       };
     })();`,
-    );
-  }
+		);
+	}
 }
 
 const pageScripts = {
-  generateSelectorMap: fs.readFileSync(
-    `${__dirname}/../../injected-scripts/generateSelectorMap.js`,
-    'utf8',
-  ),
+	generateSelectorMap: fs.readFileSync(
+		`${__dirname}/../../injected-scripts/generateSelectorMap.js`,
+		"utf8",
+	),
 };
 
 const injectedScript = `(function generateSelectorMap() {

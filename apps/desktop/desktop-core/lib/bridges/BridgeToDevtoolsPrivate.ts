@@ -1,45 +1,52 @@
-import { EventEmitter } from 'events';
-import { CanceledPromiseError } from '@ulixee/commons/interfaces/IPendingWaitEvent';
-import IDevtoolsSession, { Protocol } from '@ulixee/unblocked-specification/agent/browser/IDevtoolsSession';
-import EventSubscriber from '@ulixee/commons/lib/EventSubscriber';
+import { CanceledPromiseError } from "@ulixee/commons/interfaces/IPendingWaitEvent";
+import EventSubscriber from "@ulixee/commons/lib/EventSubscriber";
 import {
-  ___sendToCore,
-  ___receiveFromCore,
-  MessageEventType,
-  extractStringifiedComponentsFromMessage,
-  IMessageObject,
-} from '@ulixee/desktop-interfaces/BridgeHelpers';
-import { extensionId } from '../ExtensionUtils';
+	___receiveFromCore,
+	___sendToCore,
+	extractStringifiedComponentsFromMessage,
+	type IMessageObject,
+	MessageEventType,
+} from "@ulixee/desktop-interfaces/BridgeHelpers";
+import type IDevtoolsSession from "@ulixee/unblocked-specification/agent/browser/IDevtoolsSession";
+import type { Protocol } from "@ulixee/unblocked-specification/agent/browser/IDevtoolsSession";
+import { EventEmitter } from "events";
+import { extensionId } from "../ExtensionUtils";
 
 export default class BridgeToDevtoolsPrivate extends EventEmitter {
-  private devtoolsSessionMap = new Map<
-    IDevtoolsSession,
-    { contextIds: number[]; tabId?: number }
-  >();
+	private devtoolsSessionMap = new Map<
+		IDevtoolsSession,
+		{ contextIds: number[]; tabId?: number }
+	>();
 
-  private events = new EventSubscriber();
+	private events = new EventSubscriber();
 
-  public async onDevtoolsPanelAttached(devtoolsSession: IDevtoolsSession): Promise<void> {
-    this.devtoolsSessionMap.set(devtoolsSession, { contextIds: [] });
+	public async onDevtoolsPanelAttached(
+		devtoolsSession: IDevtoolsSession,
+	): Promise<void> {
+		this.devtoolsSessionMap.set(devtoolsSession, { contextIds: [] });
 
-    this.events.on(devtoolsSession, 'Runtime.executionContextCreated', event =>
-      this.onContextCreated(devtoolsSession, event),
-    );
-    this.events.on(devtoolsSession, 'Runtime.executionContextDestroyed', event =>
-      this.onContextDestroyed(devtoolsSession, event),
-    );
-    this.events.on(devtoolsSession, 'Runtime.executionContextsCleared', () =>
-      this.onContextCleared(devtoolsSession),
-    );
+		this.events.on(
+			devtoolsSession,
+			"Runtime.executionContextCreated",
+			(event) => this.onContextCreated(devtoolsSession, event),
+		);
+		this.events.on(
+			devtoolsSession,
+			"Runtime.executionContextDestroyed",
+			(event) => this.onContextDestroyed(devtoolsSession, event),
+		);
+		this.events.on(devtoolsSession, "Runtime.executionContextsCleared", () =>
+			this.onContextCleared(devtoolsSession),
+		);
 
-    this.events.on(devtoolsSession, 'Runtime.bindingCalled', event =>
-      this.handleIncomingMessageFromBrowser(event),
-    );
+		this.events.on(devtoolsSession, "Runtime.bindingCalled", (event) =>
+			this.handleIncomingMessageFromBrowser(event),
+		);
 
-    await Promise.all([
-      devtoolsSession.send('Runtime.addBinding', { name: ___sendToCore }),
-      devtoolsSession.send('Page.addScriptToEvaluateOnNewDocument', {
-        source: `(function run() {
+		await Promise.all([
+			devtoolsSession.send("Runtime.addBinding", { name: ___sendToCore }),
+			devtoolsSession.send("Page.addScriptToEvaluateOnNewDocument", {
+				source: `(function run() {
           window.___includedBackendNodeIds = new Set();
           window.___excludedBackendNodeIds = new Set();
           window.${___receiveFromCore} = function ${___receiveFromCore}(destLocation, responseCode, restOfMessage) {
@@ -64,143 +71,161 @@ export default class BridgeToDevtoolsPrivate extends EventEmitter {
             }
           };
           (${interceptElementWasSelected.toString()})('${___sendToCore}', '${
-            MessageEventType.OpenElementOptionsOverlay
-          }');
+						MessageEventType.OpenElementOptionsOverlay
+					}');
           (${interceptInspectElementMode.toString()})('${___sendToCore}', '${
-            MessageEventType.InspectElementModeChanged
-          }');
+						MessageEventType.InspectElementModeChanged
+					}');
           (${interceptElementPanelOnHighlight.toString()})('${___sendToCore}', '${
-            MessageEventType.HideElementOptionsOverlay
-          }');
+						MessageEventType.HideElementOptionsOverlay
+					}');
           (${interceptElementPanelOnRemoveHighlight.toString()})('${___sendToCore}', '${
-            MessageEventType.RemoveHideFromElementOptionsOverlay
-          }');
+						MessageEventType.RemoveHideFromElementOptionsOverlay
+					}');
           (${injectContextMenu.toString()})('${___sendToCore}', '${
-            MessageEventType.UpdateElementOptions
-          }');
+						MessageEventType.UpdateElementOptions
+					}');
         })();`,
-      }),
-      this.getDevtoolsTabId.bind(this, devtoolsSession),
-      devtoolsSession.send('Runtime.runIfWaitingForDebugger'),
-    ]).catch(() => null);
+			}),
+			this.getDevtoolsTabId.bind(this, devtoolsSession),
+			devtoolsSession.send("Runtime.runIfWaitingForDebugger"),
+		]).catch(() => null);
 
-    const contextId = this.devtoolsSessionMap.get(devtoolsSession).contextIds[0];
-    await this.runInBrowser(devtoolsSession, contextId, `(${interceptInspectElementMode.toString()})('${___sendToCore}', '${MessageEventType.InspectElementModeChanged}');`);
+		const contextId =
+			this.devtoolsSessionMap.get(devtoolsSession).contextIds[0];
+		await this.runInBrowser(
+			devtoolsSession,
+			contextId,
+			`(${interceptInspectElementMode.toString()})('${___sendToCore}', '${MessageEventType.InspectElementModeChanged}');`,
+		);
 
-    // (${interceptElementOverlayDispatches.toString()})('${___sendToCore}', '${MessageEventType.CloseElementOptionsOverlay}');
-  }
+		// (${interceptElementOverlayDispatches.toString()})('${___sendToCore}', '${MessageEventType.CloseElementOptionsOverlay}');
+	}
 
+	public async send(
+		message: IMessageObject | string,
+		tabId?: number,
+	): Promise<void> {
+		const [destLocation, responseCode, restOfMessage] =
+			extractStringifiedComponentsFromMessage(message);
 
-  public async send(message: IMessageObject | string, tabId?: number): Promise<void> {
-    const [destLocation, responseCode, restOfMessage] =
-      extractStringifiedComponentsFromMessage(message);
+		let devtoolsSession: IDevtoolsSession;
+		if (tabId) {
+			devtoolsSession = await this.getDevtoolsSessionWithTabId(tabId);
+		}
 
-    let devtoolsSession: IDevtoolsSession;
-    if (tabId) {
-      devtoolsSession = await this.getDevtoolsSessionWithTabId(tabId);
-    }
+		devtoolsSession ??= this.devtoolsSessionMap.keys().next().value;
+		const contextId =
+			this.devtoolsSessionMap.get(devtoolsSession).contextIds[0];
+		await this.runInBrowser(
+			devtoolsSession,
+			contextId,
+			`window.${___receiveFromCore}('${destLocation}', '${responseCode}', ${restOfMessage});`,
+		);
+	}
 
-    devtoolsSession ??= this.devtoolsSessionMap.keys().next().value;
-    const contextId = this.devtoolsSessionMap.get(devtoolsSession).contextIds[0];
-    await this.runInBrowser(
-      devtoolsSession,
-      contextId,
-      `window.${___receiveFromCore}('${destLocation}', '${responseCode}', ${restOfMessage});`,
-    );
-  }
+	private async getDevtoolsSessionWithTabId(
+		tabId: number,
+	): Promise<IDevtoolsSession> {
+		for (const [session, details] of this.devtoolsSessionMap) {
+			if (details.tabId === tabId) return session;
+			if (!details.tabId) {
+				const loadedTabId = await this.getDevtoolsTabId(session);
+				if (loadedTabId === tabId) return session;
+			}
+		}
+	}
 
-  private async getDevtoolsSessionWithTabId(tabId: number): Promise<IDevtoolsSession> {
-    for (const [session, details] of this.devtoolsSessionMap) {
-      if (details.tabId === tabId) return session;
-      if (!details.tabId) {
-        const loadedTabId = await this.getDevtoolsTabId(session);
-        if (loadedTabId === tabId) return session;
-      }
-    }
-  }
+	private async getDevtoolsTabId(
+		devtoolsSession: IDevtoolsSession,
+		retries = 3,
+	): Promise<number> {
+		const response = await devtoolsSession.send("Runtime.evaluate", {
+			expression: "DevToolsAPI.getInspectedTabId()",
+		});
+		const tabId = response.result.value;
+		if (!tabId) {
+			if (retries <= 0) return;
+			await new Promise((resolve) => setTimeout(resolve, 250));
+			return await this.getDevtoolsTabId(devtoolsSession, retries - 1);
+		}
+		if (!this.devtoolsSessionMap.has(devtoolsSession))
+			this.devtoolsSessionMap.set(devtoolsSession, { contextIds: [] });
+		this.devtoolsSessionMap.get(devtoolsSession).tabId = tabId;
+		return tabId;
+	}
 
-  private async getDevtoolsTabId(devtoolsSession: IDevtoolsSession, retries = 3): Promise<number> {
-    const response = await devtoolsSession.send('Runtime.evaluate', {
-      expression: 'DevToolsAPI.getInspectedTabId()',
-    });
-    const tabId = response.result.value;
-    if (!tabId) {
-      if (retries <= 0) return;
-      await new Promise(resolve => setTimeout(resolve, 250));
-      return await this.getDevtoolsTabId(devtoolsSession, retries - 1);
-    }
-    if (!this.devtoolsSessionMap.has(devtoolsSession))
-      this.devtoolsSessionMap.set(devtoolsSession, { contextIds: [] });
-    this.devtoolsSessionMap.get(devtoolsSession).tabId = tabId;
-    return tabId;
-  }
+	private runInBrowser(
+		devtoolsSession: IDevtoolsSession,
+		contextId: number,
+		expressionToRun: string,
+	): Promise<any> {
+		return devtoolsSession
+			.send("Runtime.evaluate", {
+				expression: expressionToRun,
+				contextId,
+				awaitPromise: false,
+				returnByValue: false,
+			})
+			.catch((err) => {
+				if (err instanceof CanceledPromiseError) return;
+				throw err;
+			});
+	}
 
-  private runInBrowser(
-    devtoolsSession: IDevtoolsSession,
-    contextId: number,
-    expressionToRun: string,
-  ): Promise<any> {
-    return devtoolsSession
-      .send('Runtime.evaluate', {
-        expression: expressionToRun,
-        contextId,
-        awaitPromise: false,
-        returnByValue: false,
-      })
-      .catch(err => {
-        if (err instanceof CanceledPromiseError) return;
-        throw err;
-      });
-  }
+	private handleIncomingMessageFromBrowser(event: any): void {
+		if (event.name !== ___sendToCore) return;
+		const [destLocation] = extractStringifiedComponentsFromMessage(
+			event.payload,
+		);
+		this.emit("message", event.payload, { destLocation });
+	}
 
-  private handleIncomingMessageFromBrowser(event: any): void {
-    if (event.name !== ___sendToCore) return;
-    const [destLocation] = extractStringifiedComponentsFromMessage(event.payload);
-    this.emit('message', event.payload, { destLocation });
-  }
+	private onContextCreated(
+		devtoolsSession: IDevtoolsSession,
+		event: Protocol.Runtime.ExecutionContextCreatedEvent,
+	): void {
+		if (!this.devtoolsSessionMap.has(devtoolsSession)) {
+			this.devtoolsSessionMap.set(devtoolsSession, { contextIds: [] });
+		}
+		const contextIds = this.devtoolsSessionMap.get(devtoolsSession).contextIds;
+		if (!contextIds.includes(event.context.id)) {
+			contextIds.push(event.context.id);
+		}
+	}
 
-  private onContextCreated(
-    devtoolsSession: IDevtoolsSession,
-    event: Protocol.Runtime.ExecutionContextCreatedEvent,
-  ): void {
-    if (!this.devtoolsSessionMap.has(devtoolsSession)) {
-      this.devtoolsSessionMap.set(devtoolsSession, { contextIds: [] });
-    }
-    const contextIds = this.devtoolsSessionMap.get(devtoolsSession).contextIds;
-    if (!contextIds.includes(event.context.id)) {
-      contextIds.push(event.context.id);
-    }
-  }
+	private onContextDestroyed(
+		devtoolsSession: IDevtoolsSession,
+		event: Protocol.Runtime.ExecutionContextDestroyedEvent,
+	): void {
+		const contextIds = this.devtoolsSessionMap.get(devtoolsSession)?.contextIds;
+		if (!contextIds) return;
 
-  private onContextDestroyed(
-    devtoolsSession: IDevtoolsSession,
-    event: Protocol.Runtime.ExecutionContextDestroyedEvent,
-  ): void {
-    const contextIds = this.devtoolsSessionMap.get(devtoolsSession)?.contextIds;
-    if (!contextIds) return;
+		const idx = contextIds.indexOf(event.executionContextId);
+		if (idx >= 0) contextIds.splice(idx, 1);
+		if (!contextIds.length) {
+			this.devtoolsSessionMap.delete(devtoolsSession);
+		}
+	}
 
-    const idx = contextIds.indexOf(event.executionContextId);
-    if (idx >= 0) contextIds.splice(idx, 1);
-    if (!contextIds.length) {
-      this.devtoolsSessionMap.delete(devtoolsSession);
-    }
-  }
-
-  private onContextCleared(devtoolsSession: IDevtoolsSession): void {
-    this.devtoolsSessionMap.delete(devtoolsSession);
-  }
+	private onContextCleared(devtoolsSession: IDevtoolsSession): void {
+		this.devtoolsSessionMap.delete(devtoolsSession);
+	}
 }
 
 // METHODS TO RUN IN BROWSER CONTEXT ////////////////////////////////////////////////////////
 
 // eslint-disable-next-line @typescript-eslint/no-shadow
-function openSelectorGeneratorPanel(DevToolsAPI: any, extensionId: string): void {
-  // We can get list from UI.panels
-  DevToolsAPI.showPanel(`chrome-extension://${extensionId}HeroScript`);
+function openSelectorGeneratorPanel(
+	DevToolsAPI: any,
+	extensionId: string,
+): void {
+	// We can get list from UI.panels
+	DevToolsAPI.showPanel(`chrome-extension://${extensionId}HeroScript`);
 }
 
 function toggleInspectElementMode(InspectorFrontendAPI: any): void {
-  InspectorFrontendAPI.enterInspectElementMode();
+	InspectorFrontendAPI.enterInspectElementMode();
 }
 
 const interceptInspectElementMode = `
@@ -254,24 +279,28 @@ async function interceptElementPanelWasHovered(sendToCoreFnName, eventType) {
 
 // Every time an element in page is selected for inspection
 function interceptElementWasSelected(sendToCoreFnName, eventType): void {
-  // @ts-ignore
-  const globalWindow = window;
-  // @ts-ignore
-  const globalSDK = window.SDK;
-  if (!globalSDK) {
-    setTimeout(() => interceptElementWasSelected(sendToCoreFnName, eventType), 1);
-    return;
-  }
+	// @ts-expect-error
+	const globalWindow = window;
+	// @ts-expect-error
+	const globalSDK = window.SDK;
+	if (!globalSDK) {
+		setTimeout(
+			() => interceptElementWasSelected(sendToCoreFnName, eventType),
+			1,
+		);
+		return;
+	}
 
-  const inspectNodeRequestedOrig = globalSDK.OverlayModel.prototype.inspectNodeRequested;
-  globalSDK.OverlayModel.prototype.inspectNodeRequested = function inspectNodeRequested({ backendNodeId }) {
-    const payload = `{"event":"${  eventType  }","backendNodeId": ${  backendNodeId  }}`;
-    const packedMessage =
-      `:ContentScript       :N:{"origLocation":"DevtoolsPrivate","payload":${  payload  }}`;
-    // @ts-ignore
-    globalWindow[sendToCoreFnName](packedMessage);
-    inspectNodeRequestedOrig.call(this, { backendNodeId });
-  };
+	const inspectNodeRequestedOrig =
+		globalSDK.OverlayModel.prototype.inspectNodeRequested;
+	globalSDK.OverlayModel.prototype.inspectNodeRequested =
+		function inspectNodeRequested({ backendNodeId }) {
+			const payload = `{"event":"${eventType}","backendNodeId": ${backendNodeId}}`;
+			const packedMessage = `:ContentScript       :N:{"origLocation":"DevtoolsPrivate","payload":${payload}}`;
+			// @ts-expect-error
+			globalWindow[sendToCoreFnName](packedMessage);
+			inspectNodeRequestedOrig.call(this, { backendNodeId });
+		};
 }
 
 // THIS CREATES CONTEXT MENU

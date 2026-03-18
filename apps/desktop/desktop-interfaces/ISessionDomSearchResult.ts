@@ -1,14 +1,14 @@
-import IElementSummary from './IElementSummary';
+import type IElementSummary from "./IElementSummary";
 
 export default interface ISessionDomSearchResult {
-  searchingContext: ISearchContext;
-  elements: IElementSummary[];
+	searchingContext: ISearchContext;
+	elements: IElementSummary[];
 }
 
 export interface ISearchContext {
-  tabId: number;
-  baseTime: number;
-  startTime: number;
-  endTime: number;
-  documentUrl: string;
+	tabId: number;
+	baseTime: number;
+	startTime: number;
+	endTime: number;
+	documentUrl: string;
 }

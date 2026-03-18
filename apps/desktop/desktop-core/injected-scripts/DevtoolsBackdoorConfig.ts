@@ -1,9 +1,8 @@
-
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const ___emitFromDevtoolsToCore = '___emitFromDevtoolsToCore';
+export const ___emitFromDevtoolsToCore = "___emitFromDevtoolsToCore";
 
 export const EventType = {
-  ElementWasSelected: 'ElementWasSelected',
-  ToggleInspectElementMode: 'ToggleInspectElementMode',
-  DevtoolsFocus: 'DevtoolsFocus',
+	ElementWasSelected: "ElementWasSelected",
+	ToggleInspectElementMode: "ToggleInspectElementMode",
+	DevtoolsFocus: "DevtoolsFocus",
 };

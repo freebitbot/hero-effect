@@ -1,13 +1,13 @@
 declare class InspectorFrontendHost {
-  static closeWindow(): void;
+	static closeWindow(): void;
 }
 
 declare class DevToolsAPI {
-  static showPanel(name: string): void;
-  static getInspectedTabId(): number;
-  static enterInspectElementMode(): void;
+	static showPanel(name: string): void;
+	static getInspectedTabId(): number;
+	static enterInspectElementMode(): void;
 }
 
 declare class SDK {
-  static OverlayModel: any;
+	static OverlayModel: any;
 }

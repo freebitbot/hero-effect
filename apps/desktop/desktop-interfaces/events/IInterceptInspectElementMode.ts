@@ -1,3 +1,3 @@
 export default interface IInterceptInspectElementMode {
-  mode: string;
+	mode: string;
 }
