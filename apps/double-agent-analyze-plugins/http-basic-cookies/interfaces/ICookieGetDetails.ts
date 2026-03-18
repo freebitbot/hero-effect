@@ -1,4 +1,4 @@
 export default interface ICookieGetDetails {
-  getter: string;
-  httpProtocol: string;
+	getter: string;
+	httpProtocol: string;
 }
