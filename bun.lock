@@ -17,9 +17,6 @@
         "typescript": "^5",
       },
     },
-    "apps/desktop/desktop-core": {
-      "name": "@ulixee/desktop-core",
-    },
     "apps/double-agent-analyze-plugins/browser-codecs": {
       "name": "@double-agent/analyze-browser-codecs",
       "dependencies": {
@@ -411,7 +408,6 @@
       "devDependencies": {
         "@ulixee/unblocked-agent": "workspace:*",
         "@ulixee/unblocked-agent-mitm": "workspace:*",
-        "@ulixee/unblocked-agent-testing": "workspace:*",
         "fpcollect": "^1.0.4",
         "fpscanner": "^0.1.5",
         "proxy": "^2.2.0",
@@ -753,9 +749,6 @@
         "@ulixee/unblocked-browser-profiler-dom-bridger": "workspace:*",
         "@ulixee/unblocked-specification": "workspace:*",
         "lodash": "^4.17.20",
-      },
-      "devDependencies": {
-        "@ulixee/unblocked-agent-testing": "workspace:*",
       },
     },
     "apps/ulixee/unblocked-browser-profiler": {
@@ -1196,8 +1189,6 @@
     "@ulixee/default-browser-emulator": ["@ulixee/default-browser-emulator@workspace:apps/plugins/default-browser-emulator"],
 
     "@ulixee/default-human-emulator": ["@ulixee/default-human-emulator@workspace:apps/plugins/default-human-emulator"],
-
-    "@ulixee/desktop-core": ["@ulixee/desktop-core@workspace:apps/desktop/desktop-core"],
 
     "@ulixee/double-agent-stacks": ["@ulixee/double-agent-stacks@workspace:apps/ulixee/double-agent-stacks"],
 

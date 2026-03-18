@@ -1,6 +1,0 @@
-{
-	"name": "@ulixee/desktop-core",
-	"repository": "git@github.com:ulixee/platform.git",
-	"main": "index.js",
-	"license": "MIT"
-}
