@@ -1,13 +1,13 @@
-import { IIndexedDB, IObjectStore, IObjectStoreIndex } from './IIndexedDB';
+import { IIndexedDB, IObjectStore, IObjectStoreIndex } from "./IIndexedDB";
 
 export default interface IDomStorage {
-  [securityOrigin: string]: IDomStorageForOrigin;
+	[securityOrigin: string]: IDomStorageForOrigin;
 }
 
 export interface IDomStorageForOrigin {
-  localStorage: IStorageEntry[];
-  sessionStorage: IStorageEntry[];
-  indexedDB: IIndexedDB[];
+	localStorage: IStorageEntry[];
+	sessionStorage: IStorageEntry[];
+	indexedDB: IIndexedDB[];
 }
 
 export type IStorageEntry = string[];

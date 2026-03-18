@@ -1,6 +1,6 @@
-import { ConnectionOptions } from 'tls';
+import type { ConnectionOptions } from "tls";
 
 export default interface IDnsSettings {
-  dnsOverTlsConnection?: ConnectionOptions;
-  useUpstreamProxy?: boolean;
+	dnsOverTlsConnection?: ConnectionOptions;
+	useUpstreamProxy?: boolean;
 }

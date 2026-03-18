@@ -1,7 +1,7 @@
-import { IJsPath } from '@ulixee/js-path';
+import type { IJsPath } from "@ulixee/js-path";
 
 export default interface IFileChooserPrompt {
-  frameId: number;
-  selectMultiple: boolean;
-  jsPath: IJsPath;
+	frameId: number;
+	selectMultiple: boolean;
+	jsPath: IJsPath;
 }
