@@ -1,7 +1,7 @@
+import { existsSync } from "node:fs";
 import ChromeApp from "@ulixee/chrome-app";
 import type IBrowserEngine from "@ulixee/unblocked-specification/agent/browser/IBrowserEngine";
 import type IBrowserEngineOption from "@ulixee/unblocked-specification/agent/browser/IBrowserEngineOption";
-import { existsSync } from "fs";
 import BrowserEngineOptions from "./BrowserEngineOptions";
 
 export default class BrowserEngine implements IBrowserEngine {

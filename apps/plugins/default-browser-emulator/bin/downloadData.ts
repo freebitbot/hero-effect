@@ -1,7 +1,7 @@
 #!/usr/bin/env node
+import { createGunzip } from "node:zlib";
 import { httpGet } from "@ulixee/commons/lib/downloadFile";
 import * as Tar from "tar";
-import { createGunzip } from "zlib";
 import { emulatorDataDir } from "../paths";
 
 /**
