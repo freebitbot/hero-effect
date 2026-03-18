@@ -2,9 +2,9 @@ import * as Fs from "node:fs";
 import { existsSync } from "node:fs";
 import * as http from "node:http";
 import * as https from "node:https";
+import { createGunzip } from "node:zlib";
 import ProgressBar from "progress";
 import * as Tar from "tar";
-import { createGunzip } from "zlib";
 import type ChromeApp from "../index";
 import { getRequestOptionsWithProxy } from "./proxy";
 
