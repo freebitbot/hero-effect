@@ -1,31 +1,40 @@
-import { IPluginClass } from '@ulixee/hero-interfaces/IPlugin';
-import { IPluginType, PluginTypes } from '@ulixee/hero-interfaces/IPluginTypes';
+import type { IPluginClass } from "@ulixee/hero-interfaces/IPlugin";
+import {
+	type IPluginType,
+	PluginTypes,
+} from "@ulixee/hero-interfaces/IPluginTypes";
 
-export default function extractPlugins<T = IPluginClass>(obj: any, pluginType?: IPluginType): T[] {
-  const Plugins: T[] = [];
-  if (!obj) return Plugins;
+export default function extractPlugins<T = IPluginClass>(
+	obj: any,
+	pluginType?: IPluginType,
+): T[] {
+	const Plugins: T[] = [];
+	if (!obj) return Plugins;
 
-  if (isPluginMatch(obj, pluginType)) {
-    Plugins.push(obj);
-    return Plugins;
-  }
+	if (isPluginMatch(obj, pluginType)) {
+		Plugins.push(obj);
+		return Plugins;
+	}
 
-  const PotentialPlugins: any[] = Array.isArray(obj) ? obj : Object.values(obj);
-  for (const PotentialPlugin of PotentialPlugins) {
-    if (!PotentialPlugin) continue;
-    if (isPluginMatch(PotentialPlugin, pluginType)) {
-      Plugins.push(PotentialPlugin as unknown as T);
-    }
-  }
+	const PotentialPlugins: any[] = Array.isArray(obj) ? obj : Object.values(obj);
+	for (const PotentialPlugin of PotentialPlugins) {
+		if (!PotentialPlugin) continue;
+		if (isPluginMatch(PotentialPlugin, pluginType)) {
+			Plugins.push(PotentialPlugin as unknown as T);
+		}
+	}
 
-  return Plugins;
+	return Plugins;
 }
 
-function isPluginMatch(PotentialPlugin: any, pluginType?: IPluginType): boolean {
-  if (pluginType) {
-    return PotentialPlugin.type === pluginType;
-  }
-  if (PotentialPlugin.type === PluginTypes.ClientPlugin) return true;
-  if (PotentialPlugin.type === PluginTypes.CorePlugin) return true;
-  return false;
+function isPluginMatch(
+	PotentialPlugin: any,
+	pluginType?: IPluginType,
+): boolean {
+	if (pluginType) {
+		return PotentialPlugin.type === pluginType;
+	}
+	if (PotentialPlugin.type === PluginTypes.ClientPlugin) return true;
+	if (PotentialPlugin.type === PluginTypes.CorePlugin) return true;
+	return false;
 }
