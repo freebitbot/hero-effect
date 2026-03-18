@@ -1,24 +1,24 @@
-import IProfile from '@double-agent/collect-http-websockets/interfaces/IProfile';
-import SharedCheckGenerator from '@double-agent/analyze/lib/headers/SharedCheckGenerator';
+import SharedCheckGenerator from "@double-agent/analyze/lib/headers/SharedCheckGenerator";
+import type IProfile from "@double-agent/collect-http-websockets/interfaces/IProfile";
 
 export default class CheckGenerator {
-  public readonly checks = [];
+	public readonly checks = [];
 
-  private readonly profile: IProfile;
-  private readonly userAgentId: string;
+	private readonly profile: IProfile;
+	private readonly userAgentId: string;
 
-  constructor(profile: IProfile) {
-    this.profile = profile;
+	constructor(profile: IProfile) {
+		this.profile = profile;
 
-    const { userAgentId, data } = profile;
-    this.userAgentId = userAgentId;
+		const { userAgentId, data } = profile;
+		this.userAgentId = userAgentId;
 
-    const checks = new SharedCheckGenerator(userAgentId, data);
+		const checks = new SharedCheckGenerator(userAgentId, data);
 
-    this.checks.push(
-      ...checks.createHeaderCaseChecks(),
-      ...checks.createHeaderOrderChecks(),
-      ...checks.createDefaultValueChecks(),
-    );
-  }
+		this.checks.push(
+			...checks.createHeaderCaseChecks(),
+			...checks.createHeaderOrderChecks(),
+			...checks.createDefaultValueChecks(),
+		);
+	}
 }
