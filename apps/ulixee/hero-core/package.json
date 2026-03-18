@@ -1,6 +1,5 @@
 {
 	"name": "@ulixee/hero-core",
-
 	"description": "The core browser API used to run Hero",
 	"exports": {
 		".": {
@@ -52,7 +51,6 @@
 	"devDependencies": {
 		"@types/better-sqlite3": "^7.6.11",
 		"@ulixee/chrome-app": "1.0.3",
-		"@ulixee/hero": "workspace:*",
-		"@ulixee/hero-testing": "workspace:*"
+		"@ulixee/hero": "workspace:*"
 	}
 }

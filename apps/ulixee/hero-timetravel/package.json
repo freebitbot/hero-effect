@@ -1,7 +1,5 @@
 {
 	"name": "@ulixee/hero-timetravel",
-
-	"description": "The interface to playback and examine previous Hero sessions",
 	"dependencies": {
 		"@ulixee/commons": "workspace:*",
 		"@ulixee/hero-core": "workspace:*",
@@ -10,7 +8,5 @@
 		"@ulixee/unblocked-specification": "workspace:*",
 		"nanoid": "^3.3.11"
 	},
-	"devDependencies": {
-		"@ulixee/hero-testing": "workspace:*"
-	}
+	"description": "The interface to playback and examine previous Hero sessions"
 }

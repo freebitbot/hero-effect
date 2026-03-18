@@ -17,26 +17,6 @@
         "typescript": "^5",
       },
     },
-    "apps/datastore/databroker": {
-      "name": "@ulixee/databroker",
-      "bin": "./bin/cli.js",
-    },
-    "apps/datastore/datastore": {
-      "name": "@ulixee/datastore",
-      "bin": "./bin/cli.js",
-    },
-    "apps/datastore/datastore-core": {
-      "name": "@ulixee/datastore-core",
-    },
-    "apps/datastore/datastore-docpage": {
-      "name": "@ulixee/datastore-docpage",
-    },
-    "apps/datastore/datastore-plugins-hero": {
-      "name": "@ulixee/datastore-plugins-hero",
-    },
-    "apps/datastore/datastore-plugins-hero-core": {
-      "name": "@ulixee/datastore-plugins-hero-core",
-    },
     "apps/desktop/desktop-core": {
       "name": "@ulixee/desktop-core",
     },
@@ -461,12 +441,8 @@
         "@ulixee/execute-js-plugin": "workspace:*",
         "@ulixee/hero": "workspace:*",
         "@ulixee/hero-core": "workspace:*",
-        "@ulixee/hero-testing": "workspace:*",
         "@ulixee/net": "workspace:*",
       },
-    },
-    "apps/testing/hero-testing": {
-      "name": "@ulixee/hero-testing",
     },
     "apps/testing/unblocked-agent-testing": {
       "name": "@ulixee/unblocked-agent-testing",
@@ -557,7 +533,6 @@
       },
       "devDependencies": {
         "@ulixee/hero-core": "workspace:*",
-        "@ulixee/hero-testing": "workspace:*",
       },
     },
     "apps/ulixee/hero-core": {
@@ -584,7 +559,6 @@
         "@types/better-sqlite3": "^7.6.11",
         "@ulixee/chrome-app": "1.0.3",
         "@ulixee/hero": "workspace:*",
-        "@ulixee/hero-testing": "workspace:*",
       },
     },
     "apps/ulixee/hero-interfaces": {
@@ -623,9 +597,6 @@
         "@ulixee/unblocked-agent": "workspace:*",
         "@ulixee/unblocked-specification": "workspace:*",
         "nanoid": "^3.3.11",
-      },
-      "devDependencies": {
-        "@ulixee/hero-testing": "workspace:*",
       },
     },
     "apps/ulixee/js-path": {
@@ -1222,18 +1193,6 @@
 
     "@ulixee/commons": ["@ulixee/commons@workspace:apps/ulixee/commons"],
 
-    "@ulixee/databroker": ["@ulixee/databroker@workspace:apps/datastore/databroker"],
-
-    "@ulixee/datastore": ["@ulixee/datastore@workspace:apps/datastore/datastore"],
-
-    "@ulixee/datastore-core": ["@ulixee/datastore-core@workspace:apps/datastore/datastore-core"],
-
-    "@ulixee/datastore-docpage": ["@ulixee/datastore-docpage@workspace:apps/datastore/datastore-docpage"],
-
-    "@ulixee/datastore-plugins-hero": ["@ulixee/datastore-plugins-hero@workspace:apps/datastore/datastore-plugins-hero"],
-
-    "@ulixee/datastore-plugins-hero-core": ["@ulixee/datastore-plugins-hero-core@workspace:apps/datastore/datastore-plugins-hero-core"],
-
     "@ulixee/default-browser-emulator": ["@ulixee/default-browser-emulator@workspace:apps/plugins/default-browser-emulator"],
 
     "@ulixee/default-human-emulator": ["@ulixee/default-human-emulator@workspace:apps/plugins/default-human-emulator"],
@@ -1253,8 +1212,6 @@
     "@ulixee/hero-playground": ["@ulixee/hero-playground@workspace:apps/ulixee/hero-playground"],
 
     "@ulixee/hero-plugin-utils": ["@ulixee/hero-plugin-utils@workspace:apps/ulixee/hero-plugin-utils"],
-
-    "@ulixee/hero-testing": ["@ulixee/hero-testing@workspace:apps/testing/hero-testing"],
 
     "@ulixee/hero-timetravel": ["@ulixee/hero-timetravel@workspace:apps/ulixee/hero-timetravel"],
 
