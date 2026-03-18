@@ -1,12 +1,12 @@
-import IBrowserVersion from './IBrowserVersion';
-import { IDeviceCategory } from './DeviceCategory';
+import type { IDeviceCategory } from "./DeviceCategory";
+import type IBrowserVersion from "./IBrowserVersion";
 
 export default interface IBrowser {
-  id: string;
-  name: string;
-  marketshare: number;
-  version: IBrowserVersion;
-  deviceCategory: IDeviceCategory;
-  releaseDate: string;
-  description: string;
+	id: string;
+	name: string;
+	marketshare: number;
+	version: IBrowserVersion;
+	deviceCategory: IDeviceCategory;
+	releaseDate: string;
+	description: string;
 }
