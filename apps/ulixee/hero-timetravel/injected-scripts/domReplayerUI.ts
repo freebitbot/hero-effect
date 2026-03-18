@@ -1,12 +1,12 @@
 // have to import to allow declarations...
-import {} from '@ulixee/hero-interfaces/IDomChangeEvent';
+import {} from "@ulixee/hero-interfaces/IDomChangeEvent";
 
 declare global {
-  interface Window {
-    showReplayStatus(text: string);
-    overlay(options?: { notify?: string; hide?: boolean });
-    reattachUI();
-  }
+	interface Window {
+		showReplayStatus(text: string);
+		overlay(options?: { notify?: string; hide?: boolean });
+		reattachUI();
+	}
 }
 
 let overlayNode: HTMLElement;
@@ -17,16 +17,16 @@ let overlayShadow: ShadowRoot;
 let statusNode: HTMLElement;
 
 window.reattachUI = function reattachUI() {
-  if (overlayContainer && !overlayContainer.isConnected && document.body) {
-    document.body.appendChild(overlayContainer);
-  }
+	if (overlayContainer && !overlayContainer.isConnected && document.body) {
+		document.body.appendChild(overlayContainer);
+	}
 };
 
 window.showReplayStatus = function showReplayStatus(text: string) {
-  if (document?.body && document.body.children.length === 0) {
-    statusNode = document.createElement('hero-status');
-    const styleElement = document.createElement('style');
-    styleElement.textContent = `
+	if (document?.body && document.body.children.length === 0) {
+		statusNode = document.createElement("hero-status");
+		const styleElement = document.createElement("style");
+		styleElement.textContent = `
   hero-status {
     display:block;
     position: relative;
@@ -43,48 +43,51 @@ window.showReplayStatus = function showReplayStatus(text: string) {
     box-shadow: 3px 2px 4px rgba(0, 0, 0, 0.12), 2px 1px 3px rgba(0, 0, 0, 0.3);
     border: 1px solid rgba(0, 0, 0, 0.2);
   }`;
-    document.body.appendChild(statusNode);
-    document.body.appendChild(styleElement);
-  }
-  if (statusNode && statusNode.isConnected) {
-    statusNode.innerText = text;
-  }
+		document.body.appendChild(statusNode);
+		document.body.appendChild(styleElement);
+	}
+	if (statusNode && statusNode.isConnected) {
+		statusNode.innerText = text;
+	}
 };
 
-window.overlay = function overlay(options?: { hide?: boolean; notify?: string }) {
-  if (options?.hide === true) {
-    overlayNode.classList.add('hide');
-    return;
-  }
-  if (overlayNode) {
-    window.reattachUI();
-    overlayNode.classList.remove('hide');
-    if (options?.notify) {
-      overlayNode.classList.add('notify');
-      overlayNotification.textContent = options.notify;
-    }
-    return;
-  }
+window.overlay = function overlay(options?: {
+	hide?: boolean;
+	notify?: string;
+}) {
+	if (options?.hide === true) {
+		overlayNode.classList.add("hide");
+		return;
+	}
+	if (overlayNode) {
+		window.reattachUI();
+		overlayNode.classList.remove("hide");
+		if (options?.notify) {
+			overlayNode.classList.add("notify");
+			overlayNotification.textContent = options.notify;
+		}
+		return;
+	}
 
-  overlayContainer = document.createElement('hero-overlay');
-  overlayContainer.style.zIndex = '2147483647';
+	overlayContainer = document.createElement("hero-overlay");
+	overlayContainer.style.zIndex = "2147483647";
 
-  overlayNode = document.createElement('hero-mask');
-  overlayNode.textContent = ' ';
+	overlayNode = document.createElement("hero-mask");
+	overlayNode.textContent = " ";
 
-  overlayNotification = document.createElement('hero-notification');
-  overlayNotification.textContent = ' ';
-  overlayNode.appendChild(overlayNotification);
+	overlayNotification = document.createElement("hero-notification");
+	overlayNotification.textContent = " ";
+	overlayNode.appendChild(overlayNotification);
 
-  const spinner = document.createElement('hero-spinner');
-  for (let i = 0; i < 12; i += 1) {
-    const spoke = document.createElement('hero-spoke');
-    spinner.appendChild(spoke);
-  }
-  overlayNode.appendChild(spinner);
+	const spinner = document.createElement("hero-spinner");
+	for (let i = 0; i < 12; i += 1) {
+		const spoke = document.createElement("hero-spoke");
+		spinner.appendChild(spoke);
+	}
+	overlayNode.appendChild(spinner);
 
-  const styleElement = document.createElement('style');
-  styleElement.textContent = `
+	const styleElement = document.createElement("style");
+	styleElement.textContent = `
   hero-mask {
     position: fixed;
     top: 0;
@@ -218,8 +221,8 @@ window.overlay = function overlay(options?: { hide?: boolean; notify?: string })
 
   `;
 
-  overlayShadow = overlayContainer.attachShadow({ mode: 'closed' });
-  overlayShadow.appendChild(overlayNode);
-  overlayShadow.appendChild(styleElement);
-  window.reattachUI();
+	overlayShadow = overlayContainer.attachShadow({ mode: "closed" });
+	overlayShadow.appendChild(overlayNode);
+	overlayShadow.appendChild(styleElement);
+	window.reattachUI();
 };
