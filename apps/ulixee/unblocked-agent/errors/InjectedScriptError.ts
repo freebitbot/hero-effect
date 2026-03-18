@@ -1,17 +1,17 @@
-import { IPathStep } from '@ulixee/js-path';
+import type { IPathStep } from "@ulixee/js-path";
 
 export default class InjectedScriptError extends Error {
-  private readonly pathState: { step: IPathStep; index: number };
-  constructor(message: string, pathState?: { step: IPathStep; index: number }) {
-    super(message);
-    this.pathState = pathState;
-    this.name = 'InjectedScriptError';
-  }
+	private readonly pathState: { step: IPathStep; index: number };
+	constructor(message: string, pathState?: { step: IPathStep; index: number }) {
+		super(message);
+		this.pathState = pathState;
+		this.name = "InjectedScriptError";
+	}
 
-  public toJSON(): object {
-    return {
-      message: this.message,
-      pathState: this.pathState,
-    };
-  }
+	public toJSON(): object {
+		return {
+			message: this.message,
+			pathState: this.pathState,
+		};
+	}
 }

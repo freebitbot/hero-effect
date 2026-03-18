@@ -1,7 +1,7 @@
-import Browser from './lib/Browser';
-import Agent from './lib/Agent';
-import Pool from './lib/Pool';
-import Page from './lib/Page';
-import BrowserContext from './lib/BrowserContext';
+import Agent from "./lib/Agent";
+import Browser from "./lib/Browser";
+import BrowserContext from "./lib/BrowserContext";
+import Page from "./lib/Page";
+import Pool from "./lib/Pool";
 
-export { Browser, Agent, Pool, Page, BrowserContext };
+export { Agent, Browser, BrowserContext, Page, Pool };
