@@ -1,6 +1,6 @@
+import type { ServerOptions } from "node:https";
 import type { ListenOptions } from "node:net";
 import type Identity from "@ulixee/platform-utils/lib/Identity";
-import type { ServerOptions } from "https";
 
 export default interface ICloudConfiguration
 	extends ListenOptions,

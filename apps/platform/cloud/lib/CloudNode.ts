@@ -399,17 +399,17 @@ export default class CloudNode {
 ############################################################################################
 ############################################################################################
 
-            A temporary networkIdentity has been installed on your server. 
+            A temporary networkIdentity has been installed on your server.
 
-       To create a long-term network identity, you should save and use this Identity 
+       To create a long-term network identity, you should save and use this Identity
                           from your local system:
 
  npx @ulixee/datastore admin-identity save --privateKey=${key.toString("base64")} --filename="${path}"
 
 --------------------------------------------------------------------------------------------
-       
+
            To dismiss this message, add the following environment variable:
-           
+
  ULX_NETWORK_IDENTITY_PATH="${path}",
 
 ############################################################################################
