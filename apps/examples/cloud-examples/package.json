@@ -1,9 +1,0 @@
-{
-	"name": "@ulixee/cloud-examples",
-
-	"private": true,
-	"dependencies": {
-		"@ulixee/cloud": "workspace:*",
-		"@ulixee/hero": "workspace:*"
-	}
-}
