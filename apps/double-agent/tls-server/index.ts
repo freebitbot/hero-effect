@@ -1,6 +1,6 @@
+import { type ChildProcess, fork } from "node:child_process";
+import { EventEmitter } from "node:events";
 import Config from "@double-agent/config";
-import { type ChildProcess, fork } from "child_process";
-import { EventEmitter } from "events";
 import type IClientHello from "./interfaces/IClientHello";
 import IncomingMessage from "./lib/IncomingMessage";
 import parseTlsRecordFromStderr from "./lib/parseTlsRecordFromStderr";

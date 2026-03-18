@@ -1,8 +1,8 @@
 import "@ulixee/commons/lib/SourceMapSupport";
+import type { IncomingMessage, ServerResponse } from "node:http";
+import * as https from "node:https";
+import type * as tls from "node:tls";
 import ShutdownHandler from "@ulixee/commons/lib/ShutdownHandler";
-import type { IncomingMessage, ServerResponse } from "http";
-import * as https from "https";
-import type * as tls from "tls";
 
 const minMillisBetweenConnects = 5e3;
 

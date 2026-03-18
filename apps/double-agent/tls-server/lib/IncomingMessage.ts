@@ -1,4 +1,4 @@
-import type { IncomingHttpHeaders } from "http";
+import type { IncomingHttpHeaders } from "node:http";
 import type IClientHello from "../interfaces/IClientHello";
 
 export default class IncomingMessage {

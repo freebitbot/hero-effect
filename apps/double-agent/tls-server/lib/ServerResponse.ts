@@ -1,11 +1,11 @@
-import type { ChildProcess } from "child_process";
-import type { IncomingHttpHeaders } from "http";
+import type { ChildProcess } from "node:child_process";
+import type { IncomingHttpHeaders } from "node:http";
 
 export default class ServerResponse {
 	private readonly child: ChildProcess;
 	private readonly connectionId: string;
 
-	constructor(child, { connectionId }: { connectionId: string }) {
+	constructor(child: ChildProcess, { connectionId }: { connectionId: string }) {
 		this.child = child;
 		this.connectionId = connectionId;
 	}
