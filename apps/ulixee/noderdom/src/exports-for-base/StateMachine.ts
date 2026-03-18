@@ -1,21 +1,21 @@
-let stateStorageSymbol = Symbol.for('noderdom/StateMachine');
+let stateStorageSymbol = Symbol.for("noderdom/StateMachine");
 
 export function setStorageSymbol(storageSymbol: symbol): void {
-  stateStorageSymbol = storageSymbol;
+	stateStorageSymbol = storageSymbol;
 }
 
 export default function StateMachine<IClass extends object, IProperties>() {
-  function setState(instance: IClass, properties: Partial<IProperties>): void {
-    const object: Record<string, any> = getState(instance);
-    Object.assign(object, properties);
+	function setState(instance: IClass, properties: Partial<IProperties>): void {
+		const object: Record<string, any> = getState(instance);
+		Object.assign(object, properties);
 
-    (instance as any)[stateStorageSymbol] = object;
-  }
+		(instance as any)[stateStorageSymbol] = object;
+	}
 
-  function getState(instance: IClass): IProperties {
-    if (!instance) return {} as any;
-    return (instance as any)[stateStorageSymbol] || {};
-  }
+	function getState(instance: IClass): IProperties {
+		if (!instance) return {} as any;
+		return (instance as any)[stateStorageSymbol] || {};
+	}
 
-  return { getState, setState };
+	return { getState, setState };
 }
