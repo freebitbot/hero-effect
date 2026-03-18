@@ -1,10 +1,10 @@
 import Database = require("better-sqlite3");
 
+import * as fs from "node:fs";
+import * as Path from "node:path";
 import Log from "@ulixee/commons/lib/Logger";
 import type SqliteTable from "@ulixee/commons/lib/SqliteTable";
 import type { Database as SqliteDatabase, Transaction } from "better-sqlite3";
-import * as fs from "fs";
-import * as Path from "path";
 import env from "../env";
 import CertificatesTable from "../models/CertificatesTable";
 
