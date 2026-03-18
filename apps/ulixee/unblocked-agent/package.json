@@ -1,6 +1,5 @@
 {
 	"name": "@ulixee/unblocked-agent",
-
 	"description": "Fully programmable Devtools Protocol based browser",
 	"main": "index.js",
 	"dependencies": {
@@ -16,7 +15,6 @@
 		"ws": "^8.18.0"
 	},
 	"devDependencies": {
-		"@ulixee/unblocked-agent-testing": "workspace:*",
 		"image-size": "^1.0.1",
 		"vue": "^3.4.30"
 	}

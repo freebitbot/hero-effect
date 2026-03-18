@@ -423,7 +423,6 @@
       "devDependencies": {
         "@ulixee/js-path": "workspace:*",
         "@ulixee/unblocked-agent": "workspace:*",
-        "@ulixee/unblocked-agent-testing": "workspace:*",
       },
     },
     "apps/plugins/execute-js-plugin": {
@@ -439,9 +438,6 @@
         "@ulixee/hero-core": "workspace:*",
         "@ulixee/net": "workspace:*",
       },
-    },
-    "apps/testing/unblocked-agent-testing": {
-      "name": "@ulixee/unblocked-agent-testing",
     },
     "apps/ulixee/chrome-app": {
       "name": "@ulixee/chrome-app",
@@ -691,7 +687,6 @@
         "ws": "^8.18.0",
       },
       "devDependencies": {
-        "@ulixee/unblocked-agent-testing": "workspace:*",
         "image-size": "^1.0.1",
         "vue": "^3.4.30",
       },
@@ -708,7 +703,6 @@
       "devDependencies": {
         "@types/node": "^18.19.10",
         "@types/ws": "^7.4.7",
-        "@ulixee/unblocked-agent-testing": "workspace:*",
         "http-proxy-agent": "^7.0.2",
         "proxy": "^2.2.0",
         "ws": "^8.18.0",
@@ -723,7 +717,6 @@
       },
       "devDependencies": {
         "@types/ws": "^7.2.4",
-        "@ulixee/unblocked-agent-testing": "workspace:*",
         "proxy": "^2.2.0",
         "simple-socks": "^2.1.0",
         "ws": "^8.18.0",
@@ -1221,8 +1214,6 @@
     "@ulixee/unblocked-agent-mitm": ["@ulixee/unblocked-agent-mitm@workspace:apps/ulixee/unblocked-agent-mitm"],
 
     "@ulixee/unblocked-agent-mitm-socket": ["@ulixee/unblocked-agent-mitm-socket@workspace:apps/ulixee/unblocked-agent-mitm-socket"],
-
-    "@ulixee/unblocked-agent-testing": ["@ulixee/unblocked-agent-testing@workspace:apps/testing/unblocked-agent-testing"],
 
     "@ulixee/unblocked-browser-emulator-builder": ["@ulixee/unblocked-browser-emulator-builder@workspace:apps/ulixee/unblocked-browser-emulator-builder"],
 
