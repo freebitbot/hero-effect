@@ -1,0 +1,42 @@
+Я хочу щоб ти дослідив цей проект максимально уважно. Мене цікавлять наступні папки:
+
+## Datastores
+- apps/datastore/databroker
+- apps/datastore/datastore
+- apps/datastore/datastore-core
+- apps/datastore/datastore-docpage
+- apps/datastore/datastore-packager
+- apps/datastore/datastore-plugins-hero
+- apps/datastore/datastore-plugins-hero-core
+- apps/datastore/datastore-plugins-puppeteer
+- apps/datastore/datastore-plugins-puppeteer-core
+
+## desktop
+- apps/desktop/desktop-core
+- apps/desktop/desktop-interfaces
+
+
+# double-agent
+- apps/double-agent
+- apps/double-agent-analyze-plugins
+- apps/double-agent-collect-plugins
+
+# platform
+- apps/platform
+
+# plugins
+- apps/plugins
+
+
+## і найбільший це ulixee де є найбільше субпакетів
+- apps/ulixee
+
+
+# Моя ціль
+Я хочу написати схожу імплементацію ідеї даного моно репозиторію, іншими словами зробити майже те саме, але в більш оптимізований спосіб із значно краще оптимізованим кодом та процесами, викинути все що мені реально не потрібно, наприклад все що повязано з Datastores, desktop та platform.
+
+Мене цікавить детальний технічний аналіз кожного пакету, що він робить, яку бізнес ідею він виконує чи може виконувати. Мені не потрібно щоб ти описував що там імплементовано погано чи добре, просто потрібно проаналізувати сам існуючий код.
+Однозначно для дослідження рекомендую використовувати LSP, однозначно ігноруй папки з тестами, досліди які залежності я у відповідного пакету описані в package.json (бо це може виявитися важливим).
+Іншими словами - це дослідження ляже в основу максимально деталізованого тех завдання яке ми з тобою потім обговоримо. Все дослідження в форматі MD потрібно зберегти в папку research в корені проекту. Пропоную не сильно заглиблюватися на аналізі групи пакетів які я точно знаю що мені вони не потрібні, тобто Datastores, desktop та platform, можеш поверхнево їх проаналізувати без серйозних деталей.
+
+Цих пакетів є дуже багато, тому я пропоную тобі використати для різних груп пакетів окремого general-purpose субагента, цей суб агане власне зробить відповідне дослідження і видасть тобі на гору результат.
