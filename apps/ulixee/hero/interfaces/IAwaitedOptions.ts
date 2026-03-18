@@ -1,6 +1,6 @@
-import CoreFrameEnvironment from '../lib/CoreFrameEnvironment';
+import type CoreFrameEnvironment from "../lib/CoreFrameEnvironment";
 
 export default interface IAwaitedOptions {
-  coreFrame: Promise<CoreFrameEnvironment>;
-  remoteInitializerPromise?: Promise<void>;
+	coreFrame: Promise<CoreFrameEnvironment>;
+	remoteInitializerPromise?: Promise<void>;
 }

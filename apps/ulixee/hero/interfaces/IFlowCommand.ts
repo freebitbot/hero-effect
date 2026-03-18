@@ -1,8 +1,8 @@
-import ISourceCodeLocation from '@ulixee/commons/interfaces/ISourceCodeLocation';
+import type ISourceCodeLocation from "@ulixee/commons/interfaces/ISourceCodeLocation";
 
 export default interface IFlowCommand {
-  id?: number;
-  parentId?: number;
-  retryNumber?: number;
-  callsitePath: ISourceCodeLocation[];
+	id?: number;
+	parentId?: number;
+	retryNumber?: number;
+	callsitePath: ISourceCodeLocation[];
 }
