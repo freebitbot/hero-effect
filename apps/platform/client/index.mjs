@@ -1,4 +1,4 @@
-import cjsImport from './index.js';
+import cjsImport from "./index.js";
 
 const {
   IInputFilter,
@@ -10,12 +10,12 @@ const {
 } = cjsImport;
 
 export {
-  ClientForDatastore,
-  ClientForTable,
-  ClientForFunction,
-  ClientForCrawler,
-  IInputFilter,
-  IOutputSchema,
+	ClientForCrawler,
+	ClientForDatastore,
+	ClientForFunction,
+	ClientForTable,
+	IInputFilter,
+	IOutputSchema,
 };
 
 export default cjsImport.default;
