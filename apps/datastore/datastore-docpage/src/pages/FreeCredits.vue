@@ -46,60 +46,63 @@
 </template>
 
 <script lang="ts">
-import * as Vue from 'vue';
-import Prism from '../components/Prism.vue';
-import Navbar from '../layouts/Navbar.vue';
-import { docpageConfigPromise, serverDetailsPromise } from '../main';
-import IDocpageConfig from '@ulixee/datastore-packager/interfaces/IDocpageConfig';
-import { getCredit } from '@/lib/Utils';
+import type IDocpageConfig from "@ulixee/datastore-packager/interfaces/IDocpageConfig";
+import * as Vue from "vue";
+import { getCredit } from "@/lib/Utils";
+import Prism from "../components/Prism.vue";
+import Navbar from "../layouts/Navbar.vue";
+import { docpageConfigPromise, serverDetailsPromise } from "../main";
 
 export default Vue.defineComponent({
-  components: {
-    Prism,
-    Navbar,
-  },
+	components: {
+		Prism,
+		Navbar,
+	},
 
-  async setup() {
-    const config = await docpageConfigPromise;
-    const { ipAddress, port } = await serverDetailsPromise;
-    const credits = Vue.ref({ balance: 0, issuedCredits: 0 });
-    const authString = getCredit()!;
+	async setup() {
+		const config = await docpageConfigPromise;
+		const { ipAddress, port } = await serverDetailsPromise;
+		const credits = Vue.ref({ balance: 0, issuedCredits: 0 });
+		const authString = getCredit()!;
 
-    try {
-      const url = new URL(location.href);
-      url.search = `?${authString}`;
-      const result = await fetch(url.href, {
-        headers: { accept: 'application/json' },
-        method: 'GET',
-      });
+		try {
+			const url = new URL(location.href);
+			url.search = `?${authString}`;
+			const result = await fetch(url.href, {
+				headers: { accept: "application/json" },
+				method: "GET",
+			});
 
-      const json = await result.json();
-      if (json) {
-        const issuedCredits = Number(json.issuedCredits?.value ?? 0);
-        const balance = Number(json.balance?.value ?? 0);
-        if (issuedCredits) {
-          credits.value.issuedCredits =
-            issuedCredits > 0 ? Math.round((1000 * Number(issuedCredits)) / 1_000_000) / 1000 : 0;
-        }
-        if (!!balance) {
-          credits.value.balance = balance > 0 ? Math.round((1000 * balance) / 1_000_000) / 1000 : 0;
-        }
-      }
-    } catch (error) {
-      console.error(error);
-    }
+			const json = await result.json();
+			if (json) {
+				const issuedCredits = Number(json.issuedCredits?.value ?? 0);
+				const balance = Number(json.balance?.value ?? 0);
+				if (issuedCredits) {
+					credits.value.issuedCredits =
+						issuedCredits > 0
+							? Math.round((1000 * Number(issuedCredits)) / 1_000_000) / 1000
+							: 0;
+				}
+				if (balance) {
+					credits.value.balance =
+						balance > 0 ? Math.round((1000 * balance) / 1_000_000) / 1000 : 0;
+				}
+			}
+		} catch (error) {
+			console.error(error);
+		}
 
-    return {
-      authString,
-      config,
-      defaultExample: (config as unknown as IDocpageConfig).defaultExample,
-      ipAddress,
-      port,
-      credits,
-    };
-  },
+		return {
+			authString,
+			config,
+			defaultExample: (config as unknown as IDocpageConfig).defaultExample,
+			ipAddress,
+			port,
+			credits,
+		};
+	},
 
-  async mounted() {},
+	async mounted() {},
 });
 </script>
 

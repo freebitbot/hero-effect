@@ -1,9 +1,5 @@
-import cjsImport from './index.js';
+import cjsImport from "./index.js";
 
-const {
-} = cjsImport;
-
-export {
-};
+const {} = cjsImport;
 
 export default cjsImport.default;

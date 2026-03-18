@@ -1,22 +1,21 @@
-import cjsImport from './index.js';
+import cjsImport from "./index.js";
 
 const {
-  PuppeteerExtractorPlugin,
-  Observable,
-  Datastore,
-  Extractor,
-  Crawler,
-  PassthroughExtractor,
-  Schema,
+	PuppeteerExtractorPlugin,
+	Observable,
+	Datastore,
+	Extractor,
+	Crawler,
+	PassthroughExtractor,
+	Schema,
 } = cjsImport;
 
 export {
-  PuppeteerExtractorPlugin,
-  Observable,
-  Datastore,
-  Extractor,
-  Crawler,
-  PassthroughExtractor,
-  Schema,
+	Crawler,
+	Datastore,
+	Extractor,
+	Observable,
+	PassthroughExtractor,
+	PuppeteerExtractorPlugin,
+	Schema,
 };
-

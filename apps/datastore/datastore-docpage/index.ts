@@ -1,3 +1,3 @@
-import * as Path from 'path';
+import * as Path from "path";
 
-export default Path.resolve(__dirname, './dist');
+export default Path.resolve(__dirname, "./dist");

@@ -1,6 +1,6 @@
-import ILocalchainConfig from '@ulixee/datastore/interfaces/ILocalchainConfig';
+import type ILocalchainConfig from "@ulixee/datastore/interfaces/ILocalchainConfig";
 
 export default interface IDatabrokerCoreConfigureOptions {
-  storageDir: string;
-  localchainConfig?: ILocalchainConfig;
+	storageDir: string;
+	localchainConfig?: ILocalchainConfig;
 }

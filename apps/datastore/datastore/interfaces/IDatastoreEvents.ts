@@ -1,3 +1,3 @@
 export default interface IDatastoreEvents {
-  'Stream.output': { output: any };
+	"Stream.output": { output: any };
 }

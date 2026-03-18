@@ -1,17 +1,17 @@
-import { createApp } from 'vue';
-import IDocpageConfig from '@ulixee/datastore-packager/interfaces/IDocpageConfig';
-import App from './App.vue';
-import router from './router';
-import './index.css';
+import type IDocpageConfig from "@ulixee/datastore-packager/interfaces/IDocpageConfig";
+import { createApp } from "vue";
+import App from "./App.vue";
+import router from "./router";
+import "./index.css";
 
-export const serverDetailsPromise = fetch('/server-details')
-  .then(r => r.json())
-  .then(d => d || {});
+export const serverDetailsPromise = fetch("/server-details")
+	.then((r) => r.json())
+	.then((d) => d || {});
 
-export const docpageConfigPromise = fetch('docpage.json')
-  .then(r => r.json())
-  .then(d => (d || {}) as IDocpageConfig);
+export const docpageConfigPromise = fetch("docpage.json")
+	.then((r) => r.json())
+	.then((d) => (d || {}) as IDocpageConfig);
 
 export const app = createApp(App);
 app.use(router);
-app.mount('#app');
+app.mount("#app");

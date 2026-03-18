@@ -9,18 +9,18 @@
 </template>
 
 <script lang="ts">
-import * as Vue from 'vue';
-import Field from './Field.vue';
+import * as Vue from "vue";
+import Field from "./Field.vue";
 
 export default Vue.defineComponent({
-  components: {
-    Field,
-  },
-  props: {
-    schema: {
-      default: {},
-    },
-  },
+	components: {
+		Field,
+	},
+	props: {
+		schema: {
+			default: {},
+		},
+	},
 });
 </script>
 

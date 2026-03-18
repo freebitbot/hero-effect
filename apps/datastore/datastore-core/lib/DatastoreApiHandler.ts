@@ -1,21 +1,27 @@
-import ValidatingApiHandler from '@ulixee/platform-specification/utils/ValidatingApiHandler';
-import IDatastoreApis, { DatastoreApiSchemas } from '@ulixee/platform-specification/datastore/DatastoreApis';
-import IDatastoreApiContext from '../interfaces/IDatastoreApiContext';
+import type IDatastoreApis from "@ulixee/platform-specification/datastore/DatastoreApis";
+import { DatastoreApiSchemas } from "@ulixee/platform-specification/datastore/DatastoreApis";
+import ValidatingApiHandler from "@ulixee/platform-specification/utils/ValidatingApiHandler";
+import type IDatastoreApiContext from "../interfaces/IDatastoreApiContext";
 
 export default class DatastoreApiHandler<
-  Command extends keyof IDatastoreApis & string,
-> extends ValidatingApiHandler<typeof DatastoreApiSchemas, Command, IDatastoreApis, IDatastoreApiContext> {
-  constructor(
-    command: Command,
-    args: {
-      handler: (
-        this: DatastoreApiHandler<Command>,
-        request: IDatastoreApis[Command]['args'],
-        context?: IDatastoreApiContext,
-      ) => Promise<IDatastoreApis[Command]['result']>;
-    },
-  ) {
-    super(command, DatastoreApiSchemas, args);
-    this.apiHandler = args.handler.bind(this);
-  }
+	Command extends keyof IDatastoreApis & string,
+> extends ValidatingApiHandler<
+	typeof DatastoreApiSchemas,
+	Command,
+	IDatastoreApis,
+	IDatastoreApiContext
+> {
+	constructor(
+		command: Command,
+		args: {
+			handler: (
+				this: DatastoreApiHandler<Command>,
+				request: IDatastoreApis[Command]["args"],
+				context?: IDatastoreApiContext,
+			) => Promise<IDatastoreApis[Command]["result"]>;
+		},
+	) {
+		super(command, DatastoreApiSchemas, args);
+		this.apiHandler = args.handler.bind(this);
+	}
 }
