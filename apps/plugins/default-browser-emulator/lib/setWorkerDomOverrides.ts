@@ -1,16 +1,16 @@
-import { IWorker } from '@ulixee/unblocked-specification/agent/browser/IWorker';
-import IBrowserData from '../interfaces/IBrowserData';
-import DomOverridesBuilder from './DomOverridesBuilder';
+import type { IWorker } from "@ulixee/unblocked-specification/agent/browser/IWorker";
+import type IBrowserData from "../interfaces/IBrowserData";
+import type DomOverridesBuilder from "./DomOverridesBuilder";
 
 export default function setWorkerDomOverrides(
-  domOverrides: DomOverridesBuilder,
-  data: IBrowserData,
-  worker: IWorker,
+	domOverrides: DomOverridesBuilder,
+	data: IBrowserData,
+	worker: IWorker,
 ): Promise<any[]> {
-  const scriptNames = domOverrides.getWorkerOverrides();
-  const script = domOverrides.build(worker.type, scriptNames);
-  if (script.callbacks.length) {
-    throw new Error("Workers can't create callbacks");
-  }
-  return worker.evaluate(script.script, true);
+	const scriptNames = domOverrides.getWorkerOverrides();
+	const script = domOverrides.build(worker.type, scriptNames);
+	if (script.callbacks.length) {
+		throw new Error("Workers can't create callbacks");
+	}
+	return worker.evaluate(script.script, true);
 }
