@@ -1,5 +1,5 @@
-import IWaitForOptions from './IWaitForOptions';
+import type IWaitForOptions from "./IWaitForOptions";
 
 export default interface IWaitForResourceOptions extends IWaitForOptions {
-  throwIfTimeout?: boolean;
+	throwIfTimeout?: boolean;
 }

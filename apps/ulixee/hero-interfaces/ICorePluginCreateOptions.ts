@@ -1,13 +1,13 @@
-import { IBoundLog } from '@ulixee/commons/interfaces/ILog';
-import IEmulationProfile from '@ulixee/unblocked-specification/plugin/IEmulationProfile';
-import { PluginCustomConfig } from '@ulixee/unblocked-specification/plugin/IUnblockedPlugin';
-import ICorePlugins from './ICorePlugins';
-import { ISessionSummary } from './ICorePlugin';
+import type { IBoundLog } from "@ulixee/commons/interfaces/ILog";
+import type IEmulationProfile from "@ulixee/unblocked-specification/plugin/IEmulationProfile";
+import type { PluginCustomConfig } from "@ulixee/unblocked-specification/plugin/IUnblockedPlugin";
+import type { ISessionSummary } from "./ICorePlugin";
+import type ICorePlugins from "./ICorePlugins";
 
 export default interface ICorePluginCreateOptions<C extends object = any> {
-  emulationProfile: IEmulationProfile;
-  corePlugins: ICorePlugins;
-  sessionSummary: ISessionSummary;
-  logger: IBoundLog;
-  customConfig?: PluginCustomConfig<C>
+	emulationProfile: IEmulationProfile;
+	corePlugins: ICorePlugins;
+	sessionSummary: ISessionSummary;
+	logger: IBoundLog;
+	customConfig?: PluginCustomConfig<C>;
 }

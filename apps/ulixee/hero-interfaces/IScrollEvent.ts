@@ -1,4 +1,4 @@
-import { UnixTimestamp } from './GenericTypes';
+import type { UnixTimestamp } from "./GenericTypes";
 
 type ScrollX = number;
 type ScrollY = number;

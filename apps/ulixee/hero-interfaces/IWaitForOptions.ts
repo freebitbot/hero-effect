@@ -1,4 +1,4 @@
 export default interface IWaitForOptions {
-  timeoutMs?: number;
-  sinceCommandId?: number;
+	timeoutMs?: number;
+	sinceCommandId?: number;
 }

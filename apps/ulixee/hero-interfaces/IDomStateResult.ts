@@ -1,3 +1,3 @@
 export default interface IDomStateResult {
-  [commandId: string]: any;
+	[commandId: string]: any;
 }

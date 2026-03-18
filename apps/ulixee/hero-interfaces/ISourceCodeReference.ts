@@ -1,5 +1,5 @@
-import type ISourceCodeLocation from '@ulixee/commons/interfaces/ISourceCodeLocation';
+import type ISourceCodeLocation from "@ulixee/commons/interfaces/ISourceCodeLocation";
 
 export default interface ISourceCodeReference {
-  sourcecode: (ISourceCodeLocation & { code: string })[];
+	sourcecode: (ISourceCodeLocation & { code: string })[];
 }

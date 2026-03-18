@@ -1,4 +1,3 @@
-import ITabOptions from './ITabOptions';
+import type ITabOptions from "./ITabOptions";
 
-export default interface ISessionOptions extends ITabOptions {
-}
+export default interface ISessionOptions extends ITabOptions {}

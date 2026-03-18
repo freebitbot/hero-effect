@@ -1,7 +1,7 @@
-import IWaitForOptions from './IWaitForOptions';
+import type IWaitForOptions from "./IWaitForOptions";
 
 export default interface IWaitForElementOptions extends IWaitForOptions {
-  waitForVisible?: boolean;
-  waitForClickable?: boolean;
-  waitForHidden?: boolean;
+	waitForVisible?: boolean;
+	waitForClickable?: boolean;
+	waitForHidden?: boolean;
 }

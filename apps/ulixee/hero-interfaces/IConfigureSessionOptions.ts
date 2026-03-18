@@ -1,15 +1,15 @@
-import ISessionCreateOptions from './ISessionCreateOptions';
+import type ISessionCreateOptions from "./ISessionCreateOptions";
 
 export default interface IConfigureSessionOptions
-  extends Pick<
-    ISessionCreateOptions,
-    | 'userProfile'
-    | 'viewport'
-    | 'timezoneId'
-    | 'locale'
-    | 'upstreamProxyUrl'
-    | 'upstreamProxyUseLocalDns'
-    | 'blockedResourceTypes'
-    | 'blockedResourceUrls'
-    | 'interceptedResources'
-  > {}
+	extends Pick<
+		ISessionCreateOptions,
+		| "userProfile"
+		| "viewport"
+		| "timezoneId"
+		| "locale"
+		| "upstreamProxyUrl"
+		| "upstreamProxyUseLocalDns"
+		| "blockedResourceTypes"
+		| "blockedResourceUrls"
+		| "interceptedResources"
+	> {}
