@@ -1,9 +1,10 @@
-import { DOMParser } from 'linkedom';
+import { DOMParser } from "linkedom";
 
 export default class DetachedElement {
-  static #domParser = new DOMParser();
+	static #domParser = new DOMParser();
 
-  public static load(outerHTML: string): Element {
-    return this.#domParser.parseFromString(outerHTML, 'text/html').firstChild;
-  }
+	public static load(outerHTML: string): Element {
+		return DetachedElement.#domParser.parseFromString(outerHTML, "text/html")
+			.firstChild;
+	}
 }

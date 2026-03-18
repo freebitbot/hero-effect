@@ -1,1 +1,3 @@
-export const InternalPropertiesSymbol = Symbol.for('@ulixee/internalModuleState');
+export const InternalPropertiesSymbol = Symbol.for(
+	"@ulixee/internalModuleState",
+);
