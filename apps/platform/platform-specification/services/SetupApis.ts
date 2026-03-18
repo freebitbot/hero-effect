@@ -1,18 +1,22 @@
-import { z } from 'zod';
-import { IZodHandlers, IZodSchemaToApiTypes } from '../utils/IZodApi';
-import { ServicesSetupSchema } from '../types/IServicesSetup';
+import { z } from "zod";
+import { ServicesSetupSchema } from "../types/IServicesSetup";
+import type { IZodHandlers, IZodSchemaToApiTypes } from "../utils/IZodApi";
 
 export const ServicesSetupApiSchemas = {
-  'Services.getSetup': {
-    args: z.object({}).describe('Request default services setup from a node in the cluster.'),
-    result: ServicesSetupSchema,
-  },
+	"Services.getSetup": {
+		args: z
+			.object({})
+			.describe("Request default services setup from a node in the cluster."),
+		result: ServicesSetupSchema,
+	},
 };
 
-export type IServicesSetupApiTypes = IZodSchemaToApiTypes<typeof ServicesSetupApiSchemas>;
+export type IServicesSetupApiTypes = IZodSchemaToApiTypes<
+	typeof ServicesSetupApiSchemas
+>;
 export type IServicesSetupApis<TContext = any> = IZodHandlers<
-  typeof ServicesSetupApiSchemas,
-  TContext
+	typeof ServicesSetupApiSchemas,
+	TContext
 >;
 
 export default IServicesSetupApiTypes;

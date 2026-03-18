@@ -1,3 +1,3 @@
-import IPayment from './types/IPayment';
+import IPayment from "./types/IPayment";
 
 export { IPayment };

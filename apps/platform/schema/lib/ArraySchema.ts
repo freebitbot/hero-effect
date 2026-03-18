@@ -1,35 +1,43 @@
-import { strict as assert } from 'node:assert';
-import BaseSchema, { IBaseConfig } from './BaseSchema';
+import { strict as assert } from "node:assert";
+import BaseSchema, { type IBaseConfig } from "./BaseSchema";
 
-export interface IArraySchemaConfig<E extends BaseSchema<any>, TOptional extends boolean = boolean>
-  extends IBaseConfig<TOptional> {
-  element: E;
+export interface IArraySchemaConfig<
+	E extends BaseSchema<any>,
+	TOptional extends boolean = boolean,
+> extends IBaseConfig<TOptional> {
+	element: E;
 }
 
-export default class ArraySchema<E extends BaseSchema<any>, TOptional extends boolean = boolean> extends BaseSchema<
-  Array<E['$type']>,
-  TOptional,
-  IArraySchemaConfig<E, TOptional>
+export default class ArraySchema<
+	E extends BaseSchema<any>,
+	TOptional extends boolean = boolean,
+> extends BaseSchema<
+	Array<E["$type"]>,
+	TOptional,
+	IArraySchemaConfig<E, TOptional>
 > {
-  readonly typeName = 'array';
-  element: E;
+	readonly typeName = "array";
+	element: E;
 
-  constructor(config: IArraySchemaConfig<E, TOptional>) {
-    super(config);
-    assert(
-      !!config.element,
-      'You must provide a definition for the types of elements in this array',
-    );
-    assert(config.element instanceof BaseSchema, 'Element must be an instance of a type of Schema');
-  }
+	constructor(config: IArraySchemaConfig<E, TOptional>) {
+		super(config);
+		assert(
+			!!config.element,
+			"You must provide a definition for the types of elements in this array",
+		);
+		assert(
+			config.element instanceof BaseSchema,
+			"Element must be an instance of a type of Schema",
+		);
+	}
 
-  protected validationLogic(value, path, tracker): void {
-    if (!Array.isArray(value)) {
-      return this.incorrectType(value, path, tracker);
-    }
+	protected validationLogic(value, path, tracker): void {
+		if (!Array.isArray(value)) {
+			return this.incorrectType(value, path, tracker);
+		}
 
-    for (let i = 0; i < value.length; i += 1) {
-      this.element.validate(value[i], `${path}.${i}`, tracker);
-    }
-  }
+		for (let i = 0; i < value.length; i += 1) {
+			this.element.validate(value[i], `${path}.${i}`, tracker);
+		}
+	}
 }

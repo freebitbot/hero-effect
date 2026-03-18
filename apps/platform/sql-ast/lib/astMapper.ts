@@ -1,16 +1,14 @@
-import IAstPartialMapper from '../interfaces/IAstPartialMapper';
-import AstDefaultMapper from './AstDefaultMapper';
-
+import type IAstPartialMapper from "../interfaces/IAstPartialMapper";
+import AstDefaultMapper from "./AstDefaultMapper";
 
 export type IAstFullMapper = {
-  [key in keyof IAstPartialMapper]-?: IAstPartialMapper[key];
+	[key in keyof IAstPartialMapper]-?: IAstPartialMapper[key];
 };
 
 export type IAstMapper = IAstFullMapper & {
-  /** Forces the next call to use the default implementation, not yours */
-  super(): IAstMapper;
+	/** Forces the next call to use the default implementation, not yours */
+	super(): IAstMapper;
 };
-
 
 /**
  * Builds an AST modifier based on the default implementation, merged with the one you provide.
@@ -29,9 +27,9 @@ export type IAstMapper = IAstFullMapper & {
  * ```
  */
 export function astMapper(modifierBuilder: MapperBuilder): IAstMapper {
-  const instance = new AstDefaultMapper();
-  instance.wrapped = modifierBuilder(instance);
-  return instance;
+	const instance = new AstDefaultMapper();
+	instance.wrapped = modifierBuilder(instance);
+	return instance;
 }
 
 export type MapperBuilder = (defaultImplem: IAstMapper) => IAstPartialMapper;
