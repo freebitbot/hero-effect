@@ -1,6 +1,6 @@
 enum HostDomain {
-  Sub = 'Sub',
-  External = 'External',
-  Main = 'Main',
+	Sub = "Sub",
+	External = "External",
+	Main = "Main",
 }
 export default HostDomain;

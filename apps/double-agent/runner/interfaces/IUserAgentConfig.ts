@@ -1,3 +1,3 @@
 export default interface IUserAgentConfig {
-  browserIds: string[];
+	browserIds: string[];
 }

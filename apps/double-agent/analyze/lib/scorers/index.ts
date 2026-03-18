@@ -1,5 +1,5 @@
-import BaseScorer from './BaseScorer';
-import DiffGradient from './DiffGradient';
+import BaseScorer from "./BaseScorer";
+import DiffGradient from "./DiffGradient";
 
 export { BaseScorer, DiffGradient };
 

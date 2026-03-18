@@ -1,87 +1,87 @@
-import IRequestContext from '../interfaces/IRequestContext';
-import { DomainType } from './DomainUtils';
+import type IRequestContext from "../interfaces/IRequestContext";
+import type { DomainType } from "./DomainUtils";
 
-const clickElementId = 'next-page';
+const clickElementId = "next-page";
 const clickElementSelector = `#${clickElementId}`;
-const waitForElementClass = 'ready';
+const waitForElementClass = "ready";
 const waitForElementSelector = `body.${waitForElementClass}`;
 
 export default class Document {
-  public static clickElementSelector = clickElementSelector;
-  public static waitForElementSelector = waitForElementSelector;
+	public static clickElementSelector = clickElementSelector;
+	public static waitForElementSelector = waitForElementSelector;
 
-  private headTags: string[] = [];
-  private bodyTags: string[] = [];
-  private footerTags: string[] = [];
-  private clickToNextPage = false;
-  private ctx: IRequestContext;
+	private headTags: string[] = [];
+	private bodyTags: string[] = [];
+	private footerTags: string[] = [];
+	private clickToNextPage = false;
+	private ctx: IRequestContext;
 
-  constructor(ctx: IRequestContext) {
-    this.ctx = ctx;
-  }
+	constructor(ctx: IRequestContext) {
+		this.ctx = ctx;
+	}
 
-  public get html(): string {
-    return this.generateHtml();
-  }
+	public get html(): string {
+		return this.generateHtml();
+	}
 
-  public injectBodyTag(tag: string): void {
-    this.bodyTags.push(tag);
-  }
+	public injectBodyTag(tag: string): void {
+		this.bodyTags.push(tag);
+	}
 
-  public injectHeadTag(tag: string): void {
-    this.headTags.push(tag);
-  }
+	public injectHeadTag(tag: string): void {
+		this.headTags.push(tag);
+	}
 
-  public injectFooterTag(tag: string): void {
-    this.footerTags.push(tag);
-  }
+	public injectFooterTag(tag: string): void {
+		this.footerTags.push(tag);
+	}
 
-  public addNextPageClick(): void {
-    this.clickToNextPage = true;
-  }
+	public addNextPageClick(): void {
+		this.clickToNextPage = true;
+	}
 
-  public get clickElementId(): string {
-    return clickElementId;
-  }
+	public get clickElementId(): string {
+		return clickElementId;
+	}
 
-  public send(): void {
-    this.ctx.res.writeHead(200, {
-      'Cache-Control': 'no-cache, no-store, must-revalidate',
-      Pragma: 'no-cache',
-      Expires: 0,
-      'Content-Type': 'text/html',
-    });
-    this.ctx.res.end(this.html);
-  }
+	public send(): void {
+		this.ctx.res.writeHead(200, {
+			"Cache-Control": "no-cache, no-store, must-revalidate",
+			Pragma: "no-cache",
+			Expires: 0,
+			"Content-Type": "text/html",
+		});
+		this.ctx.res.end(this.html);
+	}
 
-  public redirectTo(location: string, domainType: DomainType): void {
-    this.ctx.res.writeHead(302, {
-      location: `${this.ctx.buildUrl(location, domainType)}`,
-    });
-    this.ctx.res.end();
-  }
+	public redirectTo(location: string, domainType: DomainType): void {
+		this.ctx.res.writeHead(302, {
+			location: `${this.ctx.buildUrl(location, domainType)}`,
+		});
+		this.ctx.res.end();
+	}
 
-  // PRIVATE
+	// PRIVATE
 
-  private generateHtml(): string {
-    const headTags = this.headTags;
-    const bodyTags = this.bodyTags;
-    const footerTags = this.footerTags;
-    const nextPageLink = this.ctx.nextPageLink;
-    const clickToNextPage = this.clickToNextPage;
+	private generateHtml(): string {
+		const headTags = this.headTags;
+		const bodyTags = this.bodyTags;
+		const footerTags = this.footerTags;
+		const nextPageLink = this.ctx.nextPageLink;
+		const clickToNextPage = this.clickToNextPage;
 
-    let nextPageTag;
-    let finalPageTag;
-    if (nextPageLink && clickToNextPage) {
-      nextPageTag = `<a href="${nextPageLink}" id="${clickElementId}">Next</a>`;
-    } else if (nextPageLink) {
-      nextPageTag = `Go to ${nextPageLink}`;
-    }
-    if (!nextPageLink) {
-      finalPageTag = `<div>Plugin Complete</div>`;
-    }
+		let nextPageTag;
+		let finalPageTag;
+		if (nextPageLink && clickToNextPage) {
+			nextPageTag = `<a href="${nextPageLink}" id="${clickElementId}">Next</a>`;
+		} else if (nextPageLink) {
+			nextPageTag = `Go to ${nextPageLink}`;
+		}
+		if (!nextPageLink) {
+			finalPageTag = `<div>Plugin Complete</div>`;
+		}
 
-    return `
+		return `
 <html>
 <head>
     <title>DoubleAgent - Session #${this.ctx.session.id}</title>
@@ -94,18 +94,18 @@ export default class Document {
       .display-inline-when-done { display: none; }
       .display-block-when-done { display: none; }
     </style>
-    ${headTags.join('\n')}
+    ${headTags.join("\n")}
 </head>
 <body>
 <div>
   Loading... <span class="display-inline-when-done" style="display: none;">DONE!</span>
 </div>
 <div class="display-block-when-done">
-  ${nextPageTag || ''}
-  ${finalPageTag || ''}
+  ${nextPageTag || ""}
+  ${finalPageTag || ""}
 </div>
 
-${bodyTags.join('\n')}
+${bodyTags.join("\n")}
 
 <script type="text/javascript">
   Promise.all(window.pageQueue)
@@ -124,9 +124,9 @@ ${bodyTags.join('\n')}
     });
 </script>
 
-${footerTags.join('\n')}
+${footerTags.join("\n")}
 
 </body>
 </html>`.trim();
-  }
+	}
 }

@@ -1,21 +1,25 @@
-import BaseCheck, { ICheckIdentity, CheckType, ICheckMeta } from './BaseCheck';
+import BaseCheck, {
+	CheckType,
+	type ICheckIdentity,
+	type ICheckMeta,
+} from "./BaseCheck";
 
 export default class BooleanCheck extends BaseCheck {
-  public readonly prefix = 'BOOL';
-  public readonly type = CheckType.Individual;
+	public readonly prefix = "BOOL";
+	public readonly type = CheckType.Individual;
 
-  private readonly value: boolean;
+	private readonly value: boolean;
 
-  constructor(identity: ICheckIdentity, meta: ICheckMeta, value: boolean) {
-    super(identity, meta);
-    this.value = value;
-  }
+	constructor(identity: ICheckIdentity, meta: ICheckMeta, value: boolean) {
+		super(identity, meta);
+		this.value = value;
+	}
 
-  public get signature(): string {
-    return `${this.id}:value=${this.value}`;
-  }
+	public get signature(): string {
+		return `${this.id}:value=${this.value}`;
+	}
 
-  public get args(): any[] {
-    return [this.value];
-  }
+	public get args(): any[] {
+		return [this.value];
+	}
 }

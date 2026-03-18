@@ -1,11 +1,12 @@
-import * as Fs from 'fs';
-import Config from '@double-agent/config';
+import Config from "@double-agent/config";
+import * as Fs from "fs";
 
-const { MainDomain, CrossDomain, SubDomain, TlsDomain } = Config.collect.domains;
+const { MainDomain, CrossDomain, SubDomain, TlsDomain } =
+	Config.collect.domains;
 
 const certPath = Config.collect.enableLetsEncrypt
-  ? `/etc/letsencrypt/live/${MainDomain}`
-  : `${__dirname}/../certs`;
+	? `/etc/letsencrypt/live/${MainDomain}`
+	: `${__dirname}/../certs`;
 
 export const CertsMessage = `
 1. Go to the collect/certs directory and run generate.sh
@@ -21,40 +22,40 @@ export const CertsMessage = `
   `;
 
 const certsCache: {
-  default?: ICert;
-  tls?: ICert;
+	default?: ICert;
+	tls?: ICert;
 } = {};
 
 export function checkSetup(): void {
-  if (!Fs.existsSync(`${certPath}/privkey.pem`)) {
-    throw new Error(
-      `You haven't completed setup. You'll need SSL Certificates to run the servers!!\n\n${CertsMessage}`,
-    );
-  }
+	if (!Fs.existsSync(`${certPath}/privkey.pem`)) {
+		throw new Error(
+			`You haven't completed setup. You'll need SSL Certificates to run the servers!!\n\n${CertsMessage}`,
+		);
+	}
 }
 
 export default function certs(): ICert {
-  checkSetup();
-  certsCache.default ??= {
-    key: Fs.readFileSync(`${certPath}/privkey.pem`),
-    cert: Fs.readFileSync(`${certPath}/fullchain.pem`),
-  };
+	checkSetup();
+	certsCache.default ??= {
+		key: Fs.readFileSync(`${certPath}/privkey.pem`),
+		cert: Fs.readFileSync(`${certPath}/fullchain.pem`),
+	};
 
-  return certsCache.default;
+	return certsCache.default;
 }
 
 const tlsCertsPath = Config.collect.enableLetsEncrypt
-  ? `/etc/letsencrypt/live/${TlsDomain}`
-  : `${__dirname}/../certs`;
+	? `/etc/letsencrypt/live/${TlsDomain}`
+	: `${__dirname}/../certs`;
 export function tlsCerts(): ICert {
-  certsCache.tls ??= {
-    key: Fs.readFileSync(`${tlsCertsPath}/privkey.pem`),
-    cert: Fs.readFileSync(`${tlsCertsPath}/fullchain.pem`),
-  };
-  return certsCache.tls;
+	certsCache.tls ??= {
+		key: Fs.readFileSync(`${tlsCertsPath}/privkey.pem`),
+		cert: Fs.readFileSync(`${tlsCertsPath}/fullchain.pem`),
+	};
+	return certsCache.tls;
 }
 
 interface ICert {
-  key: Buffer;
-  cert: Buffer;
+	key: Buffer;
+	cert: Buffer;
 }

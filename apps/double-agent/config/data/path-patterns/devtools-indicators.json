@@ -1,18 +1,16 @@
 {
-  "added": [
-    "window.Text.prototype.getDestinationInsertionPoints",
-    "window.Element.prototype.createShadowRoot",
-    "window.Element.prototype.getDestinationInsertionPoints",
-    "window.Document.prototype.registerElement"
-  ],
-  "removed": [],
-  "changed": [],
-  "changedOrder": [],
-  "extraAdded": [
-    "window.cdc_adoQpoasnfa76pfcZLmcfl"
-  ],
-  "extraChanged": [
-    "window.navigator.userActivation",
-    "window.navigator.webdriver"
-  ]
+	"added": [
+		"window.Text.prototype.getDestinationInsertionPoints",
+		"window.Element.prototype.createShadowRoot",
+		"window.Element.prototype.getDestinationInsertionPoints",
+		"window.Document.prototype.registerElement"
+	],
+	"removed": [],
+	"changed": [],
+	"changedOrder": [],
+	"extraAdded": ["window.cdc_adoQpoasnfa76pfcZLmcfl"],
+	"extraChanged": [
+		"window.navigator.userActivation",
+		"window.navigator.webdriver"
+	]
 }

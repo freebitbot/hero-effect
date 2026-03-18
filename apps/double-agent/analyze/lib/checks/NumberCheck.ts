@@ -1,23 +1,32 @@
-import BaseCheck, { CheckType, ICheckIdentity, ICheckMeta } from './BaseCheck';
+import BaseCheck, {
+	CheckType,
+	type ICheckIdentity,
+	type ICheckMeta,
+} from "./BaseCheck";
 
 export default class NumberCheck extends BaseCheck {
-  public readonly prefix = 'NUMR';
-  public readonly type = CheckType.Individual;
+	public readonly prefix = "NUMR";
+	public readonly type = CheckType.Individual;
 
-  private readonly value: number;
-  private readonly label: string;
+	private readonly value: number;
+	private readonly label: string;
 
-  constructor(identity: ICheckIdentity, meta: ICheckMeta, value: number, label?: string) {
-    super(identity, meta);
-    this.value = value;
-    this.label = label;
-  }
+	constructor(
+		identity: ICheckIdentity,
+		meta: ICheckMeta,
+		value: number,
+		label?: string,
+	) {
+		super(identity, meta);
+		this.value = value;
+		this.label = label;
+	}
 
-  public get signature(): string {
-    return `${this.id}:${this.value}`;
-  }
+	public get signature(): string {
+		return `${this.id}:${this.value}`;
+	}
 
-  public get args(): any[] {
-    return [this.value, this.label];
-  }
+	public get args(): any[] {
+		return [this.value, this.label];
+	}
 }
