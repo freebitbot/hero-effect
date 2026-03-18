@@ -1,4 +1,4 @@
-import MitmProxy from './lib/MitmProxy';
-import RequestSession from './handlers/RequestSession';
+import RequestSession from "./handlers/RequestSession";
+import MitmProxy from "./lib/MitmProxy";
 
 export { MitmProxy, RequestSession };
