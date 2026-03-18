@@ -1,9 +1,10 @@
-import csv = require('csv-parse/lib/sync');
-import { readFileSync } from 'fs';
-import IRequestContext from '@double-agent/collect/interfaces/IRequestContext';
+import csv = require("csv-parse/lib/sync");
+
+import type IRequestContext from "@double-agent/collect/interfaces/IRequestContext";
+import { readFileSync } from "fs";
 
 export default function codecPageScript(ctx: IRequestContext) {
-  return `
+	return `
 <script type="text/javascript">
   const videoMimes = ${JSON.stringify(videoMimes)};
   const audioMimes = ${JSON.stringify(audioMimes)};
@@ -84,7 +85,7 @@ export default function codecPageScript(ctx: IRequestContext) {
       }, 100);
     }
   }).then(() =>
-    fetch('${ctx.buildUrl('/save')}', {
+    fetch('${ctx.buildUrl("/save")}', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ audioSupport, videoSupport, webRtcAudioCodecs, webRtcVideoCodecs }),
@@ -95,103 +96,107 @@ export default function codecPageScript(ctx: IRequestContext) {
 </script>`;
 }
 
-const audioMimeAlternatives = csv(readFileSync(`${__dirname}/assets/mime/audio-mimetypes.csv`, 'utf8'))
-  .slice(1)
-  .map(x => x[1].toLowerCase())
-  .filter(Boolean);
+const audioMimeAlternatives = csv(
+	readFileSync(`${__dirname}/assets/mime/audio-mimetypes.csv`, "utf8"),
+)
+	.slice(1)
+	.map((x) => x[1].toLowerCase())
+	.filter(Boolean);
 
-const videoMimeAlternatives = csv(readFileSync(`${__dirname}/assets/mime/video-mimetypes.csv`, 'utf8'))
-  .slice(1)
-  .map(x => x[1].toLowerCase())
-  .filter(Boolean);
+const videoMimeAlternatives = csv(
+	readFileSync(`${__dirname}/assets/mime/video-mimetypes.csv`, "utf8"),
+)
+	.slice(1)
+	.map((x) => x[1].toLowerCase())
+	.filter(Boolean);
 
 const applicationMimeAlternatives = csv(
-  readFileSync(`${__dirname}/assets/mime/application-mimetypes.csv`, 'utf8'),
+	readFileSync(`${__dirname}/assets/mime/application-mimetypes.csv`, "utf8"),
 )
-  .slice(1)
-  .map(x => x[1].toLowerCase())
-  .filter(Boolean);
+	.slice(1)
+	.map((x) => x[1].toLowerCase())
+	.filter(Boolean);
 
 const audioMimes = [
-  ...new Set([
-    'audio/flac',
-    'audio/mp3',
-    'audio/ogg',
-    'audio/wav',
-    'audio/webm',
-    'audio/x-m4a',
-    'audio/alac',
-    'audio/amr-wb',
-    'audio/amr-mb',
-    'application/x-mpegurl',
-    'audio/mpeg',
-    ...audioMimeAlternatives,
-    ...applicationMimeAlternatives,
-  ]),
+	...new Set([
+		"audio/flac",
+		"audio/mp3",
+		"audio/ogg",
+		"audio/wav",
+		"audio/webm",
+		"audio/x-m4a",
+		"audio/alac",
+		"audio/amr-wb",
+		"audio/amr-mb",
+		"application/x-mpegurl",
+		"audio/mpeg",
+		...audioMimeAlternatives,
+		...applicationMimeAlternatives,
+	]),
 ];
 
 const videoMimes = [
-  ...new Set([
-    'video/mp4',
-    'video/ogg',
-    'video/quicktime',
-    'video/3gpp',
-    'video/3gp2',
-    'video/webm',
-    'video/x-m4a',
-    'video/mpeg',
-    'video/x-matroska',
-    ...videoMimeAlternatives,
-    ...applicationMimeAlternatives,
-  ]),
+	...new Set([
+		"video/mp4",
+		"video/ogg",
+		"video/quicktime",
+		"video/3gpp",
+		"video/3gp2",
+		"video/webm",
+		"video/x-m4a",
+		"video/mpeg",
+		"video/x-matroska",
+		...videoMimeAlternatives,
+		...applicationMimeAlternatives,
+	]),
 ];
 
 const codecs = [
-  'h264',
-  'H264',
-  'h264,vp9,opus',
-  'h264,vp8,opus',
-  'vp8,pcm',
-  'vp8,opus',
-  'vp8,vorbis',
-  'vp9,pcm',
-  'vp9,opus',
-  'vp9,vorbis',
-  'vp8',
-  'vp9',
-  'vp8.0',
-  'vp9.0',
-  'vorbis',
-  'opus',
-  'avc1',
-  'avc1.42E01E',
-  'avc1.42E01F',
-  'avc1.4D401F',
-  'avc1.4D4028',
-  'avc1.640028',
-  'avc1.640029',
-  'dvhe.05.06',
-  'dvhe.05.07',
-  'dvhe.05.09',
-  'dvhe.08.06',
-  'dvhe.08.07',
-  'dvhe.08.09',
-  'hev1.1.6.L150.B0',
-  'hev1.1.6.L153.B0',
-  'hev1.2.6.L150.B0',
-  'hev1.2.6.L153.B0',
-  'pcm',
-  '1',
-  'mp3',
-  'mp4a.40.2',
-  'mp4a.40.5',
-  'mp4a.69',
-  'mp4a.6B',
-  'mp4a.40.05',
-  'mp4a.a5',
-  'mp4a.a6',
-  'ac-3',
-  'ec-3',
-  'mhm1.0x0D',
-  'theora',
+	"h264",
+	"H264",
+	"h264,vp9,opus",
+	"h264,vp8,opus",
+	"vp8,pcm",
+	"vp8,opus",
+	"vp8,vorbis",
+	"vp9,pcm",
+	"vp9,opus",
+	"vp9,vorbis",
+	"vp8",
+	"vp9",
+	"vp8.0",
+	"vp9.0",
+	"vorbis",
+	"opus",
+	"avc1",
+	"avc1.42E01E",
+	"avc1.42E01F",
+	"avc1.4D401F",
+	"avc1.4D4028",
+	"avc1.640028",
+	"avc1.640029",
+	"dvhe.05.06",
+	"dvhe.05.07",
+	"dvhe.05.09",
+	"dvhe.08.06",
+	"dvhe.08.07",
+	"dvhe.08.09",
+	"hev1.1.6.L150.B0",
+	"hev1.1.6.L153.B0",
+	"hev1.2.6.L150.B0",
+	"hev1.2.6.L153.B0",
+	"pcm",
+	"1",
+	"mp3",
+	"mp4a.40.2",
+	"mp4a.40.5",
+	"mp4a.69",
+	"mp4a.6B",
+	"mp4a.40.05",
+	"mp4a.a5",
+	"mp4a.a6",
+	"ac-3",
+	"ec-3",
+	"mhm1.0x0D",
+	"theora",
 ];

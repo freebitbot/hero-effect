@@ -1,9 +1,9 @@
-import IRequestContext from '@double-agent/collect/interfaces/IRequestContext';
-import { DomainType } from '@double-agent/collect/lib/DomainUtils';
+import type IRequestContext from "@double-agent/collect/interfaces/IRequestContext";
+import { DomainType } from "@double-agent/collect/lib/DomainUtils";
 
 export default function websocketsScript(ctx: IRequestContext) {
-  const isSecure = ctx.url.protocol === 'https:';
-  return `
+	const isSecure = ctx.url.protocol === "https:";
+	return `
 <script type="text/javascript">
   function ws(wsUrl) {
     return new Promise(resolve => {
@@ -25,9 +25,9 @@ export default function websocketsScript(ctx: IRequestContext) {
     });
   }
   window.pageQueue.push(
-    ws('${ctx.buildUrl('/ws', DomainType.MainDomain, isSecure ? 'wss' : 'ws')}'),
-    ws('${ctx.buildUrl('/ws', DomainType.SubDomain, isSecure ? 'wss' : 'ws')}'),
-    ws('${ctx.buildUrl('/ws', DomainType.CrossDomain, isSecure ? 'wss' : 'ws')}')
+    ws('${ctx.buildUrl("/ws", DomainType.MainDomain, isSecure ? "wss" : "ws")}'),
+    ws('${ctx.buildUrl("/ws", DomainType.SubDomain, isSecure ? "wss" : "ws")}'),
+    ws('${ctx.buildUrl("/ws", DomainType.CrossDomain, isSecure ? "wss" : "ws")}')
   );
 </script>`;
 }

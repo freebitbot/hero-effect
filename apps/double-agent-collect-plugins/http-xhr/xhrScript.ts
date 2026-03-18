@@ -1,8 +1,8 @@
-import { DomainType } from '@double-agent/collect/lib/DomainUtils';
-import IRequestContext from '@double-agent/collect/interfaces/IRequestContext';
+import type IRequestContext from "@double-agent/collect/interfaces/IRequestContext";
+import { DomainType } from "@double-agent/collect/lib/DomainUtils";
 
 export default function xhrScript(ctx: IRequestContext) {
-  return `
+	return `
 <script type="text/javascript">
   const requests = ${JSON.stringify(builtRequests(ctx))};
   async function runRequests() {
@@ -30,117 +30,121 @@ export default function xhrScript(ctx: IRequestContext) {
 
 // HELPERS
 
-const headerCaseTest = 'X-HeaDer-sessionId';
+const headerCaseTest = "X-HeaDer-sessionId";
 
 function builtRequests(ctx: IRequestContext) {
-  const requests: { url: string; func: string; args: object }[] = [];
-  for (const domainType of [DomainType.MainDomain, DomainType.SubDomain, DomainType.CrossDomain]) {
-    requests.push(
-      {
-        url: ctx.buildUrl('/axios-nocustom-headers.json', domainType),
-        func: 'axios.get',
-        args: {
-          mode: 'cors',
-        },
-      },
-      {
-        url: ctx.buildUrl('/fetch-nocustom-headers.json', domainType),
-        func: 'fetch',
-        args: {
-          mode: 'cors',
-        },
-      },
-      {
-        url: ctx.buildUrl('/fetch-post-nocustom-headers.json', domainType),
-        func: 'fetch',
-        args: {
-          mode: 'cors',
-          method: 'post',
-          body: JSON.stringify({
-            [randomText()]: randomText(),
-            [randomText()]: randomText(),
-            [randomText()]: randomText(),
-          }),
-        },
-      },
-      {
-        url: ctx.buildUrl('/post-nocustom-headers.json', domainType),
-        func: 'axios.post',
-        args: {
-          mode: 'cors',
-          method: 'post',
-          body: JSON.stringify({
-            [randomText()]: randomText(),
-            [randomText()]: randomText(),
-            [randomText()]: randomText(),
-          }),
-        },
-      },
-      {
-        url: ctx.buildUrl('/fetch-custom-headers.json', domainType),
-        func: 'fetch',
-        args: {
-          mode: 'cors',
-          headers: {
-            [headerCaseTest]: randomText(),
-            'x-lower-sessionid': randomText(),
-            [randomText()]: '1',
-          },
-        },
-      },
-      {
-        url: ctx.buildUrl('/axios-custom-headers.json', domainType),
-        func: 'axios.get',
-        args: {
-          mode: 'cors',
-          headers: {
-            [headerCaseTest]: randomText(),
-            'x-lower-sessionid': randomText(),
-            [randomText()]: '1',
-          },
-        },
-      },
-      {
-        url: ctx.buildUrl('/fetch-post-custom-headers.json', domainType),
-        func: 'fetch',
-        args: {
-          method: 'post',
-          mode: 'cors',
-          headers: {
-            [headerCaseTest]: randomText(),
-            'x-lower-sessionid': randomText(),
-            [randomText()]: '1',
-          },
-          body: JSON.stringify({
-            [randomText()]: randomText(),
-            [randomText()]: randomText(),
-            [randomText()]: randomText(),
-          }),
-        },
-      },
-      {
-        url: ctx.buildUrl('/post-custom-headers.json', domainType),
-        func: 'axios.post',
-        args: {
-          mode: 'cors',
-          headers: {
-            [headerCaseTest]: randomText(),
-            'x-lower-sessionid': randomText(),
-            [randomText()]: '1',
-          },
-          body: JSON.stringify({
-            [randomText()]: randomText(),
-            [randomText()]: randomText(),
-            [randomText()]: randomText(),
-          }),
-        },
-      },
-    );
-  }
+	const requests: { url: string; func: string; args: object }[] = [];
+	for (const domainType of [
+		DomainType.MainDomain,
+		DomainType.SubDomain,
+		DomainType.CrossDomain,
+	]) {
+		requests.push(
+			{
+				url: ctx.buildUrl("/axios-nocustom-headers.json", domainType),
+				func: "axios.get",
+				args: {
+					mode: "cors",
+				},
+			},
+			{
+				url: ctx.buildUrl("/fetch-nocustom-headers.json", domainType),
+				func: "fetch",
+				args: {
+					mode: "cors",
+				},
+			},
+			{
+				url: ctx.buildUrl("/fetch-post-nocustom-headers.json", domainType),
+				func: "fetch",
+				args: {
+					mode: "cors",
+					method: "post",
+					body: JSON.stringify({
+						[randomText()]: randomText(),
+						[randomText()]: randomText(),
+						[randomText()]: randomText(),
+					}),
+				},
+			},
+			{
+				url: ctx.buildUrl("/post-nocustom-headers.json", domainType),
+				func: "axios.post",
+				args: {
+					mode: "cors",
+					method: "post",
+					body: JSON.stringify({
+						[randomText()]: randomText(),
+						[randomText()]: randomText(),
+						[randomText()]: randomText(),
+					}),
+				},
+			},
+			{
+				url: ctx.buildUrl("/fetch-custom-headers.json", domainType),
+				func: "fetch",
+				args: {
+					mode: "cors",
+					headers: {
+						[headerCaseTest]: randomText(),
+						"x-lower-sessionid": randomText(),
+						[randomText()]: "1",
+					},
+				},
+			},
+			{
+				url: ctx.buildUrl("/axios-custom-headers.json", domainType),
+				func: "axios.get",
+				args: {
+					mode: "cors",
+					headers: {
+						[headerCaseTest]: randomText(),
+						"x-lower-sessionid": randomText(),
+						[randomText()]: "1",
+					},
+				},
+			},
+			{
+				url: ctx.buildUrl("/fetch-post-custom-headers.json", domainType),
+				func: "fetch",
+				args: {
+					method: "post",
+					mode: "cors",
+					headers: {
+						[headerCaseTest]: randomText(),
+						"x-lower-sessionid": randomText(),
+						[randomText()]: "1",
+					},
+					body: JSON.stringify({
+						[randomText()]: randomText(),
+						[randomText()]: randomText(),
+						[randomText()]: randomText(),
+					}),
+				},
+			},
+			{
+				url: ctx.buildUrl("/post-custom-headers.json", domainType),
+				func: "axios.post",
+				args: {
+					mode: "cors",
+					headers: {
+						[headerCaseTest]: randomText(),
+						"x-lower-sessionid": randomText(),
+						[randomText()]: "1",
+					},
+					body: JSON.stringify({
+						[randomText()]: randomText(),
+						[randomText()]: randomText(),
+						[randomText()]: randomText(),
+					}),
+				},
+			},
+		);
+	}
 
-  return requests;
+	return requests;
 }
 
 function randomText() {
-  return Math.random().toString(36).substring(2);
+	return Math.random().toString(36).substring(2);
 }

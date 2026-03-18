@@ -1,8 +1,8 @@
-import IRequestContext from '@double-agent/collect/interfaces/IRequestContext';
-import fontList from './lib/testFonts';
+import type IRequestContext from "@double-agent/collect/interfaces/IRequestContext";
+import fontList from "./lib/testFonts";
 
 export default function fontScript(ctx: IRequestContext) {
-  return `
+	return `
 <script type="text/javascript">
 (function browserFontProbe() {
   // extracted from https://github.com/Valve/fingerprintjs2/
@@ -92,7 +92,7 @@ export default function fontScript(ctx: IRequestContext) {
         });
         document.body.removeChild(fontsDiv);
 
-        return fetch("${ctx.buildUrl('/save')}", {
+        return fetch("${ctx.buildUrl("/save")}", {
           method: 'POST',
           headers: { 'content-type': 'application/json' },
           body: JSON.stringify({ fonts }),

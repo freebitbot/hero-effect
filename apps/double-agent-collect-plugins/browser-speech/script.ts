@@ -1,7 +1,7 @@
-import IRequestContext from '@double-agent/collect/interfaces/IRequestContext';
+import type IRequestContext from "@double-agent/collect/interfaces/IRequestContext";
 
 export default function script(ctx: IRequestContext) {
-  return `
+	return `
 <script type="text/javascript">
 
 (function uaProbe() {
@@ -30,7 +30,7 @@ export default function script(ctx: IRequestContext) {
         voices.push({ 'default': de,lang,localService,name,voiceURI })
       }
     }
-    return fetch('${ctx.buildUrl('/save')}', {
+    return fetch('${ctx.buildUrl("/save")}', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({voices}),
