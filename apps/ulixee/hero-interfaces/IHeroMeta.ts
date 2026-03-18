@@ -1,15 +1,15 @@
-import ISessionCreateOptions from './ISessionCreateOptions';
+import type ISessionCreateOptions from "./ISessionCreateOptions";
 
 export default interface IHeroMeta
-  extends Omit<ISessionCreateOptions, 'userProfile' | 'scriptInvocationMeta'> {
-  userAgentString: string;
-  operatingSystemName: string;
-  operatingSystemVersion: string;
-  windowNavigatorPlatform: string;
-  uaClientHintsPlatformVersion: string;
-  browserName: string;
-  browserFullVersion: string;
-  renderingEngine: string;
-  renderingEngineVersion: string;
-  sessionId: string;
+	extends Omit<ISessionCreateOptions, "userProfile" | "scriptInvocationMeta"> {
+	userAgentString: string;
+	operatingSystemName: string;
+	operatingSystemVersion: string;
+	windowNavigatorPlatform: string;
+	uaClientHintsPlatformVersion: string;
+	browserName: string;
+	browserFullVersion: string;
+	renderingEngine: string;
+	renderingEngineVersion: string;
+	sessionId: string;
 }

@@ -1,5 +1,5 @@
 // tslint:disable-next-line
-import { UnixTimestamp } from './GenericTypes';
+import type { UnixTimestamp } from "./GenericTypes";
 
 /**
  * Buttons are a bit field from the DOM
@@ -19,13 +19,13 @@ type RelatedNodeId = NodeId;
 type MouseEventType = number;
 
 export type IMouseEvent = [
-  MouseEventType,
-  PageX,
-  PageY,
-  OffsetX,
-  OffsetY,
-  Buttons,
-  NodeId,
-  RelatedNodeId,
-  UnixTimestamp,
+	MouseEventType,
+	PageX,
+	PageY,
+	OffsetX,
+	OffsetY,
+	Buttons,
+	NodeId,
+	RelatedNodeId,
+	UnixTimestamp,
 ];

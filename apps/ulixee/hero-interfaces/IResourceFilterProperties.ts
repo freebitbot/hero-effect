@@ -1,10 +1,10 @@
-import IResourceType from '@ulixee/unblocked-specification/agent/net/IResourceType';
+import type IResourceType from "@ulixee/unblocked-specification/agent/net/IResourceType";
 
 export default interface IResourceFilterProperties {
-  url?: string | RegExp;
-  type?: IResourceType;
-  httpRequest?: {
-    method?: string;
-    statusCode?: number;
-  };
+	url?: string | RegExp;
+	type?: IResourceType;
+	httpRequest?: {
+		method?: string;
+		statusCode?: number;
+	};
 }
