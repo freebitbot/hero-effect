@@ -1,7 +1,7 @@
+import * as Fs from "node:fs";
+import * as Path from "node:path";
 import { existsAsync } from "@ulixee/commons/lib/fileUtils";
 import { bindFunctions } from "@ulixee/commons/lib/utils";
-import * as Fs from "fs";
-import * as Path from "path";
 import type ISessionRegistry from "../interfaces/ISessionRegistry";
 import SessionDb from "./SessionDb";
 

@@ -1,3 +1,5 @@
+import * as Fs from "node:fs";
+import * as Path from "node:path";
 import type { IBoundLog } from "@ulixee/commons/interfaces/ILog";
 import { TypedEventEmitter } from "@ulixee/commons/lib/eventUtils";
 import Log, { hasBeenLoggedSymbol } from "@ulixee/commons/lib/Logger";
@@ -18,8 +20,6 @@ import type BrowserContext from "@ulixee/unblocked-agent/lib/BrowserContext";
 import Pool from "@ulixee/unblocked-agent/lib/Pool";
 import { LocationTrigger } from "@ulixee/unblocked-specification/agent/browser/Location";
 import type { IUnblockedPluginClass } from "@ulixee/unblocked-specification/plugin/IUnblockedPlugin";
-import * as Fs from "fs";
-import * as Path from "path";
 import ConnectionToHeroClient from "./connections/ConnectionToHeroClient";
 import DefaultSessionRegistry from "./dbs/DefaultSessionRegistry";
 import NetworkDb from "./dbs/NetworkDb";
