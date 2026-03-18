@@ -3,9 +3,8 @@ import ShutdownHandler from "@ulixee/commons/lib/ShutdownHandler";
 import { WsTransportToCore } from "@ulixee/net";
 import type IConnectionToCoreOptions from "../interfaces/IConnectionToCoreOptions";
 import type CallsiteLocator from "../lib/CallsiteLocator";
+import { version } from "../package.json";
 import ConnectionToHeroCore from "./ConnectionToHeroCore";
-
-const { version } = require("../package.json");
 
 export default class ConnectionFactory {
 	public static hasLocalCloudPackage = false;
