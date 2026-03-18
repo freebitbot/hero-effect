@@ -14,11 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { IMouseButton } from '@ulixee/unblocked-specification/agent/interact/IInteractions';
-import { IMouseOptions } from '@ulixee/unblocked-specification/agent/interact/IInput';
-import IPoint from '@ulixee/unblocked-specification/agent/browser/IPoint';
-import DevtoolsSession from './DevtoolsSession';
-import { Keyboard } from './Keyboard';
+
+import type IPoint from "@ulixee/unblocked-specification/agent/browser/IPoint";
+import type { IMouseOptions } from "@ulixee/unblocked-specification/agent/interact/IInput";
+import type { IMouseButton } from "@ulixee/unblocked-specification/agent/interact/IInteractions";
+import type DevtoolsSession from "./DevtoolsSession";
+import type { Keyboard } from "./Keyboard";
 
 /**
  * The Mouse class operates in main-frame CSS pixels
@@ -49,73 +50,75 @@ import { Keyboard } from './Keyboard';
  */
 
 export default class Mouse {
-  public position: IPoint = { x: 0, y: 0 };
+	public position: IPoint = { x: 0, y: 0 };
 
-  private devtoolsSession: DevtoolsSession;
-  private keyboard: Keyboard;
-  private button: IMouseButton | 'none' = 'none';
+	private devtoolsSession: DevtoolsSession;
+	private keyboard: Keyboard;
+	private button: IMouseButton | "none" = "none";
 
-  constructor(devtoolsSession: DevtoolsSession, keyboard: Keyboard) {
-    this.devtoolsSession = devtoolsSession;
-    this.keyboard = keyboard;
-  }
+	constructor(devtoolsSession: DevtoolsSession, keyboard: Keyboard) {
+		this.devtoolsSession = devtoolsSession;
+		this.keyboard = keyboard;
+	}
 
-  async move(x: number, y: number): Promise<void> {
-    const roundedX = Math.round(x ?? 0);
-    const roundedY = Math.round(y ?? 0);
-    if (roundedX === this.position.x && roundedY === this.position.y) return;
-    this.position.x = roundedX;
-    this.position.y = roundedY;
+	async move(x: number, y: number): Promise<void> {
+		const roundedX = Math.round(x ?? 0);
+		const roundedY = Math.round(y ?? 0);
+		if (roundedX === this.position.x && roundedY === this.position.y) return;
+		this.position.x = roundedX;
+		this.position.y = roundedY;
 
-    await this.devtoolsSession.send('Input.dispatchMouseEvent', {
-      type: 'mouseMoved',
-      button: this.button,
-      x: this.position.x,
-      y: this.position.y,
-      modifiers: this.keyboard.modifiers,
-    });
-  }
+		await this.devtoolsSession.send("Input.dispatchMouseEvent", {
+			type: "mouseMoved",
+			button: this.button,
+			x: this.position.x,
+			y: this.position.y,
+			modifiers: this.keyboard.modifiers,
+		});
+	}
 
-  async down(options: IMouseOptions = {}): Promise<void> {
-    const { button = 'left', clickCount = 1 } = options;
-    this.button = button;
-    await this.devtoolsSession.send('Input.dispatchMouseEvent', {
-      type: 'mousePressed',
-      button,
-      x: this.position.x,
-      y: this.position.y,
-      modifiers: this.keyboard.modifiers,
-      clickCount,
-    });
-  }
+	async down(options: IMouseOptions = {}): Promise<void> {
+		const { button = "left", clickCount = 1 } = options;
+		this.button = button;
+		await this.devtoolsSession.send("Input.dispatchMouseEvent", {
+			type: "mousePressed",
+			button,
+			x: this.position.x,
+			y: this.position.y,
+			modifiers: this.keyboard.modifiers,
+			clickCount,
+		});
+	}
 
-  async up(options: IMouseOptions = {}): Promise<void> {
-    const { button = 'left', clickCount = 1 } = options;
-    this.button = 'none';
-    await this.devtoolsSession.send('Input.dispatchMouseEvent', {
-      type: 'mouseReleased',
-      button,
-      x: this.position.x,
-      y: this.position.y,
-      modifiers: this.keyboard.modifiers,
-      clickCount,
-    });
-  }
+	async up(options: IMouseOptions = {}): Promise<void> {
+		const { button = "left", clickCount = 1 } = options;
+		this.button = "none";
+		await this.devtoolsSession.send("Input.dispatchMouseEvent", {
+			type: "mouseReleased",
+			button,
+			x: this.position.x,
+			y: this.position.y,
+			modifiers: this.keyboard.modifiers,
+			clickCount,
+		});
+	}
 
-  async wheel(options: { deltaX?: number; deltaY?: number } = {}): Promise<void> {
-    const deltaX = Math.round(options.deltaX ?? 0);
-    const deltaY = Math.round(options.deltaY ?? 0);
+	async wheel(
+		options: { deltaX?: number; deltaY?: number } = {},
+	): Promise<void> {
+		const deltaX = Math.round(options.deltaX ?? 0);
+		const deltaY = Math.round(options.deltaY ?? 0);
 
-    if (deltaY === 0 && deltaY === 0) return;
+		if (deltaY === 0 && deltaY === 0) return;
 
-    await this.devtoolsSession.send('Input.dispatchMouseEvent', {
-      type: 'mouseWheel',
-      x: 0,
-      y: 0, // don't scroll relative to points... not included in mouse events and just confusing
-      deltaX,
-      deltaY,
-      modifiers: this.keyboard.modifiers,
-      pointerType: 'mouse',
-    });
-  }
+		await this.devtoolsSession.send("Input.dispatchMouseEvent", {
+			type: "mouseWheel",
+			x: 0,
+			y: 0, // don't scroll relative to points... not included in mouse events and just confusing
+			deltaX,
+			deltaY,
+			modifiers: this.keyboard.modifiers,
+			pointerType: "mouse",
+		});
+	}
 }

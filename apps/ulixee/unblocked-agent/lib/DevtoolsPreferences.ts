@@ -14,41 +14,46 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import IDevtoolsSession, {
-  Protocol,
-} from '@ulixee/unblocked-specification/agent/browser/IDevtoolsSession';
-import { bindFunctions } from '@ulixee/commons/lib/utils';
-import IBrowserEngine from '@ulixee/unblocked-specification/agent/browser/IBrowserEngine';
-import { readFileAsJson } from '@ulixee/commons/lib/fileUtils';
-import * as Fs from 'fs';
-import * as Path from 'path';
+
+import { readFileAsJson } from "@ulixee/commons/lib/fileUtils";
+import { bindFunctions } from "@ulixee/commons/lib/utils";
+import type IBrowserEngine from "@ulixee/unblocked-specification/agent/browser/IBrowserEngine";
+import type IDevtoolsSession from "@ulixee/unblocked-specification/agent/browser/IDevtoolsSession";
+import { Protocol } from "@ulixee/unblocked-specification/agent/browser/IDevtoolsSession";
+import * as Fs from "fs";
+import * as Path from "path";
+
 import BindingCalledEvent = Protocol.Runtime.BindingCalledEvent;
 
-const devtoolsPreferencesCallback = '_DevtoolsPreferencesCallback';
+const devtoolsPreferencesCallback = "_DevtoolsPreferencesCallback";
 
 export default class DevtoolsPreferences {
-  readonly preferencesPath: string;
-  private cachedPreferences: any;
+	readonly preferencesPath: string;
+	private cachedPreferences: any;
 
-  constructor(browserEngine: IBrowserEngine) {
-    bindFunctions(this);
-    let browserDir = browserEngine.executablePath.split(browserEngine.fullVersion).shift();
-    if (Fs.lstatSync(browserDir).isFile()) {
-      browserDir = Path.dirname(browserDir);
-    }
+	constructor(browserEngine: IBrowserEngine) {
+		bindFunctions(this);
+		let browserDir = browserEngine.executablePath
+			.split(browserEngine.fullVersion)
+			.shift();
+		if (Fs.lstatSync(browserDir).isFile()) {
+			browserDir = Path.dirname(browserDir);
+		}
 
-    this.preferencesPath = Path.join(browserDir, `devtoolsPreferences.json`);
-  }
+		this.preferencesPath = Path.join(browserDir, `devtoolsPreferences.json`);
+	}
 
-  public installOnConnect(session: IDevtoolsSession): Promise<void> {
-    session.on('Runtime.bindingCalled', event => this.onPreferenceAction(session, event));
+	public installOnConnect(session: IDevtoolsSession): Promise<void> {
+		session.on("Runtime.bindingCalled", (event) =>
+			this.onPreferenceAction(session, event),
+		);
 
-    return Promise.all([
-      session.send('Runtime.enable'),
-      session.send('Runtime.addBinding', { name: devtoolsPreferencesCallback }),
-      session.send('Page.enable'),
-      session.send('Page.addScriptToEvaluateOnNewDocument', {
-        source: `(function devtoolsPreferencesInterceptor() {
+		return Promise.all([
+			session.send("Runtime.enable"),
+			session.send("Runtime.addBinding", { name: devtoolsPreferencesCallback }),
+			session.send("Page.enable"),
+			session.send("Page.addScriptToEvaluateOnNewDocument", {
+				source: `(function devtoolsPreferencesInterceptor() {
     const toIntercept = ['getPreferences', 'setPreference', 'removePreference', 'clearPreferences'].map(x => {
       return JSON.stringify({ method: x }).replace('{','').replace('}','').trim();
     });
@@ -75,59 +80,59 @@ export default class DevtoolsPreferences {
       },
     });
 })()`,
-      }),
-      session.send('Runtime.runIfWaitingForDebugger'),
-    ]).catch(() => null);
-  }
+			}),
+			session.send("Runtime.runIfWaitingForDebugger"),
+		]).catch(() => null);
+	}
 
-  private async onPreferenceAction(
-    session: IDevtoolsSession,
-    event: BindingCalledEvent,
-  ): Promise<void> {
-    if (event.name !== devtoolsPreferencesCallback) return;
+	private async onPreferenceAction(
+		session: IDevtoolsSession,
+		event: BindingCalledEvent,
+	): Promise<void> {
+		if (event.name !== devtoolsPreferencesCallback) return;
 
-    const { id, method, params } = JSON.parse(event.payload);
+		const { id, method, params } = JSON.parse(event.payload);
 
-    await this.load();
+		await this.load();
 
-    let result;
-    if (method === 'getPreferences') {
-      result = this.cachedPreferences;
-    } else {
-      if (method === 'setPreference') {
-        this.cachedPreferences[params[0]] = params[1];
-      } else if (method === 'removePreference') {
-        delete this.cachedPreferences[params[0]];
-      } else if (method === 'clearPreferences') {
-        this.cachedPreferences = {};
-      }
-      await this.save();
-    }
+		let result;
+		if (method === "getPreferences") {
+			result = this.cachedPreferences;
+		} else {
+			if (method === "setPreference") {
+				this.cachedPreferences[params[0]] = params[1];
+			} else if (method === "removePreference") {
+				delete this.cachedPreferences[params[0]];
+			} else if (method === "clearPreferences") {
+				this.cachedPreferences = {};
+			}
+			await this.save();
+		}
 
-    await session
-      .send('Runtime.evaluate', {
-        // built-in devtools function/api
-        expression: `window.DevToolsAPI.embedderMessageAck(${id}, ${JSON.stringify(result)})`,
-        contextId: event.executionContextId,
-      })
-      .catch(() => null);
-  }
+		await session
+			.send("Runtime.evaluate", {
+				// built-in devtools function/api
+				expression: `window.DevToolsAPI.embedderMessageAck(${id}, ${JSON.stringify(result)})`,
+				contextId: event.executionContextId,
+			})
+			.catch(() => null);
+	}
 
-  private async save(): Promise<void> {
-    await Fs.promises.writeFile(
-      this.preferencesPath,
-      JSON.stringify(this.cachedPreferences, null, 2),
-      'utf8',
-    );
-  }
+	private async save(): Promise<void> {
+		await Fs.promises.writeFile(
+			this.preferencesPath,
+			JSON.stringify(this.cachedPreferences, null, 2),
+			"utf8",
+		);
+	}
 
-  private async load(): Promise<void> {
-    if (this.cachedPreferences === undefined) {
-      try {
-        this.cachedPreferences = await readFileAsJson(this.preferencesPath);
-      } catch (e) {
-        this.cachedPreferences = {};
-      }
-    }
-  }
+	private async load(): Promise<void> {
+		if (this.cachedPreferences === undefined) {
+			try {
+				this.cachedPreferences = await readFileAsJson(this.preferencesPath);
+			} catch (e) {
+				this.cachedPreferences = {};
+			}
+		}
+	}
 }
