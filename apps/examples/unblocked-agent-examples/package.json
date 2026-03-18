@@ -1,9 +1,0 @@
-{
-	"name": "@ulixee/unblocked-agent-examples",
-	"private": true,
-
-	"dependencies": {
-		"@ulixee/js-path": "workspace:*",
-		"@ulixee/unblocked-agent": "workspace:*"
-	}
-}
