@@ -1,3 +1,0 @@
-function thisIsATest() {
-  return true;
-}
