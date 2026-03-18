@@ -1,6 +1,5 @@
 {
 	"name": "@ulixee/default-browser-emulator",
-
 	"description": "Browser emulator generated from DoubleAgent data",
 	"main": "index.js",
 	"bin": {
@@ -21,7 +20,6 @@
 	"devDependencies": {
 		"@ulixee/unblocked-agent": "workspace:*",
 		"@ulixee/unblocked-agent-mitm": "workspace:*",
-		"@ulixee/unblocked-agent-testing": "workspace:*",
 		"fpcollect": "^1.0.4",
 		"fpscanner": "^0.1.5",
 		"proxy": "^2.2.0",

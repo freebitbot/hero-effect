@@ -1,9 +1,0 @@
-{
-	"name": "@ulixee/unblocked-agent-testing",
-	"main": "index.js",
-	"description": "Helpers and stubs for testing",
-	"engines": {
-		"node": ">=18"
-	},
-	"private": true
-}

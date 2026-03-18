@@ -1,6 +1,5 @@
 {
 	"name": "@ulixee/unblocked-agent-mitm-socket",
-
 	"description": "Man-in-the-middle socket library to emulate TLS and TCP settings",
 	"main": "index.js",
 	"scripts": {
@@ -14,7 +13,6 @@
 	},
 	"devDependencies": {
 		"@types/ws": "^7.2.4",
-		"@ulixee/unblocked-agent-testing": "workspace:*",
 		"proxy": "^2.2.0",
 		"simple-socks": "^2.1.0",
 		"ws": "^8.18.0"

@@ -1,6 +1,5 @@
 {
 	"name": "@ulixee/default-human-emulator",
-
 	"description": "Default human emulator based on Xetera/ghost-cursor",
 	"main": "index.js",
 	"dependencies": {
@@ -9,7 +8,6 @@
 	},
 	"devDependencies": {
 		"@ulixee/js-path": "workspace:*",
-		"@ulixee/unblocked-agent": "workspace:*",
-		"@ulixee/unblocked-agent-testing": "workspace:*"
+		"@ulixee/unblocked-agent": "workspace:*"
 	}
 }
