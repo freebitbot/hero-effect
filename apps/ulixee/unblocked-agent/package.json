@@ -1,6 +1,5 @@
 {
 	"name": "@ulixee/unblocked-agent",
-	"description": "Fully programmable Devtools Protocol based browser",
 	"main": "index.js",
 	"dependencies": {
 		"@ulixee/chrome-139-0": "^7258.155.11",
@@ -14,8 +13,5 @@
 		"tough-cookie": "^5.0.0",
 		"ws": "^8.18.0"
 	},
-	"devDependencies": {
-		"image-size": "^1.0.1",
-		"vue": "^3.4.30"
-	}
+	"description": "Fully programmable Devtools Protocol based browser"
 }
