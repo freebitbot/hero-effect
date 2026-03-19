@@ -29,5 +29,8 @@
 		"start": "node bin/cli.js start",
 		"start:alive": "node -r @ulixee/desktop-core/register bin/cli.js start",
 		"preversion": "node ../../build/cloud/main/scripts/gatherEnvSettings.js"
+	},
+	"devDependencies": {
+		"@types/ws": "8.18.1"
 	}
 }

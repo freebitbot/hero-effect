@@ -386,6 +386,9 @@
         "commander": "^9.5.0",
         "ws": "^8.18.0",
       },
+      "devDependencies": {
+        "@types/ws": "8.18.1",
+      },
     },
     "apps/plugins/default-browser-emulator": {
       "name": "@ulixee/default-browser-emulator",
@@ -2680,6 +2683,8 @@
 
     "@ulixee/chrome-versions/uuid": ["uuid@8.3.2", "", { "bin": { "uuid": "dist/bin/uuid" } }, "sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg=="],
 
+    "@ulixee/cloud/@types/ws": ["@types/ws@8.18.1", "", { "dependencies": { "@types/node": "*" } }, "sha512-ThVF6DCVhA8kUGy+aazFQ4kXQ7E1Ty7A3ypFOe0IcJV8O/M511G99AW24irKrW56Wt44yG9+ij8FaqoBGkuBXg=="],
+
     "@ulixee/hero-core/@ulixee/chrome-app": ["@ulixee/chrome-app@1.0.3", "", { "dependencies": { "https-proxy-agent": "^5.0.0", "progress": "^2.0.3", "tar": "^6.1.11" }, "bin": { "install-browser-deps": "bin/installDeps.js" } }, "sha512-VhotXRa364M2aym8urvEJ0e1o55dV4gWttAVb0M20xWjpUCIpyBfvO6mz69J40+K/SAVa6ne9mXkiFBFz6g/8g=="],
 
     "@ulixee/noderdom/@ulixee/js-path": ["@ulixee/js-path@2.0.0-alpha.34", "", {}, "sha512-Q/JHg9LW2uSV7J1eoEta8XUlyntv26ZOE6fBkyhQ2GO+IR1rzRv10qmy8k02q8eKRgtNdvPGPEm8iO2A/nz08g=="],
@@ -3025,6 +3030,8 @@
     "@ulixee/chrome-app/@types/tar/@types/node": ["@types/node@18.19.130", "", { "dependencies": { "undici-types": "~5.26.4" } }, "sha512-GRaXQx6jGfL8sKfaIDD6OupbIHBr9jv7Jnaml9tB7l4v068PAOXqfcujMMo5PhbIs6ggR1XODELqahT2R8v0fg=="],
 
     "@ulixee/chrome-versions/@types/tar/@types/node": ["@types/node@18.19.130", "", { "dependencies": { "undici-types": "~5.26.4" } }, "sha512-GRaXQx6jGfL8sKfaIDD6OupbIHBr9jv7Jnaml9tB7l4v068PAOXqfcujMMo5PhbIs6ggR1XODELqahT2R8v0fg=="],
+
+    "@ulixee/cloud/@types/ws/@types/node": ["@types/node@18.19.130", "", { "dependencies": { "undici-types": "~5.26.4" } }, "sha512-GRaXQx6jGfL8sKfaIDD6OupbIHBr9jv7Jnaml9tB7l4v068PAOXqfcujMMo5PhbIs6ggR1XODELqahT2R8v0fg=="],
 
     "@ulixee/hero-core/@ulixee/chrome-app/https-proxy-agent": ["https-proxy-agent@5.0.1", "", { "dependencies": { "agent-base": "6", "debug": "4" } }, "sha512-dFcAjpTQFgoLMzC2VwU+C/CbS7uRL0lWmxDITmqm7C+7F0Odmj6s9l6alZc6AELXhrnggM2CeWSXHGOdX2YtwA=="],
 
