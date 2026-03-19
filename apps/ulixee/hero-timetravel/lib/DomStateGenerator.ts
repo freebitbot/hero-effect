@@ -1,10 +1,16 @@
+import * as Path from "node:path";
 import { CanceledPromiseError } from "@ulixee/commons/interfaces/IPendingWaitEvent";
 import Log from "@ulixee/commons/lib/Logger";
 import Resolvable from "@ulixee/commons/lib/Resolvable";
 import type Core from "@ulixee/hero-core";
 import type SessionDb from "@ulixee/hero-core/dbs/SessionDb";
 import type ISessionRegistry from "@ulixee/hero-core/interfaces/ISessionRegistry";
+import { NodeType } from "@ulixee/hero-core/lib/DomNode";
+import DomRebuilder from "@ulixee/hero-core/lib/DomRebuilder";
+import MirrorNetwork from "@ulixee/hero-core/lib/MirrorNetwork";
+import MirrorPage from "@ulixee/hero-core/lib/MirrorPage";
 import Session from "@ulixee/hero-core/lib/Session";
+import XPathGenerator from "@ulixee/hero-core/lib/XPathGenerator";
 import DomChangesTable, {
 	type IDomChangeRecord,
 	type IDomRecording,
@@ -16,16 +22,10 @@ import type IDomStateAssertionBatch from "@ulixee/hero-interfaces/IDomStateAsser
 import type IResourceFilterProperties from "@ulixee/hero-interfaces/IResourceFilterProperties";
 import type IResourceSummary from "@ulixee/hero-interfaces/IResourceSummary";
 import type BrowserContext from "@ulixee/unblocked-agent/lib/BrowserContext";
-import * as Path from "path";
-import { NodeType } from "@ulixee/hero-core/lib/DomNode";
-import DomRebuilder from "@ulixee/hero-core/lib/DomRebuilder";
 import DomStateAssertions, {
 	type IFrameAssertions,
 } from "./DomStateAssertions";
 import MirrorContext from "./MirrorContext";
-import MirrorNetwork from "@ulixee/hero-core/lib/MirrorNetwork";
-import MirrorPage from "@ulixee/hero-core/lib/MirrorPage";
-import XPathGenerator from "@ulixee/hero-core/lib/XPathGenerator";
 
 const { log } = Log(module);
 

@@ -1,7 +1,7 @@
+import type * as http from "node:http";
+import type * as http2 from "node:http2";
+import type { ClientHttp2Stream } from "node:http2";
 import Log from "@ulixee/commons/lib/Logger";
-import type * as http from "http";
-import type * as http2 from "http2";
-import type { ClientHttp2Stream } from "http2";
 import type IMitmRequestContext from "../interfaces/IMitmRequestContext";
 import ResourceState from "../interfaces/ResourceState";
 import type HttpResponseCache from "../lib/HttpResponseCache";

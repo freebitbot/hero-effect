@@ -1,6 +1,6 @@
+import type * as http from "node:http";
+import type * as net from "node:net";
 import Log, { hasBeenLoggedSymbol } from "@ulixee/commons/lib/Logger";
-import type * as http from "http";
-import type * as net from "net";
 import type IMitmRequestContext from "../interfaces/IMitmRequestContext";
 import ResourceState from "../interfaces/ResourceState";
 import MitmRequestContext from "../lib/MitmRequestContext";

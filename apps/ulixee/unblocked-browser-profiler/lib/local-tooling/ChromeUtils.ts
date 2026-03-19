@@ -1,5 +1,5 @@
+import { type ChildProcess, spawn } from "node:child_process";
 import ChromeApp from "@ulixee/chrome-app";
-import { type ChildProcess, spawn } from "child_process";
 import type { LaunchedChrome } from "chrome-launcher";
 import * as ChromeLauncher from "chrome-launcher";
 import * as CDP from "chrome-remote-interface";

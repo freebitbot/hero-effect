@@ -1,7 +1,7 @@
 import "@ulixee/commons/lib/SourceMapSupport";
+import * as Fs from "node:fs";
 import { readFileAsJson } from "@ulixee/commons/lib/fileUtils";
 import { Agent } from "@ulixee/unblocked-agent";
-import * as Fs from "fs";
 import { getDataFilePath } from "../lib/paths";
 
 export default async function importMacOsVersions(): Promise<void> {
@@ -20,7 +20,7 @@ export default async function importMacOsVersions(): Promise<void> {
     let savedCols = [];
     for (const row of document.querySelectorAll('table.wikitable tr')) {
       let tds = [...row.querySelectorAll('td,th')];
-      
+
       if (!row.querySelector('td')) {
         headerKeys = tds.map(x => x.lastChild.textContent.trim());
         continue;
@@ -28,13 +28,13 @@ export default async function importMacOsVersions(): Promise<void> {
       if (!tds.length) {
         continue;
       }
-      
+
       for (let i=0;i<tds.length;i+=1) {
         if (tds[i].rowSpan > 1) {
           savedCols.push( { td: tds[i], count: tds[i].rowSpan -1, index:i });
         }
       }
-      
+
       if (tds.length < headerKeys.length) {
         tds = [...tds];
         for (const saved of savedCols) {
@@ -43,14 +43,14 @@ export default async function importMacOsVersions(): Promise<void> {
         }
         savedCols = savedCols.filter(x => x.count>0);
       }
-      
+
       const result = {};
       for (let i=0;i<headerKeys.length;i+=1) {
         const header = headerKeys[i];
         const value = tds[i].textContent.trim();
         if (header === 'Version') {
           result.darwinVersion = value;
-        } 
+        }
         if (header.includes('Notes')) {
           const match =  value.match(/(?:Mac OS X|macOS|OS X) v?\\.?([\\d.]+)/);
           if (match) result.macOsVersion = match[1].trim()

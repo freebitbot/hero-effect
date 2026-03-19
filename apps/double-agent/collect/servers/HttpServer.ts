@@ -1,4 +1,4 @@
-import * as http from "http";
+import * as http from "node:http";
 import type IServerContext from "../interfaces/IServerContext";
 import createHttpRequestHandler from "../lib/createHttpRequestHandler";
 import createWebsocketHandler from "../lib/createWebsocketHandler";

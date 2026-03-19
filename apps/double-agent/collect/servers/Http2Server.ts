@@ -1,4 +1,4 @@
-import * as http2 from "http2";
+import * as http2 from "node:http2";
 import type IServerContext from "../interfaces/IServerContext";
 import createHttpRequestHandler from "../lib/createHttpRequestHandler";
 import createWebsocketHandler from "../lib/createWebsocketHandler";

@@ -1,7 +1,7 @@
+import type * as http from "node:http";
+import type * as http2 from "node:http2";
 import type MitmSocket from "@ulixee/unblocked-agent-mitm-socket";
 import type IHttpResourceLoadDetails from "@ulixee/unblocked-specification/agent/net/IHttpResourceLoadDetails";
-import type * as http from "http";
-import type * as http2 from "http2";
 import type CacheHandler from "../handlers/CacheHandler";
 import type RequestSession from "../handlers/RequestSession";
 import type ResourceState from "./ResourceState";

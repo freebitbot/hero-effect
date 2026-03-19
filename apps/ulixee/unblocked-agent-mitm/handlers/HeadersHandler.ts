@@ -1,10 +1,10 @@
+import * as http from "node:http";
+import * as http2 from "node:http2";
+import { URL } from "node:url";
 import type IHttpHeaders from "@ulixee/unblocked-specification/agent/net/IHttpHeaders";
 import type IHttpResourceLoadDetails from "@ulixee/unblocked-specification/agent/net/IHttpResourceLoadDetails";
 import type IResourceType from "@ulixee/unblocked-specification/agent/net/IResourceType";
 import type OriginType from "@ulixee/unblocked-specification/agent/net/OriginType";
-import * as http from "http";
-import * as http2 from "http2";
-import { URL } from "url";
 import type IMitmRequestContext from "../interfaces/IMitmRequestContext";
 import ResourceState from "../interfaces/ResourceState";
 import { parseRawHeaders, toLowerCase } from "../lib/Utils";

@@ -1,6 +1,6 @@
-import type { IncomingMessage, ServerResponse } from "http";
-import type * as http2 from "http2";
-import type { URL } from "url";
+import type { IncomingMessage, ServerResponse } from "node:http";
+import type * as http2 from "node:http2";
+import type { URL } from "node:url";
 import type { DomainType } from "../lib/DomainUtils";
 import type { IPluginPage } from "../lib/Plugin";
 import type Session from "../lib/Session";

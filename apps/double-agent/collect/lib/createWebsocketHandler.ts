@@ -1,8 +1,8 @@
-import type * as http from "http";
+import type * as http from "node:http";
 
 import WebSocket = require("ws");
 
-import type * as net from "net";
+import type * as net from "node:net";
 import type IServerContext from "../interfaces/IServerContext";
 import ResourceType from "../interfaces/ResourceType";
 import type BaseServer from "../servers/BaseServer";

@@ -1,8 +1,8 @@
+import * as fs from "node:fs";
 import type IRequestContext from "@double-agent/collect/interfaces/IRequestContext";
 import Document from "@double-agent/collect/lib/Document";
 import { DomainType } from "@double-agent/collect/lib/DomainUtils";
 import Plugin, { type IPluginPage } from "@double-agent/collect/lib/Plugin";
-import * as fs from "fs";
 import type { IProfileData } from "./interfaces/IProfile";
 
 const contentTypeByPath = {

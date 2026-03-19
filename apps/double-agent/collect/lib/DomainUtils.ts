@@ -1,5 +1,5 @@
 import Config from "@double-agent/config/index";
-import { URL } from "url";
+import { URL } from "node:url";
 
 const { CrossDomain, MainDomain, SubDomain, TlsDomain } =
 	Config.collect.domains;

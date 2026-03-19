@@ -1,4 +1,4 @@
-import * as Fs from "fs";
+import * as Fs from "node:fs";
 import { DOMParser } from "noderdom-detached";
 import type { IDocument, IElement } from "noderdom-detached/base/interfaces";
 import NodeType from "noderdom-detached/src/constants/NodeType";

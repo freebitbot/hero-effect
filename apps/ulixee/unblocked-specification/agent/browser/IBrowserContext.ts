@@ -1,5 +1,5 @@
+import type { URL } from "node:url";
 import type ITypedEventEmitter from "@ulixee/commons/interfaces/ITypedEventEmitter";
-import type { URL } from "url";
 import type { IBrowserContextHooks } from "../hooks/IBrowserHooks";
 import type IInteractHooks from "../hooks/IInteractHooks";
 import type { ICookie } from "../net/ICookie";

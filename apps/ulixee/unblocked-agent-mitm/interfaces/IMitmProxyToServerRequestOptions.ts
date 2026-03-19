@@ -1,4 +1,4 @@
-import type * as http from "http";
+import type * as http from "node:http";
 
 export default interface IMitmProxyToServerRequestOptions
 	extends http.ClientRequestArgs {

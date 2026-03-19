@@ -1,7 +1,7 @@
+import { promises as Fs } from "node:fs";
+import * as Path from "node:path";
 import Config from "@double-agent/config";
 import RealUserAgents from "@ulixee/real-user-agents";
-import { promises as Fs } from "fs";
-import * as Path from "path";
 import type IUserAgentConfig from "../interfaces/IUserAgentConfig";
 
 export default async function importBrowserProfiles(

@@ -1,7 +1,7 @@
 import csv = require("csv-parse/lib/sync");
 
+import { readFileSync } from "node:fs";
 import type IRequestContext from "@double-agent/collect/interfaces/IRequestContext";
-import { readFileSync } from "fs";
 
 export default function codecPageScript(ctx: IRequestContext) {
 	return `
@@ -25,7 +25,7 @@ export default function codecPageScript(ctx: IRequestContext) {
 
   let webRtcAudioCodecs = [];
   let webRtcVideoCodecs = [];
-  
+
   function testCodecs() {
     const videoElt = document.createElement('video');
     const audioElt = document.createElement('audio');
@@ -40,9 +40,9 @@ export default function codecPageScript(ctx: IRequestContext) {
         const canPlay = audioElt.canPlayType(format);
         if (canPlay === 'probably') audioSupport.probablyPlays.push(format);
         if (canPlay === 'maybe') audioSupport.maybePlays.push(format);
-          
+
       }
-  
+
       for (const codec of codecs) {
         const formatPlusCodec= format + ';codecs=' + codec;
         const isTypeAllowed = window["MediaRecorder"] && MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(formatPlusCodec);
@@ -59,9 +59,9 @@ export default function codecPageScript(ctx: IRequestContext) {
         const canPlay = videoElt.canPlayType(format);
         if (canPlay === 'probably') videoSupport.probablyPlays.push(format);
         if (canPlay === 'maybe') videoSupport.maybePlays.push(format);
-          
+
       }
-  
+
       for (const codec of codecs) {
         const formatPlusCodec= format + ';codecs=' + codec;
         const isTypeAllowed = window["MediaRecorder"] && MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(formatPlusCodec);
@@ -72,7 +72,7 @@ export default function codecPageScript(ctx: IRequestContext) {
       }
     }
   }
-  const promise = new Promise(resolve => {  
+  const promise = new Promise(resolve => {
     if (window.requestIdleCallback) {
       requestIdleCallback(() => {
         testCodecs();

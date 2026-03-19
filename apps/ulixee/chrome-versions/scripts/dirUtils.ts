@@ -1,6 +1,6 @@
-import Fs from "fs";
-import Os from "os";
-import * as Path from "path";
+import Fs from "node:fs";
+import Os from "node:os";
+import * as Path from "node:path";
 
 const tmp = Os.tmpdir();
 const downloadsDir = Path.join(__dirname, "..", "downloads");

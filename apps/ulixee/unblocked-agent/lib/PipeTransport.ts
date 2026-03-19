@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import type { ChildProcess } from "node:child_process";
 import EventSubscriber from "@ulixee/commons/lib/EventSubscriber";
 import Log from "@ulixee/commons/lib/Logger";
 import Resolvable from "@ulixee/commons/lib/Resolvable";
-import type { ChildProcess } from "child_process";
 import type IConnectionTransport from "../interfaces/IConnectionTransport";
 
 const { log } = Log(module);

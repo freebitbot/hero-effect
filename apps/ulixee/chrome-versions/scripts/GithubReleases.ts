@@ -1,7 +1,7 @@
+import * as Fs from "node:fs";
+import * as Path from "node:path";
 import * as GithubActions from "@actions/github";
 import type { GitHub } from "@actions/github/lib/utils";
-import * as Fs from "fs";
-import * as Path from "path";
 
 export default class GithubReleases {
 	private octokit: InstanceType<typeof GitHub>;

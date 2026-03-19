@@ -1,6 +1,9 @@
 import "@ulixee/commons/lib/SourceMapSupport";
 import "../env"; // load our env before DA
 import "@double-agent/config/load";
+import { execSync } from "node:child_process";
+import { existsSync, promises as Fs, rmSync } from "node:fs";
+import * as Path from "node:path";
 import Config, { createUserAgentIdFromIds } from "@double-agent/config";
 import AssignmentsClient, {
 	type IAssignment,
@@ -9,9 +12,7 @@ import saveAssignmentToProfileDir from "@double-agent/runner/lib/saveAssignmentT
 import { existsAsync } from "@ulixee/commons/lib/fileUtils";
 import getLocalOperatingSystemMeta from "@ulixee/real-user-agents/lib/getLocalOperatingSystemMeta";
 import Axios from "axios";
-import { execSync } from "child_process";
-import { existsSync, promises as Fs, rmSync } from "fs";
-import * as Path from "path";
+
 import BrowserProfiler from "../index";
 import getStableChromeVersions from "../lib/getStableChromeVersions";
 import {

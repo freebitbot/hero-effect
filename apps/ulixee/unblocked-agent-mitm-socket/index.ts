@@ -1,5 +1,7 @@
 // eslint-disable-next-line max-classes-per-file
 
+import { unlink } from "node:fs";
+import * as net from "node:net";
 import type { IBoundLog } from "@ulixee/commons/interfaces/ILog";
 import TimeoutError from "@ulixee/commons/interfaces/TimeoutError";
 import EventSubscriber from "@ulixee/commons/lib/EventSubscriber";
@@ -8,8 +10,6 @@ import { createIpcSocketPath } from "@ulixee/commons/lib/IpcUtils";
 import Resolvable from "@ulixee/commons/lib/Resolvable";
 import type IHttpSocketConnectOptions from "@ulixee/unblocked-specification/agent/net/IHttpSocketConnectOptions";
 import type IHttpSocketWrapper from "@ulixee/unblocked-specification/agent/net/IHttpSocketWrapper";
-import { unlink } from "fs";
-import * as net from "net";
 import type MitmSocketSession from "./lib/MitmSocketSession";
 
 let idCounter = 0;

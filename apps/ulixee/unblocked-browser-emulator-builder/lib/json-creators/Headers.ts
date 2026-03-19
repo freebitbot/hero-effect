@@ -1,3 +1,4 @@
+import * as Fs from "node:fs";
 import {
 	isOfficialDefaultValueKey,
 	isOfficialHeader,
@@ -5,7 +6,6 @@ import {
 import type IHeaderDataPage from "@double-agent/collect/interfaces/IHeaderDataPage";
 import type IBasicHeadersProfile from "@double-agent/collect-http-basic-headers/interfaces/IProfile";
 import BrowserProfiler from "@ulixee/unblocked-browser-profiler";
-import * as Fs from "fs";
 import type Config from "./Config";
 
 export default class HeadersJson {

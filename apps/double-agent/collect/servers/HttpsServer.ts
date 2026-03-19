@@ -1,4 +1,4 @@
-import * as https from "https";
+import * as https from "node:https";
 import type IServerContext from "../interfaces/IServerContext";
 import createHttpRequestHandler from "../lib/createHttpRequestHandler";
 import createWebsocketHandler from "../lib/createWebsocketHandler";

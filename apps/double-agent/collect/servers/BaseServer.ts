@@ -1,6 +1,6 @@
-import type * as http from "http";
-import * as http2 from "http2";
-import { URL } from "url";
+import type * as http from "node:http";
+import * as http2 from "node:http2";
+import { URL } from "node:url";
 import type IServerContext from "../interfaces/IServerContext";
 import type Plugin from "../lib/Plugin";
 import type { IHandlerFn, IRoute, IRoutesByPath } from "../lib/Plugin";

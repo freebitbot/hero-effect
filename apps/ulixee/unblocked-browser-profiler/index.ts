@@ -1,8 +1,8 @@
+import * as Fs from "node:fs";
+import * as Path from "node:path";
+import { gunzipSync } from "node:zlib";
 import type Plugin from "@double-agent/collect/lib/Plugin";
 import RealUserAgents, { type IUserAgentMeta } from "@ulixee/real-user-agents";
-import * as Fs from "fs";
-import * as Path from "path";
-import { gunzipSync } from "zlib";
 import { profileDataDir } from "./paths";
 
 export default class BrowserProfiler {

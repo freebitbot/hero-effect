@@ -1,10 +1,10 @@
+import type { ClientRequest, IncomingHttpHeaders } from "node:http";
+import * as http from "node:http";
+import * as https from "node:https";
 import { CanceledPromiseError } from "@ulixee/commons/interfaces/IPendingWaitEvent";
 import { TypedEventEmitter } from "@ulixee/commons/lib/eventUtils";
 import Resolvable from "@ulixee/commons/lib/Resolvable";
 import TypeSerializer from "@ulixee/commons/lib/TypeSerializer";
-import type { ClientRequest, IncomingHttpHeaders } from "http";
-import * as http from "http";
-import * as https from "https";
 import RemoteError from "../errors/RemoteError";
 import type IApiHandlers from "../interfaces/IApiHandlers";
 import type ICoreResponsePayload from "../interfaces/ICoreResponsePayload";

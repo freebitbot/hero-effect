@@ -1,5 +1,5 @@
+import * as Fs from "node:fs";
 import Axios from "axios";
-import * as Fs from "fs";
 import { getDownloadPath } from "./dirUtils";
 
 export async function downloadInstaller(

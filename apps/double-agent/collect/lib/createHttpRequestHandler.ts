@@ -1,7 +1,7 @@
+import * as fs from "node:fs";
+import type { IncomingMessage, ServerResponse } from "node:http";
+import type * as http2 from "node:http2";
 import Config from "@double-agent/config/index";
-import * as fs from "fs";
-import type { IncomingMessage, ServerResponse } from "http";
-import type * as http2 from "http2";
 import type IRequestContext from "../interfaces/IRequestContext";
 import type IServerContext from "../interfaces/IServerContext";
 import type BaseServer from "../servers/BaseServer";

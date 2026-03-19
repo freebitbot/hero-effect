@@ -1,5 +1,5 @@
-import { spawnSync } from "child_process";
-import * as Fs from "fs";
+import { spawnSync } from "node:child_process";
+import * as Fs from "node:fs";
 import BrowserData from "..";
 
 const path = BrowserData.dataDir;

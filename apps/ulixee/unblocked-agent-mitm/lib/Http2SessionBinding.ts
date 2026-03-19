@@ -1,7 +1,7 @@
+import type { Http2Session } from "node:http2";
 import type { IBoundLog } from "@ulixee/commons/interfaces/ILog";
 import type { IEventSubscriber } from "@ulixee/commons/interfaces/IRegisteredEventListener";
 import { bindFunctions } from "@ulixee/commons/lib/utils";
-import type { Http2Session } from "http2";
 
 export default class Http2SessionBinding {
 	private logger: IBoundLog;

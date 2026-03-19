@@ -1,4 +1,4 @@
-import Fs from "fs";
+import Fs from "node:fs";
 import file from "../versions.json";
 
 let json = file;

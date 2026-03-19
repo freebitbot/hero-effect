@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-import * as Fs from "fs";
-import * as Path from "path";
+import * as Fs from "node:fs";
+import * as Path from "node:path";
 import ChromeApp from "../index";
 import { isDebianFlavor } from "../lib/LinuxUtils";
 

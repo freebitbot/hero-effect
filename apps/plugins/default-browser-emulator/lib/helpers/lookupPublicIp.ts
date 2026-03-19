@@ -1,14 +1,14 @@
+import type { RequestOptions } from "node:http";
+import * as http from "node:http";
+import * as http2 from "node:http2";
+import * as https from "node:https";
+import * as url from "node:url";
 import Logger from "@ulixee/commons/lib/Logger";
 import ShutdownHandler from "@ulixee/commons/lib/ShutdownHandler";
 import MitmSocket from "@ulixee/unblocked-agent-mitm-socket";
 import MitmSocketSession from "@ulixee/unblocked-agent-mitm-socket/lib/MitmSocketSession";
 import type IHttpSocketAgent from "@ulixee/unblocked-specification/agent/net/IHttpSocketAgent";
 import type IHttpSocketWrapper from "@ulixee/unblocked-specification/agent/net/IHttpSocketWrapper";
-import type { RequestOptions } from "http";
-import * as http from "http";
-import * as http2 from "http2";
-import * as https from "https";
-import * as url from "url";
 
 let sharedSession: MitmSocketSession;
 let cachedMachineIp: string;

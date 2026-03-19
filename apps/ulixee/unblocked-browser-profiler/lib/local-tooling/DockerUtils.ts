@@ -1,6 +1,6 @@
-import { type ChildProcess, execSync, spawn } from "child_process";
-import * as Path from "path";
-import { URL } from "url";
+import { type ChildProcess, execSync, spawn } from "node:child_process";
+import * as Path from "node:path";
+import { URL } from "node:url";
 import { navigateDevtoolsToUrl } from "./ChromeUtils";
 
 const dockerWorkingDirectory = Path.resolve(__dirname, `../../chrome-docker`);

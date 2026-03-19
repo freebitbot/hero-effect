@@ -1,6 +1,6 @@
+import type { Readable } from "node:stream";
+import type { URL } from "node:url";
 import type { IEventSubscriber } from "@ulixee/commons/interfaces/IRegisteredEventListener";
-import type { Readable } from "stream";
-import type { URL } from "url";
 import type IHttpHeaders from "./IHttpHeaders";
 import type IResourceType from "./IResourceType";
 import type OriginType from "./OriginType";

@@ -1,9 +1,9 @@
 import { TypedEventEmitter } from "@ulixee/commons/lib/eventUtils";
 import "@ulixee/commons/lib/SourceMapSupport";
+import type { IncomingMessage, ServerResponse } from "node:http";
+import * as QueryString from "node:querystring";
+import { URL } from "node:url";
 import TypeSerializer from "@ulixee/commons/lib/TypeSerializer";
-import type { IncomingMessage, ServerResponse } from "http";
-import * as QueryString from "querystring";
-import { URL } from "url";
 import type ICoreRequestPayload from "../interfaces/ICoreRequestPayload";
 import type ITransport from "../interfaces/ITransport";
 import type { ITransportEvents } from "../interfaces/ITransport";

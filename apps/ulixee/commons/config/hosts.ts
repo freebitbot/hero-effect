@@ -1,5 +1,5 @@
-import * as Fs from "fs";
-import * as Path from "path";
+import * as Fs from "node:fs";
+import * as Path from "node:path";
 import { getDataDirectory } from "../lib/dirUtils";
 import { TypedEventEmitter } from "../lib/eventUtils";
 import { isPortInUse } from "../lib/utils";

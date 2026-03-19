@@ -1,7 +1,7 @@
+import type { IncomingMessage, ServerResponse } from "node:http";
+import type * as http2 from "node:http2";
+import { URL } from "node:url";
 import Config from "@double-agent/config/index";
-import type { IncomingMessage, ServerResponse } from "http";
-import type * as http2 from "http2";
-import { URL } from "url";
 import type IRequestContext from "../interfaces/IRequestContext";
 import type IRequestDetails from "../interfaces/IRequestDetails";
 import type BaseServer from "../servers/BaseServer";

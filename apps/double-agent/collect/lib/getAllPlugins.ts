@@ -1,5 +1,5 @@
-import * as Fs from "fs";
-import * as Path from "path";
+import * as Fs from "node:fs";
+import * as Path from "node:path";
 import type IPlugin from "../interfaces/IPlugin";
 import type Plugin from "./Plugin";
 

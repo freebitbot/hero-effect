@@ -1,7 +1,7 @@
+import * as fs from "node:fs";
 import { stringifiedTypeSerializerClass } from "@ulixee/commons/lib/TypeSerializer";
 import type IDevtoolsSession from "@ulixee/unblocked-specification/agent/browser/IDevtoolsSession";
 import type { IPage } from "@ulixee/unblocked-specification/agent/browser/IPage";
-import * as fs from "fs";
 
 const pageScripts = {
 	domStorage: fs.readFileSync(

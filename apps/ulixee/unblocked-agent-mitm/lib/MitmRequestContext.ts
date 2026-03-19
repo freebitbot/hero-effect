@@ -1,3 +1,7 @@
+import type * as http from "node:http";
+import type * as http2 from "node:http2";
+import type { TLSSocket } from "node:tls";
+import { URL } from "node:url";
 import EventSubscriber from "@ulixee/commons/lib/EventSubscriber";
 import type MitmSocket from "@ulixee/unblocked-agent-mitm-socket";
 import type { IBrowserResourceRequest } from "@ulixee/unblocked-specification/agent/browser/IBrowserNetworkEvents";
@@ -6,10 +10,6 @@ import type IResourceRequest from "@ulixee/unblocked-specification/agent/net/IRe
 import type IResourceResponse from "@ulixee/unblocked-specification/agent/net/IResourceResponse";
 import type OriginType from "@ulixee/unblocked-specification/agent/net/OriginType";
 import { isOriginType } from "@ulixee/unblocked-specification/agent/net/OriginType";
-import type * as http from "http";
-import type * as http2 from "http2";
-import type { TLSSocket } from "tls";
-import { URL } from "url";
 import CacheHandler from "../handlers/CacheHandler";
 import HeadersHandler from "../handlers/HeadersHandler";
 import type { IRequestSessionResponseEvent } from "../handlers/RequestSession";

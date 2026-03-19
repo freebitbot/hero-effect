@@ -1,9 +1,9 @@
+import type { IncomingMessage } from "node:http";
 import { CanceledPromiseError } from "@ulixee/commons/interfaces/IPendingWaitEvent";
 import EventSubscriber from "@ulixee/commons/lib/EventSubscriber";
 import { TypedEventEmitter } from "@ulixee/commons/lib/eventUtils";
 import TypeSerializer from "@ulixee/commons/lib/TypeSerializer";
 import { bindFunctions } from "@ulixee/commons/lib/utils";
-import type { IncomingMessage } from "http";
 
 import WebSocket = require("ws");
 

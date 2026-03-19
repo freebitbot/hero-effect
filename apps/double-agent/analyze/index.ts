@@ -1,11 +1,8 @@
 import "@ulixee/commons/lib/SourceMapSupport";
 import * as Fs from "node:fs";
 import * as Path from "node:path";
-import type IBaseProfile from "@double-agent/interfaces/IBaseProfile";
-import {
-	type IUserAgentToTestPickType,
-	UserAgentToTestPickType,
-} from "@double-agent/interfaces/IUserAgentToTest";
+
+
 import {
 	extractProfilePathsMap,
 	importProfile,
@@ -16,6 +13,7 @@ import type Plugin from "./lib/Plugin";
 import type { IResultFlag } from "./lib/Plugin";
 import Probe from "./lib/Probe";
 import ProbeBucket from "./lib/ProbeBucket";
+import { UserAgentToTestPickType, type IBaseProfile, type IUserAgentToTestPickType } from "@double-agent/interfaces";
 
 interface IResult {
 	userAgentId: string;
@@ -27,9 +25,7 @@ interface IResultsMap {
 		[userAgentId: string]: IResultFlag[];
 	};
 	byPickType: {
-		// @ts-expect-error
 		[UserAgentToTestPickType.popular]: IResult[];
-		// @ts-expect-error
 		[UserAgentToTestPickType.random]: IResult[];
 	};
 }

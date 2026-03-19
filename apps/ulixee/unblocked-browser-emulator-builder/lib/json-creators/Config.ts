@@ -1,5 +1,5 @@
+import * as Fs from "node:fs";
 import type IBrowserEngineOption from "@ulixee/unblocked-specification/agent/browser/IBrowserEngineOption";
-import * as Fs from "fs";
 
 interface IConfig {
 	defaultLocale: string;

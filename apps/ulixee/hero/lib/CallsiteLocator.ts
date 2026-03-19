@@ -1,6 +1,6 @@
+import * as Path from "node:path";
 import type ISourceCodeLocation from "@ulixee/commons/interfaces/ISourceCodeLocation";
 import Callsite from "@ulixee/commons/lib/Callsite";
-import * as Path from "path";
 
 const AwaitedDomPath = require
 	.resolve("@ulixee/awaited-dom/package.json")

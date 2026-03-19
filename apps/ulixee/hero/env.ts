@@ -1,5 +1,5 @@
+import * as Path from "node:path";
 import { loadEnv, parseEnvPath } from "@ulixee/commons/lib/envUtils";
-import * as Path from "path";
 
 loadEnv(Path.join(__dirname, "..", "core"));
 loadEnv(Path.join(__dirname, "..", "hero-core"));

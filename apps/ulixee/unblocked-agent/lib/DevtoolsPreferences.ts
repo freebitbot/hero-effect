@@ -15,13 +15,13 @@
  * limitations under the License.
  */
 
+import * as Fs from "node:fs";
+import * as Path from "node:path";
 import { readFileAsJson } from "@ulixee/commons/lib/fileUtils";
 import { bindFunctions } from "@ulixee/commons/lib/utils";
 import type IBrowserEngine from "@ulixee/unblocked-specification/agent/browser/IBrowserEngine";
 import type IDevtoolsSession from "@ulixee/unblocked-specification/agent/browser/IDevtoolsSession";
 import { Protocol } from "@ulixee/unblocked-specification/agent/browser/IDevtoolsSession";
-import * as Fs from "fs";
-import * as Path from "path";
 
 import BindingCalledEvent = Protocol.Runtime.BindingCalledEvent;
 

@@ -1,10 +1,10 @@
+import type { ClientHttp2Session } from "node:http2";
 import type { IBoundLog } from "@ulixee/commons/interfaces/ILog";
 import { CanceledPromiseError } from "@ulixee/commons/interfaces/IPendingWaitEvent";
 import EventSubscriber from "@ulixee/commons/lib/EventSubscriber";
 import Queue from "@ulixee/commons/lib/Queue";
 import Resolvable from "@ulixee/commons/lib/Resolvable";
 import type MitmSocket from "@ulixee/unblocked-agent-mitm-socket";
-import type { ClientHttp2Session } from "http2";
 import type RequestSession from "../handlers/RequestSession";
 import type Http2SessionBinding from "./Http2SessionBinding";
 

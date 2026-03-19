@@ -1,5 +1,5 @@
+import * as Fs from "node:fs";
 import Config from "@double-agent/config";
-import * as Fs from "fs";
 
 const { MainDomain, CrossDomain, SubDomain, TlsDomain } =
 	Config.collect.domains;

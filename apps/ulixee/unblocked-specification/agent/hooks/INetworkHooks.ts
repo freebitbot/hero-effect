@@ -1,6 +1,6 @@
-import type * as http from "http";
-import type * as http2 from "http2";
-import type { URL } from "url";
+import type * as http from "node:http";
+import type * as http2 from "node:http2";
+import type { URL } from "node:url";
 import type IDnsSettings from "../net/IDnsSettings";
 import type IHttp2ConnectSettings from "../net/IHttp2ConnectSettings";
 import type IHttpResourceLoadDetails from "../net/IHttpResourceLoadDetails";

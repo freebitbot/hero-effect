@@ -1,9 +1,9 @@
+import * as Fs from "node:fs";
+import type * as http from "node:http";
+import { createServer } from "node:http";
 import ShutdownHandler from "@ulixee/commons/lib/ShutdownHandler";
 import Axios from "axios";
 import * as BrowserStack from "browserstack-local";
-import * as Fs from "fs";
-import type * as http from "http";
-import { createServer } from "http";
 import Queue from "p-queue";
 import {
 	Builder,

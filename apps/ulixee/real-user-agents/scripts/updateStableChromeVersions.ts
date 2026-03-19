@@ -1,6 +1,6 @@
 import "@ulixee/commons/lib/SourceMapSupport";
+import * as Fs from "node:fs";
 import axios from "axios";
-import * as Fs from "fs";
 import type IStableChromeVersion from "../interfaces/IStableChromeVersion";
 import { getDataFilePath } from "../lib/paths";
 
