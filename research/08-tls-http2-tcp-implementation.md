@@ -304,6 +304,262 @@ export default class HeadersHandler {
 
 ---
 
+## Node.js ↔ Go Комунікація (Детально)
+
+### Архітектура IPC
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                     NODE.JS ↔ GO IPC ARCHITECTURE                          │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│   Node.js Process                                                          │
+│   ┌────────────────────────────────────────────────────────────────────┐   │
+│   │                                                                    │   │
+│   │  1. BaseIpcHandler                                                 │   │
+│   │     - Створює Unix Domain Socket server                           │   │
+│   │     - Шлях: /tmp/ulixee-ipc-{id}.sock                             │   │
+│   │     - spawn() Go процес                                            │   │
+│   │                                                                    │   │
+│   │  2. MitmSocketSession extends BaseIpcHandler                       │   │
+│   │     - sendIpcMessage({ id, socketPath, host, port, ... })         │   │
+│   │     - JSON over TCP                                                │   │
+│   │                                                                    │   │
+│   │  3. MitmSocket                                                     │   │
+│   │     - Створює ВЛАСНИЙ Unix socket server                          │   │
+│   │     - Шлях: /tmp/ulixee-agent-{sessionId}-{id}.sock               │   │
+│   │     - Чекає на з'єднання від Go                                   │   │
+│   │                                                                    │   │
+│   └────────────────────────────────────────────────────────────────────┘   │
+│                    │                                                       │
+│                    │ Unix Domain Socket (IPC)                              │
+│                    ▼                                                       │
+│   Go Process                                                               │
+│   ┌────────────────────────────────────────────────────────────────────┐   │
+│   │                                                                    │   │
+│   │  1. main() in connect.go                                           │   │
+│   │     - Отримує SessionArgs як JSON з command line                   │   │
+│   │     - Підключається до IPC socket (Node.js server)                 │   │
+│   │                                                                    │   │
+│   │  2. handleSocket()                                                 │   │
+│   │     - Читає ConnectArgs з IPC                                      │   │
+│   │     - Dial() до цільового сервера                                  │   │
+│   │     - EmulateTls() для TLS                                         │   │
+│   │     - Підключається до MitmSocket's Unix socket                   │   │
+│   │     - Pipe() дані між сервером і socket'ом                        │   │
+│   │                                                                    │   │
+│   └────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+### Крок 1: Node.js Spawn Go Process
+
+```typescript
+// apps/ulixee/unblocked-agent-mitm-socket/lib/BaseIpcHandler.ts
+
+// Шлях до скомпільованого Go бінарника
+const libPath = Path.join(
+    __dirname,
+    `/../dist/${os.platform()}-${os.arch()}`,
+    `connect${ext}`  // наприклад: "connect" або "connect.exe"
+);
+
+private spawnChild(): void {
+    // Spawn Go процес з JSON конфігурацією як аргумент
+    this.child = spawn(libPath, [JSON.stringify(options)], {
+        stdio: ["pipe", "pipe", "pipe"],
+        windowsHide: true,
+    });
+
+    // Обробка stdout/stderr
+    child.stdout.on("data", this.onChildProcessMessage);
+    child.stderr.on("data", this.onChildProcessStderr);
+}
+```
+
+### Крок 2: Go Process Підключається до IPC
+
+```go
+// apps/ulixee/unblocked-agent-mitm-socket/go/connect.go
+
+func main() {
+    // 1. Парсить аргументи командного рядка
+    var sessionArgs = SessionArgs{}
+    json.Unmarshal([]byte(os.Args[1]), &sessionArgs)
+
+    // 2. Підключається до Node.js IPC socket
+    conn, err := ConnectIpc(sessionArgs.IpcSocketPath)
+    // -> net.Dial("unix", path)
+
+    // 3. Слухає повідомлення в циклі
+    for {
+        msg, err = reader.ReadBytes('\n')  // JSON з \n роздільником
+        var connectArgs = ConnectArgs{}
+        json.Unmarshal(msg, &connectArgs)
+
+        go handleSocket(connectArgs, sessionArgs, signals)
+    }
+}
+```
+
+### Крок 3: Обробка Socket Запиту
+
+```go
+func handleSocket(connectArgs ConnectArgs, sessionArgs SessionArgs, signals *Signals) {
+    // 1. Підключається до MitmSocket's Unix socket
+    domainConn, connErr := DialOnDomain(connectArgs.SocketPath)
+
+    // 2. Dial до цільового сервера
+    dialConn, connectErr := Dial(addr, connectArgs, sessionArgs)
+    // -> net.Dialer{ Control: ConfigureSocket(ttl, windowSize) }
+
+    // 3. Якщо SSL - емулює TLS
+    if connectArgs.IsSsl {
+        uTlsConn, err = EmulateTls(dialConn, addr, sessionArgs, connectArgs)
+    }
+
+    // 4. Відправляє статус підключення назад до Node.js
+    SendToIpc(id, "connected", map[string]interface{}{
+        "alpn": protocol,
+        "remoteAddress": dialConn.RemoteAddr().String(),
+    })
+
+    // 5. Pipe дані між сервером і MitmSocket
+    domainSocketPiper.Pipe(uTlsConn)  // або dialConn
+}
+```
+
+### Крок 4: Pipe Даних
+
+```go
+// apps/ulixee/unblocked-agent-mitm-socket/go/domain_socket_piper.go
+
+type DomainSocketPiper struct {
+    client net.Conn  // Unix socket до MitmSocket (Node.js)
+}
+
+func (p *DomainSocketPiper) Pipe(remoteConn net.Conn) {
+    // Два напрями одночасно:
+    go func() {
+        // Remote -> Client (сервер -> браузер)
+        io.Copy(p.client, remoteConn)
+    }()
+
+    // Client -> Remote (браузер -> сервер)
+    io.Copy(remoteConn, p.client)
+}
+```
+
+### Повний потік даних
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                        DATA FLOW (Один запит)                              │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  1. Browser                                                                │
+│     │ HTTP GET https://example.com/api                                     │
+│     │ Host: localhost:8080 (proxy port)                                    │
+│     ▼                                                                       │
+│  2. MitmProxy (Node.js)                                                    │
+│     │ onHttpRequest()                                                       │
+│     │ createProxyToServerRequest()                                          │
+│     ▼                                                                       │
+│  3. MitmRequestAgent (Node.js)                                             │
+│     │ createSocketConnection()                                              │
+│     │ requestSocket(socket)                                                 │
+│     ▼                                                                       │
+│  4. MitmSocketSession (Node.js)                                            │
+│     │ sendIpcMessage({ id, socketPath, host, port, isSsl, ... })          │
+│     │ -----> Unix Socket IPC ----->                                        │
+│     ▼                                                                       │
+│  5. Go Process                                                             │
+│     │ handleSocket()                                                        │
+│     │ - Dial("example.com:443")                                            │
+│     │ - ConfigureSocket(ttl, windowSize)                                   │
+│     │ - EmulateTls() з uTLS                                                │
+│     │ - DialOnDomain(socketPath) -> підключення до MitmSocket             │
+│     │ - SendToIpc("connected")                                             │
+│     │ - Pipe(remoteConn, clientConn)                                       │
+│     ▼                                                                       │
+│  6. MitmSocket (Node.js)                                                   │
+│     │ onConnected(socket)                                                   │
+│     │ socket - це з'єднання від Go                                         │
+│     │ Тепер можна читати/писати дані                                       │
+│     ▼                                                                       │
+│  7. Http2SessionBinding / HttpRequestHandler                               │
+│     │ Використовує socket для запиту до сервера                            │
+│     ▼                                                                       │
+│  8. Target Server                                                          │
+│     Бачить: Chrome 120 TLS fingerprint                                     │
+│     Відправляє: Response                                                   │
+│     ▼                                                                       │
+│  9. Response → Go Pipe → MitmSocket → MitmProxy → Browser                 │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+### Формат повідомлень IPC
+
+**Node.js → Go:**
+```json
+{
+    "id": 1,
+    "socketPath": "/tmp/ulixee-agent-session-123-1.sock",
+    "host": "example.com",
+    "port": "443",
+    "isSsl": true,
+    "servername": "example.com",
+    "proxyUrl": null,
+    "keepAlive": true,
+    "isWebsocket": false,
+    "applicationSettings": {}
+}
+```
+
+**Go → Node.js:**
+```json
+{
+    "id": 1,
+    "status": "connected",
+    "alpn": "h2",
+    "rawApplicationSettings": "base64...",
+    "remoteAddress": "93.184.216.34:443",
+    "localAddress": "192.168.1.100:54321"
+}
+```
+
+### Unix Domain Sockets - Два рівні
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                        UNIX DOMAIN SOCKETS                                  │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  IPC Socket (Control Channel):                                             │
+│  ┌──────────────────┐         ┌──────────────────┐                        │
+│  │  Node.js         │         │  Go Process      │                        │
+│  │  ipcServer       │ <-----> │  ConnectIpc()    │                        │
+│  │  /tmp/ulixee-ipc-{id}.sock                                    │                        │
+│  └──────────────────┘         └──────────────────┘                        │
+│                                                                             │
+│  Data Sockets (Per-Connection):                                            │
+│  ┌──────────────────┐         ┌──────────────────┐                        │
+│  │  MitmSocket      │         │  Go handleSocket │                        │
+│  │  server          │ <-----> │  DialOnDomain()  │                        │
+│  │  /tmp/ulixee-agent-{session}-{id}.sock                        │                        │
+│  └──────────────────┘         └──────────────────┘                        │
+│                                                                             │
+│  Чому два рівні?                                                           │
+│  - IPC socket: один на сесію, для control messages                         │
+│  - Data socket: один на TCP з'єднання, для actual data                     │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
 ## Ключові файли
 
 | Функція | Файл | Мова |
