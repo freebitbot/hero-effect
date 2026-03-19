@@ -1,5 +1,6 @@
 {
 	"name": "@ulixee/cloud",
+	"version": "2.0.0",
 	"dependencies": {
 		"@ulixee/commons": "workspace:*",
 		"@ulixee/hero-core": "workspace:*",
@@ -27,7 +28,6 @@
 	"description": "The Ulixee Cloud is an out-of-the box tool to host and deploy Ulixee Datastores and Hero scripts. It allows you to easily create a paid API service.",
 	"scripts": {
 		"start": "node bin/cli.js start",
-		"start:alive": "node -r @ulixee/desktop-core/register bin/cli.js start",
 		"preversion": "node ../../build/cloud/main/scripts/gatherEnvSettings.js"
 	},
 	"devDependencies": {

@@ -1,9 +1,17 @@
-import CloudApiHandler from "../lib/CloudApiHandler";
+import type ICloudApiContext from "../interfaces/ICloudApiContext";
 
-export default new CloudApiHandler("Cloud.status", {
-	handler(_request, context) {
-		const cloudNodes = context.nodeTracker.count;
+interface IStatusResponse {
+	version: string;
+}
 
-		return Promise.resolve({ nodes: cloudNodes, version: context.version });
+const CloudStatus = {
+	command: "Cloud.status",
+	async handler(
+		_request: void,
+		context: ICloudApiContext,
+	): Promise<IStatusResponse> {
+		return { version: context.version };
 	},
-});
+};
+
+export default CloudStatus;
