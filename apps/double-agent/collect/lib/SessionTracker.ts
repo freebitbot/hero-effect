@@ -1,4 +1,4 @@
-import type { IAssignmentType } from "@double-agent/collect-controller/interfaces/IAssignment";
+import type { IAssignmentType } from "@double-agent/interfaces/IAssignment";
 import type * as http from "http";
 import type * as http2 from "http2";
 import type BaseServer from "../servers/BaseServer";

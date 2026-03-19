@@ -4,8 +4,8 @@
 	"main": "index.js",
 	"license": "MIT",
 	"dependencies": {
-		"@double-agent/collect": "workspace:*",
 		"@double-agent/config": "workspace:*",
+		"@double-agent/interfaces": "workspace:*",
 		"@ulixee/commons": "workspace:*",
 		"@ulixee/real-user-agents": "workspace:*",
 		"humanize-string": "^2.1.0",

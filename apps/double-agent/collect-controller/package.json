@@ -6,6 +6,7 @@
 	"dependencies": {
 		"@double-agent/collect": "workspace:*",
 		"@double-agent/config": "workspace:*",
+		"@double-agent/interfaces": "workspace:*",
 		"@ulixee/commons": "workspace:*",
 		"@ulixee/real-user-agents": "workspace:*",
 		"axios": "^1.7.7",

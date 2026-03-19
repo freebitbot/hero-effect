@@ -1,4 +1,4 @@
-import { AssignmentType } from "@double-agent/collect-controller/interfaces/IAssignment";
+import { AssignmentType } from "@double-agent/interfaces/IAssignment";
 import Config from "@double-agent/config";
 import { EventEmitter } from "events";
 import * as Path from "path";

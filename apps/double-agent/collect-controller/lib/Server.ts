@@ -1,6 +1,6 @@
 import type Collect from "@double-agent/collect";
 import type Plugin from "@double-agent/collect/lib/Plugin";
-import type IUserAgentToTest from "@double-agent/config/interfaces/IUserAgentToTest";
+import type IUserAgentToTest from "@double-agent/interfaces/IUserAgentToTest";
 import { createWriteStream, existsSync, promises as Fs, rmSync } from "fs";
 import * as http from "http";
 import * as Path from "path";

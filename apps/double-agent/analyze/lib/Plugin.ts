@@ -1,4 +1,4 @@
-import type IBaseProfile from "@double-agent/collect/interfaces/IBaseProfile";
+import type IBaseProfile from "@double-agent/interfaces/IBaseProfile";
 import * as Path from "path";
 import type BaseCheck from "./checks/BaseCheck";
 import {

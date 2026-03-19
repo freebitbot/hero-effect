@@ -1,5 +1,5 @@
-import type { IAssignmentType } from "@double-agent/collect-controller/interfaces/IAssignment";
-import { createUserAgentIdFromString } from "@double-agent/config";
+import type { IAssignmentType } from "@double-agent/interfaces/IAssignment";
+import { createUserAgentIdFromString } from "@double-agent/interfaces";
 import type IAsset from "../interfaces/IAsset";
 import type IBaseProfile from "../interfaces/IBaseProfile";
 import type IRequestDetails from "../interfaces/IRequestDetails";

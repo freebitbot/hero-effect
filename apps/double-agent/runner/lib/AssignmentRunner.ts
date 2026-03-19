@@ -1,4 +1,4 @@
-import type IAssignment from "@double-agent/collect-controller/interfaces/IAssignment";
+import type IAssignment from "@double-agent/interfaces/IAssignment";
 import Queue from "p-queue";
 import type { IRunner, IRunnerFactory } from "../interfaces/IRunnerFactory";
 import AssignmentsClient from "./AssignmentsClient";

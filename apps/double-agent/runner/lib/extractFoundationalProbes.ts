@@ -1,4 +1,4 @@
-import ProbesGenerator from "@double-agent/config/lib/ProbesGenerator";
+import ProbesGenerator from "./ProbesGenerator";
 
 export default async function extractFoundationalProbes(
 	profilesDir: string,

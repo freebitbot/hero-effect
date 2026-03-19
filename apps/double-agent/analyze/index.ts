@@ -1,13 +1,13 @@
 import "@ulixee/commons/lib/SourceMapSupport";
-import type IBaseProfile from "@double-agent/collect/interfaces/IBaseProfile";
+import type IBaseProfile from "@double-agent/interfaces/IBaseProfile";
 import {
 	type IUserAgentToTestPickType,
 	UserAgentToTestPickType,
-} from "@double-agent/config/interfaces/IUserAgentToTest";
+} from "@double-agent/interfaces/IUserAgentToTest";
 import {
 	extractProfilePathsMap,
 	importProfile,
-} from "@double-agent/config/lib/ProfileUtils";
+} from "@double-agent/interfaces/lib/ProfileUtils";
 import * as Fs from "fs";
 import * as Path from "path";
 import getAllPlugins from "./lib/getAllPlugins";

@@ -1,4 +1,4 @@
-import type { IUserAgentToTestPickType } from "@double-agent/config/interfaces/IUserAgentToTest";
+import type { IUserAgentToTestPickType } from "@double-agent/interfaces/IUserAgentToTest";
 import RealUserAgents, { type IUserAgentMeta } from "@ulixee/real-user-agents";
 import type IAssignment from "../interfaces/IAssignment";
 import {

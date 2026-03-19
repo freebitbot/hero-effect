@@ -1,4 +1,4 @@
-import type IAssignment from "@double-agent/collect-controller/interfaces/IAssignment";
+import type IAssignment from "@double-agent/interfaces/IAssignment";
 
 // Each assignment requires a fresh runner. The runner is created
 // by a factory object implementing this interface.
