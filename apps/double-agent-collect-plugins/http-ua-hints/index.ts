@@ -1,9 +1,9 @@
+import * as fs from "node:fs";
 import type IRequestContext from "@double-agent/collect/interfaces/IRequestContext";
 import Document from "@double-agent/collect/lib/Document";
 import { DomainType } from "@double-agent/collect/lib/DomainUtils";
 import Plugin from "@double-agent/collect/lib/Plugin";
 import Config from "@double-agent/config/index";
-import * as fs from "fs";
 import type { IProfileData } from "./interfaces/IProfile";
 import uaPageScript from "./uaPageScript";
 

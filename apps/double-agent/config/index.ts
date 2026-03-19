@@ -1,9 +1,9 @@
+import * as Fs from "node:fs";
+import * as Path from "node:path";
 import { loadEnv, parseEnvInt } from "@ulixee/commons/lib/envUtils";
 import RealUserAgents from "@ulixee/real-user-agents";
 import { createBrowserIdFromUserAgentString } from "@ulixee/real-user-agents/lib/BrowserUtils";
 import { createOsIdFromUserAgentString } from "@ulixee/real-user-agents/lib/OsUtils";
-import * as Fs from "fs";
-import * as Path from "path";
 import * as browserstackIndicators from "./data/path-patterns/browserstack-indicators.json";
 import * as devtoolsIndicators from "./data/path-patterns/devtools-indicators.json";
 import * as instanceVariations from "./data/path-patterns/instance-variations.json";

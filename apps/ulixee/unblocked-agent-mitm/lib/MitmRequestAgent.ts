@@ -1,3 +1,7 @@
+import * as http from "node:http";
+import type { ClientHttp2Session, Http2ServerRequest } from "node:http2";
+import * as http2 from "node:http2";
+import * as https from "node:https";
 import type { IBoundLog } from "@ulixee/commons/interfaces/ILog";
 import EventSubscriber from "@ulixee/commons/lib/EventSubscriber";
 import Resolvable from "@ulixee/commons/lib/Resolvable";
@@ -8,10 +12,6 @@ import type IHttpHeaders from "@ulixee/unblocked-specification/agent/net/IHttpHe
 import type IHttpSocketConnectOptions from "@ulixee/unblocked-specification/agent/net/IHttpSocketConnectOptions";
 import type ITcpSettings from "@ulixee/unblocked-specification/agent/net/ITcpSettings";
 import type ITlsSettings from "@ulixee/unblocked-specification/agent/net/ITlsSettings";
-import * as http from "http";
-import type { ClientHttp2Session, Http2ServerRequest } from "http2";
-import * as http2 from "http2";
-import * as https from "https";
 import env from "../env";
 import HeadersHandler from "../handlers/HeadersHandler";
 import Http2PushPromiseHandler from "../handlers/Http2PushPromiseHandler";

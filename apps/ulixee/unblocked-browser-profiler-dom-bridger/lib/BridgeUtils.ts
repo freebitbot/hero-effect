@@ -1,4 +1,4 @@
-import * as Fs from "fs";
+import * as Fs from "node:fs";
 import type IBridgeType from "../interfaces/IBridgeType";
 
 const FOLDER_MATCH = /chrome-(8|9|[1-9][0-9])[0-9]/;

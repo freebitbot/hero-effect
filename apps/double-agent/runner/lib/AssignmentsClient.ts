@@ -1,12 +1,12 @@
-import type IAssignment from "@double-agent/interfaces/IAssignment";
+import { promises as Fs } from "node:fs";
+import * as qs from "node:querystring";
+import type { Stream } from "node:stream";
 import Config from "@double-agent/config";
-import { promises as Fs } from "fs";
+import type IAssignment from "@double-agent/interfaces/IAssignment";
 import fetch from "node-fetch";
-import * as qs from "querystring";
-import type { Stream } from "stream";
 import * as Tar from "tar";
 
-export { IAssignment };
+export type { IAssignment };
 
 export default class AssignmentsClient {
 	private readonly baseUrl: string;

@@ -1,5 +1,5 @@
+import * as Fs from "node:fs";
 import { compareVersions } from "compare-versions";
-import * as Fs from "fs";
 import type { IRealUserAgentsData } from "../data";
 import type IUserAgent from "../interfaces/IUserAgent";
 import Browsers from "../lib/Browsers";

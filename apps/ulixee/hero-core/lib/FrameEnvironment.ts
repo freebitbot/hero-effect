@@ -1,3 +1,6 @@
+import * as Fs from "node:fs";
+import * as Os from "node:os";
+import { URL } from "node:url";
 import type { IRequestInit } from "@ulixee/awaited-dom/base/interfaces/official";
 import type { IBoundLog } from "@ulixee/commons/interfaces/ILog";
 import { CanceledPromiseError } from "@ulixee/commons/interfaces/IPendingWaitEvent";
@@ -30,9 +33,6 @@ import type {
 } from "@ulixee/unblocked-specification/agent/interact/IInteractions";
 import type { ICookie } from "@ulixee/unblocked-specification/agent/net/ICookie";
 import type IResourceMeta from "@ulixee/unblocked-specification/agent/net/IResourceMeta";
-import * as Fs from "fs";
-import * as Os from "os";
-import { URL } from "url";
 import type { PageRecorderResultSet } from "../injected-scripts/pageEventsRecorder";
 import type {
 	IRemoteEmitFn,

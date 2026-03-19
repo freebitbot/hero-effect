@@ -1,7 +1,7 @@
+import type * as http from "node:http";
+import type * as http2 from "node:http2";
+import { URL } from "node:url";
 import * as cookie from "cookie";
-import type * as http from "http";
-import type * as http2 from "http2";
-import { URL } from "url";
 import type IRequestDetails from "../interfaces/IRequestDetails";
 import OriginType from "../interfaces/OriginType";
 import ResourceType from "../interfaces/ResourceType";

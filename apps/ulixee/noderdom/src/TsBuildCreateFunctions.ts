@@ -1,4 +1,5 @@
-import Path from "path";
+import Path from "node:path";
+
 import { BuildType } from "./interfaces/IBuildType";
 import { ObjectStruct } from "./interfaces/IObjectStruct";
 import {

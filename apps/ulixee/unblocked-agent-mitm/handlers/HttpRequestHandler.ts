@@ -1,11 +1,11 @@
-import { CanceledPromiseError } from "@ulixee/commons/interfaces/IPendingWaitEvent";
-import Log, { hasBeenLoggedSymbol } from "@ulixee/commons/lib/Logger";
-import * as http from "http";
+import * as http from "node:http";
 import {
 	type ClientHttp2Stream,
 	Http2ServerRequest,
 	Http2ServerResponse,
-} from "http2";
+} from "node:http2";
+import { CanceledPromiseError } from "@ulixee/commons/interfaces/IPendingWaitEvent";
+import Log, { hasBeenLoggedSymbol } from "@ulixee/commons/lib/Logger";
 import type IMitmRequestContext from "../interfaces/IMitmRequestContext";
 import ResourceState from "../interfaces/ResourceState";
 import HttpResponseCache from "../lib/HttpResponseCache";

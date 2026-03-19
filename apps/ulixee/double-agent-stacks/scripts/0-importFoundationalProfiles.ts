@@ -1,6 +1,6 @@
 import "@ulixee/commons/lib/SourceMapSupport";
+import * as Fs from "node:fs";
 import importBrowserProfiles from "@double-agent/runner/lib/importFoundationalProfiles";
-import * as Fs from "fs";
 import { getExternalDataPath } from "../paths";
 
 const profilesDir = getExternalDataPath("0-foundational-profiles");

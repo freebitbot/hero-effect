@@ -1,4 +1,4 @@
-import * as Fs from "fs";
+import * as Fs from "node:fs";
 import type { IRealUserAgentsData } from "../data";
 import DeviceCategory from "../interfaces/DeviceCategory";
 import type IBrowser from "../interfaces/IBrowser";

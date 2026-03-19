@@ -1,6 +1,6 @@
 import "@ulixee/commons/lib/SourceMapSupport";
+import * as Fs from "node:fs";
 import { readFileAsJson } from "@ulixee/commons/lib/fileUtils";
-import * as Fs from "fs";
 import loadData, { type IStatcounterMarketshare } from "../data";
 import BrowserGenerator from "../data-generators/BrowserGenerator";
 import BrowserMarketshareGenerator from "../data-generators/BrowserMarketshareGenerator";

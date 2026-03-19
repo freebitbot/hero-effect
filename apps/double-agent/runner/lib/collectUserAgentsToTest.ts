@@ -1,10 +1,10 @@
+import * as Fs from "node:fs";
+import * as Path from "node:path";
 import Config from "@double-agent/config/index";
 import type IUserAgentToTest from "@double-agent/interfaces/IUserAgentToTest";
 import { UserAgentToTestPickType } from "@double-agent/interfaces/IUserAgentToTest";
 import RealUserAgents from "@ulixee/real-user-agents";
 import UserAgent from "@ulixee/real-user-agents/lib/UserAgent";
-import * as Fs from "fs";
-import * as Path from "path";
 import type IUserAgentConfig from "../interfaces/IUserAgentConfig";
 
 const FsPromises = Fs.promises;

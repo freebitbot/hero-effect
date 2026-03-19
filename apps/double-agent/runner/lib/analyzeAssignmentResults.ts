@@ -1,11 +1,11 @@
+import { createReadStream, createWriteStream, promises as Fs } from "node:fs";
+import * as Path from "node:path";
+import { createGunzip } from "node:zlib";
 import Analyze from "@double-agent/analyze";
 import type { IResultFlag } from "@double-agent/analyze/lib/Plugin";
 import { createOverTimeSessionKey } from "@double-agent/collect-controller/lib/buildAllAssignments";
-import { UserAgentToTestPickType } from "@double-agent/interfaces/IUserAgentToTest";
 import { probesDataDir } from "@double-agent/config/paths";
-import { createReadStream, createWriteStream, promises as Fs } from "fs";
-import * as Path from "path";
-import { createGunzip } from "zlib";
+import { UserAgentToTestPickType } from "@double-agent/interfaces/IUserAgentToTest";
 
 export default async function analyzeAssignmentResults(
 	assignmentsDataDir: string,

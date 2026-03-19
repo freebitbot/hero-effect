@@ -1,7 +1,7 @@
 #!/usr/bin/env ts-node
 
-import * as Fs from "fs";
-import * as Path from "path";
+import * as Fs from "node:fs";
+import * as Path from "node:path";
 import config from "../../config";
 import db from "../../db";
 import Components from "../../src/Components";

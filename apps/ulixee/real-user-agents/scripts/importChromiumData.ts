@@ -1,6 +1,6 @@
 import "@ulixee/commons/lib/SourceMapSupport";
+import * as Fs from "node:fs";
 import { Agent } from "@ulixee/unblocked-agent";
-import * as Fs from "fs";
 import { getDataFilePath } from "../lib/paths";
 
 export default async function importChromiumData(): Promise<void> {
@@ -13,7 +13,7 @@ export default async function importChromiumData(): Promise<void> {
     for (const elem of document.querySelectorAll('.RefList')) {
       if (elem.querySelector('.RefList-title').textContent === 'Tags') {
         const versionsDivs = elem.querySelectorAll('ul.RefList-items li a');
-       
+
         return Array.from(versionsDivs).map(x => x.textContent)
       }
     }

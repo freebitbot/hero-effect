@@ -1,7 +1,7 @@
 import "@ulixee/commons/lib/SourceMapSupport";
+import * as Fs from "node:fs";
 import { readFileAsJson } from "@ulixee/commons/lib/fileUtils";
 import { Agent } from "@ulixee/unblocked-agent";
-import * as Fs from "fs";
 import * as moment from "moment";
 import { getDataFilePath } from "../lib/paths";
 
@@ -74,7 +74,7 @@ export default async function importOsVersions(): Promise<void> {
        if (tds.length < 3) return;
        skipNestedTimes--;
        if (skipNestedTimes > 0) return;
-       if (tds[0].rowSpan > 1) skipNestedTimes = tds[0].rowSpan -1; 
+       if (tds[0].rowSpan > 1) skipNestedTimes = tds[0].rowSpan -1;
         colSpanTimes -= 1;
         const offset = colSpanTimes > 1 ? 1 : 2;
        if (tds[1].rowSpan > 1) colSpanTimes = tds[1].rowSpan;

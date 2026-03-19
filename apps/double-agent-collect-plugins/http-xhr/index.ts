@@ -1,8 +1,8 @@
+import * as Fs from "node:fs";
+import * as Path from "node:path";
 import type IRequestContext from "@double-agent/collect/interfaces/IRequestContext";
 import Document from "@double-agent/collect/lib/Document";
 import Plugin, { type IPluginPage } from "@double-agent/collect/lib/Plugin";
-import * as Fs from "fs";
-import * as Path from "path";
 import type { IProfileData } from "./interfaces/IProfile";
 import xhrScript from "./xhrScript";
 

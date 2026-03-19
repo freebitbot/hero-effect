@@ -1,3 +1,4 @@
+import * as Path from "node:path";
 import type { IBoundLog } from "@ulixee/commons/interfaces/ILog";
 import Callsite from "@ulixee/commons/lib/Callsite";
 import EventSubscriber from "@ulixee/commons/lib/EventSubscriber";
@@ -32,7 +33,7 @@ import type { IFrame } from "@ulixee/unblocked-specification/agent/browser/IFram
 import type IViewport from "@ulixee/unblocked-specification/agent/browser/IViewport";
 import type IEmulationProfile from "@ulixee/unblocked-specification/plugin/IEmulationProfile";
 import { nanoid } from "nanoid";
-import * as Path from "path";
+
 import type SessionDb from "../dbs/SessionDb";
 import env from "../env";
 import type Core from "../index";

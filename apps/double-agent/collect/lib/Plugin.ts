@@ -1,8 +1,8 @@
-import { AssignmentType } from "@double-agent/interfaces/IAssignment";
+import { EventEmitter } from "node:events";
+import * as Path from "node:path";
+import { URL } from "node:url";
 import Config from "@double-agent/config";
-import { EventEmitter } from "events";
-import * as Path from "path";
-import { URL } from "url";
+import type { AssignmentType } from "@double-agent/interfaces";
 import type IPlugin from "../interfaces/IPlugin";
 import type IRequestContext from "../interfaces/IRequestContext";
 import type IServerContext from "../interfaces/IServerContext";

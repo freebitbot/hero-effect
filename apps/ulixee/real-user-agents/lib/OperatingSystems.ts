@@ -1,4 +1,4 @@
-import { readFileSync } from "fs";
+import { readFileSync } from "node:fs";
 import OperatingSystem from "./OperatingSystem";
 import { getDataFilePath } from "./paths";
 

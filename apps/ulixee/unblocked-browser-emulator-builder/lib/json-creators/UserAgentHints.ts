@@ -1,6 +1,6 @@
+import * as Fs from "node:fs";
 import type IProfile from "@double-agent/collect-http-ua-hints/interfaces/IProfile";
 import BrowserProfiler from "@ulixee/unblocked-browser-profiler";
-import * as Fs from "fs";
 import EmulatorData from "../EmulatorData";
 import type Config from "./Config";
 

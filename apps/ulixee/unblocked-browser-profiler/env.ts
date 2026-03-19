@@ -1,6 +1,6 @@
 import "@ulixee/commons/lib/SourceMapSupport";
+import * as Path from "node:path";
 import { loadEnv, parseEnvBool } from "@ulixee/commons/lib/envUtils";
-import * as Path from "path";
 
 loadEnv(Path.resolve(__dirname, ".."));
 const { env } = process;

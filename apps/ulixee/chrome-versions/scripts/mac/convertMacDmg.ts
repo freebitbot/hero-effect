@@ -1,7 +1,7 @@
-import childProcess, { execSync } from "child_process";
-import * as Fs from "fs";
-import { promises as fs } from "fs";
-import path from "path";
+import childProcess, { execSync } from "node:child_process";
+import * as Fs from "node:fs";
+import { promises as fs } from "node:fs";
+import path from "node:path";
 import Plist from "plist";
 import { createTarGz } from "../createTarGz";
 import { mkTempDir } from "../dirUtils";

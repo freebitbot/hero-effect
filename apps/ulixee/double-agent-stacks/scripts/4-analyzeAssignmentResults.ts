@@ -1,6 +1,6 @@
 import "@ulixee/commons/lib/SourceMapSupport";
+import * as Fs from "node:fs";
 import analyzeAssignmentResults from "@double-agent/runner/lib/analyzeAssignmentResults";
-import * as Fs from "fs";
 import { getExternalDataPath } from "../paths";
 
 const assignmentsDataDir = getExternalDataPath(`/3-assignments`);

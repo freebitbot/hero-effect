@@ -1,4 +1,4 @@
-import * as Path from "path";
+import * as Path from "node:path";
 import AssignmentsClient, { type IAssignment } from "./AssignmentsClient";
 
 export default async function saveAssignmentToProfileDir(

@@ -1,6 +1,6 @@
+import type { IncomingMessage, ServerResponse } from "node:http";
 import type { IBoundLog } from "@ulixee/commons/interfaces/ILog";
 import Logger from "@ulixee/commons/lib/Logger";
-import type { IncomingMessage, ServerResponse } from "http";
 import type IApiHandler from "../interfaces/IApiHandler";
 import type { IAsyncFunc } from "../interfaces/IApiHandlers";
 import type ICoreRequestPayload from "../interfaces/ICoreRequestPayload";

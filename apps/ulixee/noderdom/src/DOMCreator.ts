@@ -1,5 +1,5 @@
-import * as Fs from "fs";
-import * as Path from "path";
+import * as Fs from "node:fs";
+import * as Path from "node:path";
 import type Components from "./Components";
 import Exports from "./Exports";
 import { BuildType } from "./interfaces/IBuildType";

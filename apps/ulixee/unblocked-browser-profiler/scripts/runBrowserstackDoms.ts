@@ -1,11 +1,12 @@
 import "../env";
+import { existsSync, promises as Fs, rmSync } from "node:fs";
+import * as Path from "node:path";
 import getAllPlugins from "@double-agent/collect/lib/getAllPlugins";
 import { existsAsync } from "@ulixee/commons/lib/fileUtils";
 import ShutdownHandler from "@ulixee/commons/lib/ShutdownHandler";
 import RealUserAgents from "@ulixee/real-user-agents";
-import { existsSync, promises as Fs, rmSync } from "fs";
 import Queue from "p-queue";
-import * as Path from "path";
+
 import BrowserProfiler from "../index";
 import type IBrowserstackAgent from "../interfaces/IBrowserstackAgent";
 import BrowserStack from "../lib/BrowserStack";

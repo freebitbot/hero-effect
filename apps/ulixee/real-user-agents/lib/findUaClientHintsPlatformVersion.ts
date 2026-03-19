@@ -1,5 +1,5 @@
-import { readFileSync } from "fs";
-import * as Path from "path";
+import { readFileSync } from "node:fs";
+import * as Path from "node:path";
 import { dataDir } from "./paths";
 
 let data: {

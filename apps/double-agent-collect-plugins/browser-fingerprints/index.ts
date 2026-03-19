@@ -1,7 +1,7 @@
+import * as fs from "node:fs";
 import type IRequestContext from "@double-agent/collect/interfaces/IRequestContext";
 import Document from "@double-agent/collect/lib/Document";
 import Plugin from "@double-agent/collect/lib/Plugin";
-import * as fs from "fs";
 import fingerprintScript from "./fingerprintScript";
 import type {
 	IProfileData,

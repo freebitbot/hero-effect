@@ -1,4 +1,4 @@
-import Fs from "fs";
+import * as Fs from "node:fs";
 import * as Tar from "tar";
 
 export async function createTarGz(

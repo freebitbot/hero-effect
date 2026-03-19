@@ -1,6 +1,6 @@
+import * as Fs from "node:fs";
 import type IHttp2SessionProfile from "@double-agent/collect-http2-session/interfaces/IProfile";
 import BrowserProfiler from "@ulixee/unblocked-browser-profiler";
-import * as Fs from "fs";
 import EmulatorData from "../EmulatorData";
 import type Config from "./Config";
 

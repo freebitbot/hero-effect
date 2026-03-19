@@ -11,7 +11,7 @@
  * 1 6 * * * cd $HOME/Projects/ulixee/hero/browser-profiler/build/ && npx runLocal
  */
 import "@ulixee/commons/lib/SourceMapSupport";
-import { spawnSync } from "child_process";
+import { spawnSync } from "node:child_process";
 import { profileDataDir } from "../paths";
 import runLocalDoms from "../scripts/runLocalDoms";
 

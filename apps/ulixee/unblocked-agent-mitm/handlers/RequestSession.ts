@@ -1,3 +1,7 @@
+import type * as http from "node:http";
+import type * as http2 from "node:http2";
+import type * as net from "node:net";
+import { URL } from "node:url";
 import type { IBoundLog } from "@ulixee/commons/interfaces/ILog";
 import type IResolvablePromise from "@ulixee/commons/interfaces/IResolvablePromise";
 import EventSubscriber from "@ulixee/commons/lib/EventSubscriber";
@@ -14,10 +18,6 @@ import type IHttpResourceLoadDetails from "@ulixee/unblocked-specification/agent
 import type IResourceRequest from "@ulixee/unblocked-specification/agent/net/IResourceRequest";
 import type IResourceResponse from "@ulixee/unblocked-specification/agent/net/IResourceResponse";
 import type IResourceType from "@ulixee/unblocked-specification/agent/net/IResourceType";
-import type * as http from "http";
-import type * as http2 from "http2";
-import type * as net from "net";
-import { URL } from "url";
 import type IBrowserRequestMatcher from "../interfaces/IBrowserRequestMatcher";
 import type IMitmRequestContext from "../interfaces/IMitmRequestContext";
 import ResourceState from "../interfaces/ResourceState";

@@ -1,4 +1,4 @@
-import { readFileSync } from "fs";
+import { readFileSync } from "node:fs";
 import type IOperatingSystemVersion from "../interfaces/IOperatingSystemVersion";
 import type IUserAgent from "../interfaces/IUserAgent";
 import Browsers from "./Browsers";

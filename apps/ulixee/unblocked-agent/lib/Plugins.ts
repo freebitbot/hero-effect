@@ -1,3 +1,6 @@
+import type { IncomingMessage, ServerResponse } from "node:http";
+import type { Http2ServerRequest, Http2ServerResponse } from "node:http2";
+import type { URL } from "node:url";
 import ChromeApp from "@ulixee/chrome-app";
 import type IBrowser from "@ulixee/unblocked-specification/agent/browser/IBrowser";
 import type IBrowserContext from "@ulixee/unblocked-specification/agent/browser/IBrowserContext";
@@ -27,9 +30,6 @@ import type {
 	PluginConfigs,
 } from "@ulixee/unblocked-specification/plugin/IUnblockedPlugin";
 import type IUnblockedPlugins from "@ulixee/unblocked-specification/plugin/IUnblockedPlugins";
-import type { IncomingMessage, ServerResponse } from "http";
-import type { Http2ServerRequest, Http2ServerResponse } from "http2";
-import type { URL } from "url";
 import ChromeEngine from "./ChromeEngine";
 import Interactor from "./Interactor";
 

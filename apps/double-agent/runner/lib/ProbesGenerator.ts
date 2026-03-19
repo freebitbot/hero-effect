@@ -1,15 +1,15 @@
+import * as Fs from "node:fs";
+import * as Path from "node:path";
 import getAllPlugins from "@double-agent/analyze/lib/getAllPlugins";
 import type Layer from "@double-agent/analyze/lib/Layer";
 import type Plugin from "@double-agent/analyze/lib/Plugin";
-import type IBaseProfile from "@double-agent/interfaces/IBaseProfile";
 import Config from "@double-agent/config";
+import type IBaseProfile from "@double-agent/interfaces/IBaseProfile";
 import {
 	extractProfilePathsMap,
 	type IProfilePathsMap,
 	importProfile,
 } from "@double-agent/interfaces/lib/ProfileUtils";
-import * as Fs from "fs";
-import * as Path from "path";
 
 export default class ProbesGenerator {
 	private profilePathsMap: IProfilePathsMap = {};

@@ -1,10 +1,10 @@
 import "@ulixee/commons/lib/SourceMapSupport";
+import * as Fs from "node:fs";
+import { readFile } from "node:fs/promises";
+import * as Path from "node:path";
+import { gunzip } from "node:zlib";
 import BrowserProfiler from "@ulixee/unblocked-browser-profiler";
 import getStableChromeVersions from "@ulixee/unblocked-browser-profiler/lib/getStableChromeVersions";
-import * as Fs from "fs";
-import { readFile } from "fs/promises";
-import * as Path from "path";
-import { gunzip } from "zlib";
 import { extractPathsFromDom } from "../lib/extractDomPaths";
 import BrowserstackIndicatorExtractor from "../lib/extractors/BrowserstackIndicatorExtractor";
 import DevtoolsIndicatorExtractor from "../lib/extractors/DevtoolsIndicatorExtractor";

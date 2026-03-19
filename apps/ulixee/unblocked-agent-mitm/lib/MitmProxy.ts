@@ -1,3 +1,7 @@
+import type { IncomingMessage } from "node:http";
+import * as http from "node:http";
+import * as http2 from "node:http2";
+import * as https from "node:https";
 import { CanceledPromiseError } from "@ulixee/commons/interfaces/IPendingWaitEvent";
 import EventSubscriber from "@ulixee/commons/lib/EventSubscriber";
 import Log from "@ulixee/commons/lib/Logger";
@@ -5,10 +9,6 @@ import { createPromise } from "@ulixee/commons/lib/utils";
 import CertificateGenerator, {
 	type ICertificateStore,
 } from "@ulixee/unblocked-agent-mitm-socket/lib/CertificateGenerator";
-import type { IncomingMessage } from "http";
-import * as http from "http";
-import * as http2 from "http2";
-import * as https from "https";
 import type { Socket } from "net";
 import * as net from "net";
 import env from "../env";

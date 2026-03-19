@@ -1,7 +1,7 @@
 import "@ulixee/commons/lib/SourceMapSupport";
+import * as Fs from "node:fs";
 import type IUserAgentConfig from "@double-agent/runner/interfaces/IUserAgentConfig";
 import { defaultBrowserEngine } from "@ulixee/default-browser-emulator";
-import * as Fs from "fs";
 import { getExternalDataPath } from "../paths";
 
 const currentBrowserId = defaultBrowserEngine.id;

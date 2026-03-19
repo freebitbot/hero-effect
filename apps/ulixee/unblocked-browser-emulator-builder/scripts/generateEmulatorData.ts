@@ -1,8 +1,9 @@
 import "@ulixee/commons/lib/SourceMapSupport";
+import * as Fs from "node:fs";
+import * as Path from "node:path";
 import * as stableChromeVersions from "@ulixee/real-user-agents/data/stableChromeVersions.json";
 import BrowserProfiler from "@ulixee/unblocked-browser-profiler";
-import * as Fs from "fs";
-import * as Path from "path";
+
 import EmulatorData from "../lib/EmulatorData";
 import ClienthelloJson from "../lib/json-creators/Clienthello";
 import CodecsJson from "../lib/json-creators/Codecs";

@@ -1,6 +1,6 @@
 import "@ulixee/commons/lib/SourceMapSupport";
-import * as Fs from "fs";
-import * as Path from "path";
+import * as Fs from "node:fs";
+import * as Path from "node:path";
 import Config from "../index";
 
 export default function updatePathPatterns(): void {

@@ -1,14 +1,15 @@
+import * as fs from "node:fs";
 import type { IBoundLog } from "@ulixee/commons/interfaces/ILog";
 import EventSubscriber from "@ulixee/commons/lib/EventSubscriber";
 import { TypedEventEmitter } from "@ulixee/commons/lib/eventUtils";
 import Log from "@ulixee/commons/lib/Logger";
 import Queue from "@ulixee/commons/lib/Queue";
 import Resolvable from "@ulixee/commons/lib/Resolvable";
-import type { Tab } from "./index";
-import InjectedScripts, {
-	CorePageInjectedScript,
-} from "./InjectedScripts";
-import type { ITabEventParams } from "./Tab";
+import type { IFrontendDomChangeEvent } from "@ulixee/hero-interfaces/IDomChangeEvent";
+import type BrowserContext from "@ulixee/unblocked-agent/lib/BrowserContext";
+import type Page from "@ulixee/unblocked-agent/lib/Page";
+import type { IFrame } from "@ulixee/unblocked-specification/agent/browser/IFrame";
+import type IViewport from "@ulixee/unblocked-specification/agent/browser/IViewport";
 import DomChangesTable, {
 	type IDocument,
 	type IDomChangeRecord,
@@ -17,13 +18,10 @@ import DomChangesTable, {
 } from "../models/DomChangesTable";
 import type { IMouseEventRecord } from "../models/MouseEventsTable";
 import type { IScrollRecord } from "../models/ScrollEventsTable";
-import type { IFrontendDomChangeEvent } from "@ulixee/hero-interfaces/IDomChangeEvent";
-import type BrowserContext from "@ulixee/unblocked-agent/lib/BrowserContext";
-import type Page from "@ulixee/unblocked-agent/lib/Page";
-import type { IFrame } from "@ulixee/unblocked-specification/agent/browser/IFrame";
-import type IViewport from "@ulixee/unblocked-specification/agent/browser/IViewport";
-import * as fs from "fs";
+import InjectedScripts, { CorePageInjectedScript } from "./InjectedScripts";
+import type { Tab } from "./index";
 import type MirrorNetwork from "./MirrorNetwork";
+import type { ITabEventParams } from "./Tab";
 
 const { log } = Log(module);
 
@@ -608,7 +606,7 @@ export default class MirrorPage extends TypedEventEmitter<{
     const records = ${JSON.stringify(events).replace(/,null/g, ",")};
     const tagNamesById = ${JSON.stringify(tagNamesById)};
     const domNodePathsByFrameId = ${JSON.stringify(domNodePathByFrameId ?? {})};
-    
+
     const paintEvents = [];
     for (const event of records) {
       const changeEvents = [];
@@ -650,7 +648,7 @@ const injectedScript = `(function mirrorInjectedScripts() {
   ${pageScripts.DomActions};
   ${pageScripts.domReplayer};
   ${pageScripts.domReplayerUI};
-  
+
   window.waitForFramesReady = true;
   window.blockClickAndSubmit = true;
 })();`;

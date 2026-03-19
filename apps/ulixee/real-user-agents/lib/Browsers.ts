@@ -1,5 +1,5 @@
 // LOAD DATA
-import { readFileSync } from "fs";
+import { readFileSync } from "node:fs";
 import Browser from "./Browser";
 import { getDataFilePath } from "./paths";
 

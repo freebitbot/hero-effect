@@ -1,9 +1,9 @@
+import * as Fs from "node:fs";
+import * as Path from "node:path";
+import { gunzipSync } from "node:zlib";
 import type IBaseProfile from "@double-agent/collect/interfaces/IBaseProfile";
 import type { IProfileDataByProtocol } from "@double-agent/collect-browser-dom-environment/interfaces/IProfile";
 import BrowserProfiler from "@ulixee/unblocked-browser-profiler";
-import * as Fs from "fs";
-import * as Path from "path";
-import { gunzipSync } from "zlib";
 import EmulatorData from "../EmulatorData";
 import type Config from "./Config";
 

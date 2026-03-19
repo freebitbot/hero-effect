@@ -1,4 +1,4 @@
-import type * as http2 from "http2";
+import type * as http2 from "node:http2";
 
 export default interface IHttp2ConnectSettings {
 	settings: http2.Settings;

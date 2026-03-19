@@ -1,6 +1,6 @@
+import * as fs from "node:fs";
 import { stringifiedTypeSerializerClass } from "@ulixee/commons/lib/TypeSerializer";
 import type { TNewDocumentCallbackFn } from "@ulixee/unblocked-specification/agent/browser/IPage";
-import * as fs from "fs";
 import type DevtoolsSession from "./DevtoolsSession";
 import type FramesManager from "./FramesManager";
 

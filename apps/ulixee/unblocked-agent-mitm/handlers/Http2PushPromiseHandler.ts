@@ -1,8 +1,8 @@
+import type { ClientHttp2Stream, ServerHttp2Stream } from "node:http2";
+import * as http2 from "node:http2";
 import type { IBoundLog } from "@ulixee/commons/interfaces/ILog";
 import { CanceledPromiseError } from "@ulixee/commons/interfaces/IPendingWaitEvent";
 import Log, { hasBeenLoggedSymbol } from "@ulixee/commons/lib/Logger";
-import type { ClientHttp2Stream, ServerHttp2Stream } from "http2";
-import * as http2 from "http2";
 import type IMitmRequestContext from "../interfaces/IMitmRequestContext";
 import ResourceState from "../interfaces/ResourceState";
 import MitmRequestContext from "../lib/MitmRequestContext";
