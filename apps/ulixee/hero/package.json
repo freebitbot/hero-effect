@@ -27,8 +27,5 @@
 		"@ulixee/net": "workspace:*",
 		"@ulixee/unblocked-specification": "workspace:*",
 		"linkedom": "^0.14.11"
-	},
-	"devDependencies": {
-		"@ulixee/hero-core": "workspace:*"
 	}
 }

@@ -17,15 +17,15 @@ import type IResourceFilterProperties from "@ulixee/hero-interfaces/IResourceFil
 import type IResourceSummary from "@ulixee/hero-interfaces/IResourceSummary";
 import type BrowserContext from "@ulixee/unblocked-agent/lib/BrowserContext";
 import * as Path from "path";
-import { NodeType } from "./DomNode";
-import DomRebuilder from "./DomRebuilder";
+import { NodeType } from "@ulixee/hero-core/lib/DomNode";
+import DomRebuilder from "@ulixee/hero-core/lib/DomRebuilder";
 import DomStateAssertions, {
 	type IFrameAssertions,
 } from "./DomStateAssertions";
 import MirrorContext from "./MirrorContext";
-import MirrorNetwork from "./MirrorNetwork";
-import MirrorPage from "./MirrorPage";
-import XPathGenerator from "./XPathGenerator";
+import MirrorNetwork from "@ulixee/hero-core/lib/MirrorNetwork";
+import MirrorPage from "@ulixee/hero-core/lib/MirrorPage";
+import XPathGenerator from "@ulixee/hero-core/lib/XPathGenerator";
 
 const { log } = Log(module);
 

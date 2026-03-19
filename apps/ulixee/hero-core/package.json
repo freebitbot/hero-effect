@@ -37,7 +37,6 @@
 		"@ulixee/default-human-emulator": "workspace:*",
 		"@ulixee/hero-interfaces": "workspace:*",
 		"@ulixee/hero-plugin-utils": "workspace:*",
-		"@ulixee/hero-timetravel": "workspace:*",
 		"@ulixee/js-path": "workspace:*",
 		"@ulixee/net": "workspace:*",
 		"@ulixee/unblocked-agent": "workspace:*",

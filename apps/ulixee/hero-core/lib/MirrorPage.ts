@@ -4,19 +4,19 @@ import { TypedEventEmitter } from "@ulixee/commons/lib/eventUtils";
 import Log from "@ulixee/commons/lib/Logger";
 import Queue from "@ulixee/commons/lib/Queue";
 import Resolvable from "@ulixee/commons/lib/Resolvable";
-import type { Tab } from "@ulixee/hero-core";
+import type { Tab } from "./index";
 import InjectedScripts, {
 	CorePageInjectedScript,
-} from "@ulixee/hero-core/lib/InjectedScripts";
-import type { ITabEventParams } from "@ulixee/hero-core/lib/Tab";
+} from "./InjectedScripts";
+import type { ITabEventParams } from "./Tab";
 import DomChangesTable, {
 	type IDocument,
 	type IDomChangeRecord,
 	type IDomRecording,
 	type IPaintEvent,
-} from "@ulixee/hero-core/models/DomChangesTable";
-import type { IMouseEventRecord } from "@ulixee/hero-core/models/MouseEventsTable";
-import type { IScrollRecord } from "@ulixee/hero-core/models/ScrollEventsTable";
+} from "../models/DomChangesTable";
+import type { IMouseEventRecord } from "../models/MouseEventsTable";
+import type { IScrollRecord } from "../models/ScrollEventsTable";
 import type { IFrontendDomChangeEvent } from "@ulixee/hero-interfaces/IDomChangeEvent";
 import type BrowserContext from "@ulixee/unblocked-agent/lib/BrowserContext";
 import type Page from "@ulixee/unblocked-agent/lib/Page";
