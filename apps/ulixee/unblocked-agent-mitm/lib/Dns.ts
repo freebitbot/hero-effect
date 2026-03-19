@@ -1,9 +1,9 @@
+import { promises as dns } from "node:dns";
+import * as net from "node:net";
 import type IResolvablePromise from "@ulixee/commons/interfaces/IResolvablePromise";
 import { createPromise } from "@ulixee/commons/lib/utils";
 import type IDnsSettings from "@ulixee/unblocked-specification/agent/net/IDnsSettings";
-import { promises as dns } from "dns";
 import * as moment from "moment";
-import * as net from "net";
 import type RequestSession from "../handlers/RequestSession";
 import DnsOverTlsSocket from "./DnsOverTlsSocket";
 

@@ -13,6 +13,7 @@
 		"strictNullChecks": true,
 		"exactOptionalPropertyTypes": true,
 		"allowImportingTsExtensions": false,
+		"verbatimModuleSyntax": false,
 		"typeRoots": ["./@types", "./node_modules/@types"]
 	},
 	"exclude": [
