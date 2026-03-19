@@ -1,4 +1,6 @@
 import "@ulixee/commons/lib/SourceMapSupport";
+import * as Fs from "node:fs";
+import * as Path from "node:path";
 import type IBaseProfile from "@double-agent/interfaces/IBaseProfile";
 import {
 	type IUserAgentToTestPickType,
@@ -8,8 +10,6 @@ import {
 	extractProfilePathsMap,
 	importProfile,
 } from "@double-agent/interfaces/lib/ProfileUtils";
-import * as Fs from "fs";
-import * as Path from "path";
 import getAllPlugins from "./lib/getAllPlugins";
 import Layer from "./lib/Layer";
 import type Plugin from "./lib/Plugin";

@@ -1,26 +1,26 @@
 // Interfaces
-export { default as IBaseProfile } from "./interfaces/IBaseProfile";
-export { default as ISessionPage } from "./interfaces/ISessionPage";
-export { default as IAssignment } from "./interfaces/IAssignment";
+
 export {
 	AssignmentType,
+	default as IAssignment,
 	type IAssignmentType,
 } from "./interfaces/IAssignment";
+export { default as IBaseProfile } from "./interfaces/IBaseProfile";
+export { default as ISessionPage } from "./interfaces/ISessionPage";
 export {
 	default as IUserAgentToTest,
-	UserAgentToTestPickType,
 	type IUserAgentToTestPickType,
 	type IUserAgentToTestUsagePercent,
+	UserAgentToTestPickType,
 } from "./interfaces/IUserAgentToTest";
-
-// Utilities
-export {
-	createUserAgentIdFromString,
-	createUserAgentIdFromIds,
-} from "./lib/userAgentIds";
 export {
 	extractProfilePathsMap,
-	importProfile,
-	type IProfilePathsMap,
 	type IProfilePath,
+	type IProfilePathsMap,
+	importProfile,
 } from "./lib/ProfileUtils";
+// Utilities
+export {
+	createUserAgentIdFromIds,
+	createUserAgentIdFromString,
+} from "./lib/userAgentIds";
