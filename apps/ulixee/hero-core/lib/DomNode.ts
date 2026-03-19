@@ -1,4 +1,4 @@
-import type { IDomChangeRecord } from "@ulixee/hero-core/models/DomChangesTable";
+import type { IDomChangeRecord } from "../models/DomChangesTable";
 import { DomActionType } from "@ulixee/hero-interfaces/IDomChangeEvent";
 import type { INodesById } from "./DomRebuilder";
 

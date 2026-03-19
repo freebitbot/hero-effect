@@ -2,10 +2,10 @@ import { CanceledPromiseError } from "@ulixee/commons/interfaces/IPendingWaitEve
 import { decompressBuffer } from "@ulixee/commons/lib/bufferUtils";
 import Resolvable from "@ulixee/commons/lib/Resolvable";
 import { bindFunctions } from "@ulixee/commons/lib/utils";
-import type SessionDb from "@ulixee/hero-core/dbs/SessionDb";
+import type SessionDb from "../dbs/SessionDb";
 import ResourcesTable, {
 	type IResourcesRecord,
-} from "@ulixee/hero-core/models/ResourcesTable";
+} from "../models/ResourcesTable";
 import type IResourceSummary from "@ulixee/hero-interfaces/IResourceSummary";
 import { Protocol } from "@ulixee/unblocked-specification/agent/browser/IDevtoolsSession";
 import type IHttpHeaders from "@ulixee/unblocked-specification/agent/net/IHttpHeaders";

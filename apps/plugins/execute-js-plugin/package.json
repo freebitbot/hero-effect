@@ -8,7 +8,6 @@
 	},
 	"devDependencies": {
 		"@ulixee/commons": "workspace:*",
-		"@ulixee/execute-js-plugin": "workspace:*",
 		"@ulixee/hero": "workspace:*",
 		"@ulixee/hero-core": "workspace:*",
 		"@ulixee/net": "workspace:*"

@@ -2,7 +2,7 @@ import EventSubscriber from "@ulixee/commons/lib/EventSubscriber";
 import { TypedEventEmitter } from "@ulixee/commons/lib/eventUtils";
 import Resolvable from "@ulixee/commons/lib/Resolvable";
 import type SessionDb from "@ulixee/hero-core/dbs/SessionDb";
-import type MirrorPage from "../lib/MirrorPage";
+import type MirrorPage from "@ulixee/hero-core/lib/MirrorPage";
 import TimetravelTab from "./TimetravelTab";
 import type { ITabDetails } from "./TimetravelTicks";
 

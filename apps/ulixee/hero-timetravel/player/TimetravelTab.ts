@@ -2,7 +2,7 @@ import EventSubscriber from "@ulixee/commons/lib/EventSubscriber";
 import { TypedEventEmitter } from "@ulixee/commons/lib/eventUtils";
 import type { IPaintEvent } from "@ulixee/hero-core/models/DomChangesTable";
 import type ITimelineMetadata from "@ulixee/hero-interfaces/ITimelineMetadata";
-import type MirrorPage from "../lib/MirrorPage";
+import type MirrorPage from "@ulixee/hero-core/lib/MirrorPage";
 import type { ITabDetails, ITick } from "./TimetravelTicks";
 
 export default class TimetravelTab extends TypedEventEmitter<{

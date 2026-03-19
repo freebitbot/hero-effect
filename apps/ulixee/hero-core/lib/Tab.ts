@@ -23,8 +23,8 @@ import type {
 } from "@ulixee/hero-interfaces/ITabOptions";
 import type IWaitForOptions from "@ulixee/hero-interfaces/IWaitForOptions";
 import type IWaitForResourceOptions from "@ulixee/hero-interfaces/IWaitForResourceOptions";
-import MirrorNetwork from "@ulixee/hero-timetravel/lib/MirrorNetwork";
-import MirrorPage from "@ulixee/hero-timetravel/lib/MirrorPage";
+import MirrorNetwork from "./MirrorNetwork";
+import MirrorPage from "./MirrorPage";
 import type { IJsPath } from "@ulixee/js-path";
 import type BrowserContext from "@ulixee/unblocked-agent/lib/BrowserContext";
 import type FrameNavigations from "@ulixee/unblocked-agent/lib/FrameNavigations";

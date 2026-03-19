@@ -1,7 +1,7 @@
 import type {
 	IDomChangeRecord,
 	IPaintEvent,
-} from "@ulixee/hero-core/models/DomChangesTable";
+} from "../models/DomChangesTable";
 import { DomActionType } from "@ulixee/hero-interfaces/IDomChangeEvent";
 import DomNode from "./DomNode";
 import XPathGenerator from "./XPathGenerator";

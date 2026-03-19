@@ -441,7 +441,6 @@
       },
       "devDependencies": {
         "@ulixee/commons": "workspace:*",
-        "@ulixee/execute-js-plugin": "workspace:*",
         "@ulixee/hero": "workspace:*",
         "@ulixee/hero-core": "workspace:*",
         "@ulixee/net": "workspace:*",
@@ -531,9 +530,6 @@
         "@ulixee/unblocked-specification": "workspace:*",
         "linkedom": "^0.14.11",
       },
-      "devDependencies": {
-        "@ulixee/hero-core": "workspace:*",
-      },
     },
     "apps/ulixee/hero-core": {
       "name": "@ulixee/hero-core",
@@ -544,7 +540,6 @@
         "@ulixee/default-human-emulator": "workspace:*",
         "@ulixee/hero-interfaces": "workspace:*",
         "@ulixee/hero-plugin-utils": "workspace:*",
-        "@ulixee/hero-timetravel": "workspace:*",
         "@ulixee/js-path": "workspace:*",
         "@ulixee/net": "workspace:*",
         "@ulixee/unblocked-agent": "workspace:*",
