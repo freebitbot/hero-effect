@@ -1,0 +1,9 @@
+{
+	"name": "@double-agent/interfaces",
+	"private": true,
+	"main": "index.js",
+	"license": "MIT",
+	"dependencies": {
+		"@ulixee/real-user-agents": "workspace:*"
+	}
+}
