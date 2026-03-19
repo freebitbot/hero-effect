@@ -14,20 +14,14 @@
 		"better-sqlite3": "npm:better-sqlite3@workspace:*"
 	},
 	"dependencies": {
-		"dependency-cruiser": "^17.2.0",
-		"ts-morph": "^27.0.2",
-		"typedoc": "^0.28.14"
+		"ts-morph": "^27.0.2"
 	},
 	"workspaces": [
-		"apps/datastore/*",
-		"apps/desktop/*",
 		"apps/double-agent/*",
 		"apps/double-agent-analyze-plugins/*",
 		"apps/double-agent-collect-plugins/*",
-		"apps/examples/*",
 		"apps/platform/*",
 		"apps/plugins/*",
-		"apps/testing/*",
 		"apps/ulixee/*",
 		"resolutions/*"
 	]
