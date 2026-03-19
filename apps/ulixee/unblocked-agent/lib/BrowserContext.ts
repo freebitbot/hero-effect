@@ -1,3 +1,4 @@
+import { URL } from "node:url";
 import type { IBoundLog } from "@ulixee/commons/interfaces/ILog";
 import { CanceledPromiseError } from "@ulixee/commons/interfaces/IPendingWaitEvent";
 import EventSubscriber from "@ulixee/commons/lib/EventSubscriber";
@@ -15,7 +16,6 @@ import type {
 import type { ICookie } from "@ulixee/unblocked-specification/agent/net/ICookie";
 import Protocol from "devtools-protocol";
 import type ProtocolMapping from "devtools-protocol/types/protocol-mapping";
-import { URL } from "url";
 import type ICommandMarker from "../interfaces/ICommandMarker";
 import type IProxyConnectionOptions from "../interfaces/IProxyConnectionOptions";
 import type Browser from "./Browser";
