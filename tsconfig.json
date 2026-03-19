@@ -13,5 +13,8 @@
 		"strictNullChecks": true,
 		"exactOptionalPropertyTypes": true,
 		"allowImportingTsExtensions": false
-	}
+	},
+"exclude": [
+  "docs"
+]
 }
