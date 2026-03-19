@@ -245,6 +245,11 @@ if (!global.UlixeeLogCreator) {
 	};
 }
 
+/**
+ * @deprecated
+ * @param module
+ * @returns
+ */
 export default function logger(module: NodeModule): ILogBuilder {
 	return global.UlixeeLogCreator(module);
 }
