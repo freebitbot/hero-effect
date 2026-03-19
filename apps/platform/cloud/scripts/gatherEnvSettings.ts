@@ -1,4 +1,4 @@
-import * as Fs from "fs";
+import * as Fs from "node:fs";
 import { rootDir } from "../paths";
 
 const AgentEnv = Fs.readFileSync(

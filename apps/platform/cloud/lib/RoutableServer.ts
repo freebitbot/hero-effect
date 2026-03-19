@@ -1,14 +1,14 @@
 import WebSocket = require("ws");
 
+import type { IncomingMessage, ServerResponse } from "node:http";
+import * as Http from "node:http";
+import type { AddressInfo, ListenOptions, Socket } from "node:net";
 import Log from "@ulixee/commons/lib/Logger";
 import Resolvable from "@ulixee/commons/lib/Resolvable";
 import { bindFunctions, createPromise } from "@ulixee/commons/lib/utils";
 import { isWsOpen } from "@ulixee/net/lib/WsUtils";
-import type { IncomingMessage, ServerResponse } from "http";
-import * as Http from "http";
-import type { AddressInfo, ListenOptions, Socket } from "net";
 
-const pkg = require("../package.json");
+import pkg from "../package.json";
 
 const { log } = Log(module);
 

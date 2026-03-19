@@ -1,3 +1,6 @@
+import * as Http from "node:http";
+import * as Https from "node:https";
+import * as Path from "node:path";
 import UlixeeHostsConfig from "@ulixee/commons/config/hosts";
 import { getDataDirectory } from "@ulixee/commons/lib/dirUtils";
 import Log from "@ulixee/commons/lib/Logger";
@@ -14,17 +17,13 @@ import { ConnectionToCore, WsTransportToCore } from "@ulixee/net";
 import type IServicesSetup from "@ulixee/platform-specification/types/IServicesSetup";
 import Ed25519 from "@ulixee/platform-utils/lib/Ed25519";
 import Identity from "@ulixee/platform-utils/lib/Identity";
-import * as Http from "http";
-import * as Https from "https";
-import * as Path from "path";
 import Env from "../env";
 import type ICloudConfiguration from "../interfaces/ICloudConfiguration";
+import pkg from "../package.json";
 import CoreRouter from "./CoreRouter";
 import NodeRegistry from "./NodeRegistry";
 import NodeTracker from "./NodeTracker";
 import RoutableServer from "./RoutableServer";
-
-const pkg = require("../package.json");
 
 const isTestEnv = process.env.NODE_ENV === "test";
 
