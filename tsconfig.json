@@ -12,9 +12,12 @@
 		"isolatedModules": true,
 		"strictNullChecks": true,
 		"exactOptionalPropertyTypes": true,
-		"allowImportingTsExtensions": false
+		"allowImportingTsExtensions": false,
+		"typeRoots": ["./@types", "./node_modules/@types"]
 	},
-"exclude": [
-  "docs"
-]
+	"exclude": [
+		"docs",
+		"apps/ulixee/noderdom/builds",
+		"apps/ulixee/noderdom/files"
+	]
 }
