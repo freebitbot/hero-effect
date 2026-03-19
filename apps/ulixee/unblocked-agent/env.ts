@@ -2,7 +2,8 @@ import { loadEnv, parseEnvBool } from "@ulixee/commons/lib/envUtils";
 
 loadEnv(__dirname);
 const env = process.env;
-const pkgJson = require("./package.json");
+
+import pkgJson from "./package.json";
 
 export default {
 	disableMitm: parseEnvBool(env.ULX_DISABLE_MITM),

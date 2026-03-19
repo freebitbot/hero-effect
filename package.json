@@ -11,8 +11,8 @@
 		"typescript": "^5"
 	},
 	"resolutions": {
-    "better-sqlite3": "npm:better-sqlite3@workspace:*"
-  },
+		"better-sqlite3": "npm:better-sqlite3@workspace:*"
+	},
 	"dependencies": {
 		"dependency-cruiser": "^17.2.0",
 		"ts-morph": "^27.0.2",
@@ -29,6 +29,6 @@
 		"apps/plugins/*",
 		"apps/testing/*",
 		"apps/ulixee/*",
-	 "resolutions/*"
+		"resolutions/*"
 	]
 }

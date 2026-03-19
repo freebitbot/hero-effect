@@ -1,3 +1,4 @@
+import { URL } from "node:url";
 import type { IBoundLog } from "@ulixee/commons/interfaces/ILog";
 import { CanceledPromiseError } from "@ulixee/commons/interfaces/IPendingWaitEvent";
 import EventSubscriber from "@ulixee/commons/lib/EventSubscriber";
@@ -9,7 +10,6 @@ import type {
 } from "@ulixee/unblocked-specification/agent/browser/IBrowserNetworkEvents";
 import { getResourceTypeForChromeValue } from "@ulixee/unblocked-specification/agent/net/IResourceType";
 import { Protocol } from "devtools-protocol";
-import { URL } from "url";
 import type DevtoolsSession from "./DevtoolsSession";
 
 import AuthChallengeResponse = Protocol.Fetch.AuthChallengeResponseResponse;

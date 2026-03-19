@@ -1,3 +1,4 @@
+import { URL } from "node:url";
 import type { IBoundLog } from "@ulixee/commons/interfaces/ILog";
 import { CanceledPromiseError } from "@ulixee/commons/interfaces/IPendingWaitEvent";
 import type IRegisteredEventListener from "@ulixee/commons/interfaces/IRegisteredEventListener";
@@ -26,7 +27,6 @@ import type {
 	IInteractionGroups,
 } from "@ulixee/unblocked-specification/agent/interact/IInteractions";
 import Protocol from "devtools-protocol";
-import { URL } from "url";
 import ProtocolError from "../errors/ProtocolError";
 import type IWaitForOptions from "../interfaces/IWaitForOptions";
 import ConsoleMessage from "./ConsoleMessage";
