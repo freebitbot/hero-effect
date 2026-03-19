@@ -1,4 +1,4 @@
-import type IHeaderDataPage from "@double-agent/collect/interfaces/IHeaderDataPage";
+import type IHeaderDataPage from "../../../collect/interfaces/IHeaderDataPage";
 import ArrayOrderIndexCheck from "../checks/ArrayOrderIndexCheck";
 import type BaseCheck from "../checks/BaseCheck";
 import type { ICheckMeta } from "../checks/BaseCheck";

@@ -1,5 +1,5 @@
 import Config from "@double-agent/config";
-import * as Path from "path";
+import * as Path from "node:path";
 import type BaseCheck from "./checks/BaseCheck";
 import type { ICheckMeta, ICheckType } from "./checks/BaseCheck";
 
