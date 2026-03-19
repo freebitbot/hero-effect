@@ -14,6 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import * as Url from "node:url";
 import type { IBoundLog } from "@ulixee/commons/interfaces/ILog";
 import { CanceledPromiseError } from "@ulixee/commons/interfaces/IPendingWaitEvent";
 import EventSubscriber from "@ulixee/commons/lib/EventSubscriber";
@@ -41,7 +43,6 @@ import {
 } from "@ulixee/unblocked-specification/agent/interact/IInteractions";
 import type IResourceMeta from "@ulixee/unblocked-specification/agent/net/IResourceMeta";
 import Protocol from "devtools-protocol";
-import * as Url from "url";
 import type IWaitForOptions from "../interfaces/IWaitForOptions";
 import type BrowserContext from "./BrowserContext";
 import type DevtoolsSession from "./DevtoolsSession";
