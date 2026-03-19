@@ -5,8 +5,6 @@ import {
 	parseEnvBool,
 } from "@ulixee/commons/lib/envUtils";
 import { filterUndefined } from "@ulixee/commons/lib/objectUtils";
-import type ILocalchainConfig from "@ulixee/datastore/interfaces/ILocalchainConfig";
-import { parseAddress, parseIdentities } from "@ulixee/datastore-core/env";
 import { Command } from "commander";
 import { CloudNode } from "../index";
 
@@ -46,50 +44,10 @@ export default function cliCommands(options?: {
 				.env("ULX_PUBLIC_HOST"),
 		)
 		.addOption(
-			program
-				.createOption(
-					"--hosted-services-port <number>",
-					"Activate hosted services on this node at this port (datastore registry, node registry). Defaults to any 18181, or any available port (0).",
-				)
-				.env("ULX_HOSTED_SERVICES_PORT"),
-		)
-		.addOption(
-			program
-				.createOption(
-					"--hosted-services-hostname <hostname>",
-					"The ip or host that Cluster Services should listed on. You should make this a private-to-your-cloud ip if possible.",
-				)
-				.env("ULX_HOSTED_SERVICES_HOSTNAME"),
-		)
-		.addOption(
-			program
-				.createOption(
-					"--setup-host <host>",
-					"Setup services for this node with another node in your cluster. NOTE: this should be the hosted services address of your cluster node.",
-				)
-				.env("ULX_SERVICES_SETUP_HOST"),
-		)
-		.addOption(
 			program.createOption(
 				"--env <path>",
 				"Load environment settings from a .env file.",
 			),
-		)
-		.addOption(
-			program
-				.createOption(
-					"--network-identity-path <path>",
-					"Filesystem path to your network identity keypair",
-				)
-				.env("ULX_NETWORK_IDENTITY_PATH"),
-		)
-		.addOption(
-			program
-				.createOption(
-					"--admin-identities <ids...>",
-					"Your admin identity public ids (starting with id1)",
-				)
-				.env("ULX_CLOUD_ADMIN_IDENTITIES"),
 		)
 		.addOption(
 			program
@@ -99,15 +57,6 @@ export default function cliCommands(options?: {
 				)
 				.argParser(parseEnvBool)
 				.env("ULX_DISABLE_SESSION_PERSISTENCE"),
-		)
-		.addOption(
-			program
-				.createOption(
-					"--disable-desktop-apis",
-					"Do not enable Ulixee Desktop apis.",
-				)
-				.argParser(parseEnvBool)
-				.env("ULX_DISABLE_DESKTOP_APIS"),
 		)
 		.addOption(
 			program
@@ -128,14 +77,6 @@ export default function cliCommands(options?: {
 				.default(10),
 		)
 		.addOption(
-			program
-				.createOption(
-					"--max-datastore-runtime-ms <millis>",
-					"Max runtime allowed for a Datastore to complete. (default: 10 mins)",
-				)
-				.argParser(parseInt),
-		)
-		.addOption(
 			program.createOption(
 				"--unblocked-plugins <plugins...>",
 				"Register default Unblocked Plugin npm module names for all Hero instances to load.",
@@ -148,96 +89,6 @@ export default function cliCommands(options?: {
 					"Override the default data directory for Hero sessions and dbs.",
 				)
 				.env("ULX_DATA_DIR"),
-		)
-		.addOption(
-			program
-				.createOption(
-					"--datastore-storage-dir <dir>",
-					"Override the default storage directory where Datastores are located.",
-				)
-				.env("ULX_DATASTORE_DIR"),
-		)
-		.addOption(
-			program.createOption(
-				"--datastore-tmp-dir <dir>",
-				"Override the default temp directory where uploaded Datastores are processed.",
-			),
-		)
-		.addOption(
-			program
-				.createOption(
-					"--datastore-wait-for-completion",
-					"Wait for all in-process Datastores to complete before shutting down the Cloud node.",
-				)
-				.argParser(parseEnvBool)
-				.default(false),
-		)
-		.addOption(
-			program
-				.createOption(
-					"--argon-notary-id <id>",
-					"The preferred Argon notary to notarize payments with.",
-				)
-				.argParser(parseInt)
-				.env("ARGON_NOTARY_ID"),
-		)
-		.addOption(
-			program
-				.createOption(
-					"--argon-localchain-path <path>",
-					"Activate payment receipt with the given Argon Localchain.",
-				)
-				.env("ARGON_LOCALCHAIN_PATH"),
-		)
-		.addOption(
-			program
-				.createOption(
-					"--argon-localchain-create-if-missing",
-					"Create a new Localchain on this machine if missing.",
-				)
-				.env("ARGON_LOCALCHAIN_CREATE_IF_MISSING"),
-		)
-		.addOption(
-			program
-				.createOption(
-					"--argon-mainchain-url <url>",
-					"Connect to the given Argon Mainchain rpc url.",
-				)
-				.env("ARGON_MAINCHAIN_URL"),
-		)
-		.addOption(
-			program
-				.createOption(
-					"--argon-localchain-password <password>",
-					"Localchain password provided inline (unsafe).",
-				)
-				.env("ARGON_LOCALCHAIN_PASSWORD"),
-		)
-		.addOption(
-			program
-				.createOption(
-					"--argon-localchain-password-interactive",
-					"Localchain password prompted on command line.",
-				)
-				.argParser(parseEnvBool)
-				.env("ARGON_LOCALCHAIN_PASSWORD_INTERACTIVE_CLI"),
-		)
-		.addOption(
-			program
-				.createOption(
-					"--argon-localchain-password-file <path>",
-					"Localchain password from a file path.",
-				)
-				.env("ARGON_LOCALCHAIN_PASSWORD_FILE"),
-		)
-		.addOption(
-			program
-				.createOption(
-					"--argon-block-rewards-address <address>",
-					"Activate block rewards capture with the given Argon Localchain address.",
-				)
-				.argParser((x) => parseAddress(x, "Block Rewards Address"))
-				.env("ARGON_BLOCK_REWARDS_ADDRESS"),
 		)
 		.allowUnknownOption(true)
 		.action(async (opts) => {
@@ -254,28 +105,13 @@ export default function cliCommands(options?: {
 }
 
 export async function startCloudViaCli(opts: any): Promise<CloudNode> {
-	const {
-		port,
-		disableDesktopApis,
-		disableSessionPersistence,
-		hostname,
-		setupHost,
-		publicHost,
-		hostedServicesPort,
-		hostedServicesHostname,
-		argonNotaryId,
-		argonLocalchainPath,
-		argonLocalchainCreateIfMissing,
-		argonMainchainUrl,
-		argonLocalchainPassword,
-		argonLocalchainPasswordInteractive,
-		argonLocalchainPasswordFile,
-		argonBlockRewardsAddress,
-	} = opts;
-	let env = opts.env;
+	const { port, hostname, publicHost, env } = opts;
+
 	if (env) {
-		if (env.startsWith("~")) env = Path.resolve(os.homedir(), env.slice(1));
-		applyEnvironmentVariables(Path.resolve(env), process.env);
+		const envPath = env.startsWith("~")
+			? Path.resolve(os.homedir(), env.slice(1))
+			: env;
+		applyEnvironmentVariables(Path.resolve(envPath), process.env);
 	}
 
 	const {
@@ -283,58 +119,25 @@ export async function startCloudViaCli(opts: any): Promise<CloudNode> {
 		heroDataDir,
 		maxConcurrentHeroes,
 		maxConcurrentHeroesPerBrowser,
+		disableSessionPersistence,
 	} = opts;
-	let localchainConfig: ILocalchainConfig;
-	if (argonLocalchainPath || argonLocalchainCreateIfMissing) {
-		localchainConfig = {
-			localchainPath: argonLocalchainPath,
-			localchainCreateIfMissing: argonLocalchainCreateIfMissing,
-			mainchainUrl: argonMainchainUrl,
-			notaryId: argonNotaryId,
-			keystorePassword: {
-				password: argonLocalchainPassword
-					? Buffer.from(argonLocalchainPassword)
-					: undefined,
-				interactiveCli: argonLocalchainPasswordInteractive,
-				passwordFile: argonLocalchainPasswordFile,
-			},
-			blockRewardsAddress: argonBlockRewardsAddress,
-		};
-	}
 
 	const cloudNode = new CloudNode(
 		filterUndefined({
 			port,
 			host: hostname,
 			publicHost,
-			disableDesktopCore: disableDesktopApis,
-			hostedServicesServerOptions:
-				!!hostedServicesHostname || hostedServicesPort !== undefined
-					? { port: hostedServicesPort, host: hostedServicesHostname }
-					: undefined,
-			servicesSetupHost: setupHost,
 			heroConfiguration: filterUndefined({
 				maxConcurrentClientCount: maxConcurrentHeroes,
 				maxConcurrentClientsPerBrowser: maxConcurrentHeroesPerBrowser,
 				disableSessionPersistence,
 				dataDir: heroDataDir,
-				defaultUnblockedPlugins: unblockedPlugins?.map((x) => {
+				defaultUnblockedPlugins: unblockedPlugins?.map((x: string) => {
 					// eslint-disable-next-line import/no-dynamic-require
 					const mod: any = require(x);
 					if (mod.default) return mod.default;
 					return mod;
 				}),
-			}),
-			datastoreConfiguration: filterUndefined({
-				datastoresDir: opts.datastoreStorageDir,
-				datastoresTmpDir: opts.datastoreTmpDir,
-				maxRuntimeMs: opts.maxDatastoreRuntimeMs,
-				waitForDatastoreCompletionOnShutdown: opts.datastoreWaitForCompletion,
-				adminIdentities: parseIdentities(
-					opts.adminIdentities,
-					"Admin Identities",
-				),
-				localchainConfig,
 			}),
 		}),
 	);

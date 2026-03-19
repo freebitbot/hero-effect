@@ -52,7 +52,7 @@ export default class RoutableServer {
 	}
 
 	private publicHostname: string;
-	private isClosing: Promise<any>;
+	private isClosing!: Promise<any>;
 	private sockets = new Set<Socket>();
 	private listeningPromise = createPromise<AddressInfo>();
 	private readonly httpServer: Http.Server;
@@ -109,7 +109,12 @@ export default class RoutableServer {
 				this.httpServer
 					.listen(options, () => {
 						this.httpServer.off("error", reject);
-						resolve(this.httpServer.address() as AddressInfo);
+						const addr = this.httpServer.address();
+						if (typeof addr === "string" || !addr) {
+							reject(new Error("Failed to get server address"));
+							return;
+						}
+						resolve(addr);
 					})
 					.ref();
 			});
@@ -156,7 +161,7 @@ export default class RoutableServer {
 				sessionId: null,
 			});
 			resolvable.resolve();
-		} catch (error) {
+		} catch (error: any) {
 			log.error("Error closing socket connections", {
 				error,
 				sessionId: null,
@@ -192,7 +197,7 @@ export default class RoutableServer {
 
 			res.writeHead(404);
 			res.end("Route not found");
-		} catch (error) {
+		} catch (error: any) {
 			res.writeHead(500);
 			res.end("Unhandled Error", error.message);
 		}
