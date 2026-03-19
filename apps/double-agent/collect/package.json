@@ -4,8 +4,8 @@
 	"private": true,
 	"license": "MIT",
 	"dependencies": {
-		"@double-agent/collect-controller": "workspace:*",
 		"@double-agent/config": "workspace:*",
+		"@double-agent/interfaces": "workspace:*",
 		"@double-agent/tls-server": "workspace:*",
 		"@ulixee/commons": "workspace:*",
 		"axios": "^1.7.7",

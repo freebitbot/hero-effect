@@ -1,6 +1,6 @@
 import Config from "@double-agent/config/index";
-import type IUserAgentToTest from "@double-agent/config/interfaces/IUserAgentToTest";
-import { UserAgentToTestPickType } from "@double-agent/config/interfaces/IUserAgentToTest";
+import type IUserAgentToTest from "@double-agent/interfaces/IUserAgentToTest";
+import { UserAgentToTestPickType } from "@double-agent/interfaces/IUserAgentToTest";
 import RealUserAgents from "@ulixee/real-user-agents";
 import UserAgent from "@ulixee/real-user-agents/lib/UserAgent";
 import * as Fs from "fs";

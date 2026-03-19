@@ -1,4 +1,4 @@
-import IAssignment from "@double-agent/collect-controller/interfaces/IAssignment";
+import type IAssignment from "@double-agent/interfaces/IAssignment";
 import Config from "@double-agent/config";
 import { promises as Fs } from "fs";
 import fetch from "node-fetch";

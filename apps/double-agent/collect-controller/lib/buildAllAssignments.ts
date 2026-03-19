@@ -1,9 +1,9 @@
-import { createUserAgentIdFromIds } from "@double-agent/config";
-import type IUserAgentToTest from "@double-agent/config/interfaces/IUserAgentToTest";
+import { createUserAgentIdFromIds } from "@double-agent/interfaces";
+import type IUserAgentToTest from "@double-agent/interfaces/IUserAgentToTest";
 import {
 	type IUserAgentToTestPickType,
 	UserAgentToTestPickType,
-} from "@double-agent/config/interfaces/IUserAgentToTest";
+} from "@double-agent/interfaces/IUserAgentToTest";
 import type IAssignment from "../interfaces/IAssignment";
 import { AssignmentType } from "../interfaces/IAssignment";
 import buildAssignment from "./buildAssignment";

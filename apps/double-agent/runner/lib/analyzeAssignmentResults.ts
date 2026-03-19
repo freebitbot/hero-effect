@@ -1,7 +1,7 @@
 import Analyze from "@double-agent/analyze";
 import type { IResultFlag } from "@double-agent/analyze/lib/Plugin";
 import { createOverTimeSessionKey } from "@double-agent/collect-controller/lib/buildAllAssignments";
-import { UserAgentToTestPickType } from "@double-agent/config/interfaces/IUserAgentToTest";
+import { UserAgentToTestPickType } from "@double-agent/interfaces/IUserAgentToTest";
 import { probesDataDir } from "@double-agent/config/paths";
 import { createReadStream, createWriteStream, promises as Fs } from "fs";
 import * as Path from "path";

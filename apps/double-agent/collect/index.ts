@@ -1,6 +1,6 @@
 import "@ulixee/commons/lib/SourceMapSupport";
 import "@double-agent/config/load";
-import type { IAssignmentType } from "@double-agent/collect-controller/interfaces/IAssignment";
+import type { IAssignmentType } from "@double-agent/interfaces/IAssignment";
 import Config from "@double-agent/config";
 import type Session from "./lib/Session";
 import SessionTracker from "./lib/SessionTracker";

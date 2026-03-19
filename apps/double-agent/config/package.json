@@ -3,8 +3,7 @@
 	"license": "MIT",
 	"private": true,
 	"dependencies": {
-		"@double-agent/analyze": "workspace:*",
-		"@double-agent/collect": "workspace:*",
+		"@double-agent/interfaces": "workspace:*",
 		"@ulixee/commons": "workspace:*",
 		"@ulixee/real-user-agents": "workspace:*"
 	}
