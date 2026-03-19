@@ -1,3 +1,5 @@
+import * as os from "node:os";
+import * as Path from "node:path";
 import { CanceledPromiseError } from "@ulixee/commons/interfaces/IPendingWaitEvent";
 import { TypedEventEmitter } from "@ulixee/commons/lib/eventUtils";
 import Log from "@ulixee/commons/lib/Logger";
@@ -13,8 +15,6 @@ import type {
 } from "@ulixee/unblocked-specification/agent/hooks/IHooks";
 import Protocol from "devtools-protocol";
 import { nanoid } from "nanoid";
-import * as os from "os";
-import * as Path from "path";
 import env from "../env";
 import BrowserLaunchError from "../errors/BrowserLaunchError";
 import type IConnectionTransport from "../interfaces/IConnectionTransport";
