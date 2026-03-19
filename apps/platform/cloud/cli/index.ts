@@ -1,4 +1,5 @@
 import * as os from "node:os";
+import * as Path from "node:path";
 import {
 	applyEnvironmentVariables,
 	parseEnvBool,
@@ -7,10 +8,9 @@ import { filterUndefined } from "@ulixee/commons/lib/objectUtils";
 import type ILocalchainConfig from "@ulixee/datastore/interfaces/ILocalchainConfig";
 import { parseAddress, parseIdentities } from "@ulixee/datastore-core/env";
 import { Command } from "commander";
-import * as Path from "path";
 import { CloudNode } from "../index";
 
-const pkg = require("../package.json");
+import pkg from "../package.json";
 
 export default function cliCommands(options?: {
 	suppressLogs: boolean;
