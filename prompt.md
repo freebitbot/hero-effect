@@ -1,21 +1,5 @@
 Я хочу щоб ти дослідив цей проект максимально уважно. Мене цікавлять наступні папки:
 
-## Datastores
-- apps/datastore/databroker
-- apps/datastore/datastore
-- apps/datastore/datastore-core
-- apps/datastore/datastore-docpage
-- apps/datastore/datastore-packager
-- apps/datastore/datastore-plugins-hero
-- apps/datastore/datastore-plugins-hero-core
-- apps/datastore/datastore-plugins-puppeteer
-- apps/datastore/datastore-plugins-puppeteer-core
-
-## desktop
-- apps/desktop/desktop-core
-- apps/desktop/desktop-interfaces
-
-
 # double-agent
 - apps/double-agent
 - apps/double-agent-analyze-plugins
