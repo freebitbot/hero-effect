@@ -1,7 +1,4 @@
-import Protocol from "devtools-protocol";
-
-import Network = Protocol.Network;
-import DevtoolsResourceType = Network.ResourceType;
+import type Protocol from "devtools-protocol";
 
 export enum ResourceType {
 	Document = "Document",
@@ -28,7 +25,7 @@ export enum ResourceType {
 type IResourceType = keyof typeof ResourceType;
 
 export function getResourceTypeForChromeValue(
-	resourceType: DevtoolsResourceType,
+	resourceType: Protocol.Network.ResourceType,
 	method: string,
 ): IResourceType {
 	if (method === "OPTIONS") return "Preflight";

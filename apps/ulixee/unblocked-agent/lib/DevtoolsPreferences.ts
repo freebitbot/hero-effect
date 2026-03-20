@@ -21,9 +21,7 @@ import { readFileAsJson } from "@ulixee/commons/lib/fileUtils";
 import { bindFunctions } from "@ulixee/commons/lib/utils";
 import type IBrowserEngine from "@ulixee/unblocked-specification/agent/browser/IBrowserEngine";
 import type IDevtoolsSession from "@ulixee/unblocked-specification/agent/browser/IDevtoolsSession";
-import { Protocol } from "@ulixee/unblocked-specification/agent/browser/IDevtoolsSession";
-
-import BindingCalledEvent = Protocol.Runtime.BindingCalledEvent;
+import type Protocol from "devtools-protocol";
 
 const devtoolsPreferencesCallback = "_DevtoolsPreferencesCallback";
 
@@ -87,7 +85,7 @@ export default class DevtoolsPreferences {
 
 	private async onPreferenceAction(
 		session: IDevtoolsSession,
-		event: BindingCalledEvent,
+		event: Protocol.Runtime.BindingCalledEvent,
 	): Promise<void> {
 		if (event.name !== devtoolsPreferencesCallback) return;
 

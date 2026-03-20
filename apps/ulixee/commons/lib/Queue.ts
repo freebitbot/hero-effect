@@ -5,8 +5,6 @@ import Resolvable from "./Resolvable";
 import TypedEventEmitter from "./TypedEventEmitter";
 import { createPromise } from "./utils";
 
-import getPrototypeOf = Reflect.getPrototypeOf;
-
 type AsyncCallback<T> = (value?: any) => Promise<T>;
 
 export default class Queue<TResult = any> extends TypedEventEmitter<{
@@ -213,7 +211,7 @@ export default class Queue<TResult = any> extends TypedEventEmitter<{
 	}
 
 	private reject(entry: IQueueEntry, sourceError: Error): void {
-		const error = <Error>Object.create(getPrototypeOf(sourceError));
+		const error = <Error>Object.create(Reflect.getPrototypeOf(sourceError));
 		error.message = sourceError.message;
 		Object.assign(error, sourceError);
 

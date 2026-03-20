@@ -2,15 +2,13 @@ import { CanceledPromiseError } from "@ulixee/commons/interfaces/IPendingWaitEve
 import { decompressBuffer } from "@ulixee/commons/lib/bufferUtils";
 import Resolvable from "@ulixee/commons/lib/Resolvable";
 import { bindFunctions } from "@ulixee/commons/lib/utils";
+import type IResourceSummary from "@ulixee/hero-interfaces/IResourceSummary";
+import type IHttpHeaders from "@ulixee/unblocked-specification/agent/net/IHttpHeaders";
+import type Protocol from "devtools-protocol";
 import type SessionDb from "../dbs/SessionDb";
 import ResourcesTable, {
 	type IResourcesRecord,
 } from "../models/ResourcesTable";
-import type IResourceSummary from "@ulixee/hero-interfaces/IResourceSummary";
-import { Protocol } from "@ulixee/unblocked-specification/agent/browser/IDevtoolsSession";
-import type IHttpHeaders from "@ulixee/unblocked-specification/agent/net/IHttpHeaders";
-
-import Fetch = Protocol.Fetch;
 
 interface ISessionResourceDetails {
 	body: Buffer;
@@ -64,8 +62,8 @@ export default class MirrorNetwork {
 	}
 
 	public async mirrorNetworkRequests(
-		request: Fetch.RequestPausedEvent,
-	): Promise<Fetch.FulfillRequestRequest> {
+		request: Protocol.Fetch.RequestPausedEvent,
+	): Promise<Protocol.Fetch.FulfillRequestRequest> {
 		const { url, method } = request.request;
 		if (request.resourceType === "Document" || url === "about:blank") {
 			const doctype = this.doctypesByUrl[url] ?? "";

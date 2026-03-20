@@ -13,7 +13,7 @@ import type {
 	IBrowserHooks,
 	IHooksProvider,
 } from "@ulixee/unblocked-specification/agent/hooks/IHooks";
-import Protocol from "devtools-protocol";
+import type Protocol from "devtools-protocol";
 import { nanoid } from "nanoid";
 import env from "../env";
 import BrowserLaunchError from "../errors/BrowserLaunchError";
@@ -28,9 +28,6 @@ import DevtoolsPreferences from "./DevtoolsPreferences";
 import type DevtoolsSession from "./DevtoolsSession";
 import type Page from "./Page";
 import type { IPageCreateOptions } from "./Page";
-
-import GetVersionResponse = Protocol.Browser.GetVersionResponse;
-import TargetInfo = Protocol.Target.TargetInfo;
 
 const { log } = Log(module);
 
@@ -73,7 +70,7 @@ export default class Browser
 	private connection: Connection;
 	private process: BrowserProcess;
 
-	private version: GetVersionResponse;
+	private version: Protocol.Browser.GetVersionResponse;
 	private preferencesInterceptor?: DevtoolsPreferences;
 
 	private browserContextCreationHooks: IBrowserContextHooks;
@@ -273,7 +270,7 @@ export default class Browser
 		}
 	}
 
-	public async getAllPageTargets(): Promise<TargetInfo[]> {
+	public async getAllPageTargets(): Promise<Protocol.Target.TargetInfo[]> {
 		const targets = await this.devtoolsSession.send("Target.getTargets");
 		return targets.targetInfos.filter((x) => x.type === "page");
 	}

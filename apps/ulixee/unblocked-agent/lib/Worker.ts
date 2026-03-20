@@ -8,13 +8,11 @@ import type {
 	IWorkerEvents,
 } from "@ulixee/unblocked-specification/agent/browser/IWorker";
 import type { IBrowserContextHooks } from "@ulixee/unblocked-specification/agent/hooks/IHooks";
-import Protocol from "devtools-protocol";
+import type Protocol from "devtools-protocol";
 import type BrowserContext from "./BrowserContext";
 import ConsoleMessage from "./ConsoleMessage";
 import type DevtoolsSession from "./DevtoolsSession";
 import NetworkManager from "./NetworkManager";
-
-import TargetInfo = Protocol.Target.TargetInfo;
 
 export class Worker
 	extends TypedEventEmitter<IWorkerEvents>
@@ -33,7 +31,7 @@ export class Worker
 
 	private readonly initializationSent = createPromise<void>();
 	private readonly networkManager: NetworkManager;
-	private readonly targetInfo: TargetInfo;
+	private readonly targetInfo: Protocol.Target.TargetInfo;
 
 	private readonly events = new EventSubscriber();
 
@@ -54,7 +52,7 @@ export class Worker
 		parentNetworkManager: NetworkManager,
 		devtoolsSession: DevtoolsSession,
 		logger: IBoundLog,
-		targetInfo: TargetInfo,
+		targetInfo: Protocol.Target.TargetInfo,
 	) {
 		super();
 		this.targetInfo = targetInfo;

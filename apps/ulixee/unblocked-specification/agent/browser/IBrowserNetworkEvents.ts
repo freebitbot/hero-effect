@@ -1,7 +1,5 @@
-import Protocol from "devtools-protocol";
+import type Protocol from "devtools-protocol";
 import type IHttpResourceLoadDetails from "../net/IHttpResourceLoadDetails";
-
-import RequestWillBeSentEvent = Protocol.Network.RequestWillBeSentEvent;
 
 export declare type IBrowserResourceRequest = Omit<
 	IHttpResourceLoadDetails,
@@ -59,6 +57,6 @@ export interface IBrowserNetworkEvents {
 	};
 	// Special internal network request, used to communicate internal data
 	"internal-request": {
-		request: RequestWillBeSentEvent;
+		request: Protocol.Network.RequestWillBeSentEvent;
 	};
 }

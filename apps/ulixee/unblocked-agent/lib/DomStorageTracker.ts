@@ -7,18 +7,10 @@ import type IDomStorage from "@ulixee/unblocked-specification/agent/browser/IDom
 import type { IDomStorageForOrigin } from "@ulixee/unblocked-specification/agent/browser/IDomStorage";
 import type { IFrame } from "@ulixee/unblocked-specification/agent/browser/IFrame";
 import type { IIndexedDB } from "@ulixee/unblocked-specification/agent/browser/IIndexedDB";
-import Protocol from "devtools-protocol";
+import type Protocol from "devtools-protocol";
 import type DevtoolsSession from "./DevtoolsSession";
 import type NetworkManager from "./NetworkManager";
 import type Page from "./Page";
-
-import DomStorageItemAddedEvent = Protocol.DOMStorage.DomStorageItemAddedEvent;
-import DomStorageItemRemovedEvent = Protocol.DOMStorage.DomStorageItemRemovedEvent;
-import DomStorageItemsClearedEvent = Protocol.DOMStorage.DomStorageItemsClearedEvent;
-import DomStorageItemUpdatedEvent = Protocol.DOMStorage.DomStorageItemUpdatedEvent;
-import KeyPath = Protocol.IndexedDB.KeyPath;
-import IndexedDBContentUpdatedEvent = Protocol.Storage.IndexedDBContentUpdatedEvent;
-import IndexedDBListUpdatedEvent = Protocol.Storage.IndexedDBListUpdatedEvent;
 
 export interface IDomStorageEvents {
 	"dom-storage-updated": {
@@ -233,7 +225,9 @@ export default class DomStorageTracker extends TypedEventEmitter<IDomStorageEven
 		return this.storageByOrigin[securityOrigin];
 	}
 
-	private onDomStorageAdded(event: DomStorageItemAddedEvent): void {
+	private onDomStorageAdded(
+		event: Protocol.DOMStorage.DomStorageItemAddedEvent,
+	): void {
 		const timestamp = Date.now();
 		const { isLocalStorage, securityOrigin } = event.storageId;
 
@@ -254,7 +248,9 @@ export default class DomStorageTracker extends TypedEventEmitter<IDomStorageEven
 		});
 	}
 
-	private onDomStorageRemoved(event: DomStorageItemRemovedEvent): void {
+	private onDomStorageRemoved(
+		event: Protocol.DOMStorage.DomStorageItemRemovedEvent,
+	): void {
 		const timestamp = Date.now();
 		const { isLocalStorage, securityOrigin } = event.storageId;
 
@@ -275,7 +271,9 @@ export default class DomStorageTracker extends TypedEventEmitter<IDomStorageEven
 		});
 	}
 
-	private onDomStorageUpdated(event: DomStorageItemUpdatedEvent): void {
+	private onDomStorageUpdated(
+		event: Protocol.DOMStorage.DomStorageItemUpdatedEvent,
+	): void {
 		const timestamp = Date.now();
 		const { isLocalStorage, securityOrigin } = event.storageId;
 
@@ -297,7 +295,9 @@ export default class DomStorageTracker extends TypedEventEmitter<IDomStorageEven
 		});
 	}
 
-	private onDomStorageCleared(event: DomStorageItemsClearedEvent): void {
+	private onDomStorageCleared(
+		event: Protocol.DOMStorage.DomStorageItemsClearedEvent,
+	): void {
 		const timestamp = Date.now();
 		const { isLocalStorage, securityOrigin } = event.storageId;
 
@@ -325,7 +325,7 @@ export default class DomStorageTracker extends TypedEventEmitter<IDomStorageEven
 	}
 
 	private async onIndexedDBListUpdated(
-		event: IndexedDBListUpdatedEvent,
+		event: Protocol.Storage.IndexedDBListUpdatedEvent,
 	): Promise<void> {
 		const timestamp = Date.now();
 		const securityOrigin = event.origin;
@@ -377,7 +377,7 @@ export default class DomStorageTracker extends TypedEventEmitter<IDomStorageEven
 	}
 
 	private async onIndexedDBContentUpdated(
-		event: IndexedDBContentUpdatedEvent,
+		event: Protocol.Storage.IndexedDBContentUpdatedEvent,
 	): Promise<void> {
 		const { origin: securityOrigin, databaseName, objectStoreName } = event;
 		if (this.indexedDBContentUpdatingOrigins.has(securityOrigin)) return;
@@ -461,7 +461,9 @@ export default class DomStorageTracker extends TypedEventEmitter<IDomStorageEven
 	}
 }
 
-function flatKeypath(keypath: KeyPath): string | string[] | null {
+function flatKeypath(
+	keypath: Protocol.IndexedDB.KeyPath,
+): string | string[] | null {
 	if (keypath.type === "null") return null;
 	if (keypath.type === "string") return keypath.string;
 	return keypath.array;

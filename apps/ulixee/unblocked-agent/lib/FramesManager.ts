@@ -4,6 +4,8 @@ import EventSubscriber from "@ulixee/commons/lib/EventSubscriber";
 import { TypedEventEmitter } from "@ulixee/commons/lib/eventUtils";
 import Resolvable from "@ulixee/commons/lib/Resolvable";
 import { bindFunctions } from "@ulixee/commons/lib/utils";
+import type { IBrowserNetworkEvents } from "@ulixee/unblocked-specification/agent/browser/IBrowserNetworkEvents";
+import type { IConsoleEvents } from "@ulixee/unblocked-specification/agent/browser/IConsole";
 import type {
 	IFrame,
 	IFrameManagerEvents,
@@ -13,7 +15,8 @@ import type {
 	TNewDocumentCallbackFn,
 } from "@ulixee/unblocked-specification/agent/browser/IPage";
 import type IResourceMeta from "@ulixee/unblocked-specification/agent/net/IResourceMeta";
-import Protocol from "devtools-protocol";
+import type Protocol from "devtools-protocol";
+import { Console } from "./Console";
 import type DevtoolsSession from "./DevtoolsSession";
 import type DomStorageTracker from "./DomStorageTracker";
 import Frame from "./Frame";
@@ -21,20 +24,6 @@ import InjectedScripts from "./InjectedScripts";
 import type NetworkManager from "./NetworkManager";
 import type Page from "./Page";
 import Resources from "./Resources";
-
-import FrameNavigatedEvent = Protocol.Page.FrameNavigatedEvent;
-import FrameTree = Protocol.Page.FrameTree;
-import FrameDetachedEvent = Protocol.Page.FrameDetachedEvent;
-import FrameAttachedEvent = Protocol.Page.FrameAttachedEvent;
-import NavigatedWithinDocumentEvent = Protocol.Page.NavigatedWithinDocumentEvent;
-import FrameStoppedLoadingEvent = Protocol.Page.FrameStoppedLoadingEvent;
-import LifecycleEventEvent = Protocol.Page.LifecycleEventEvent;
-import FrameRequestedNavigationEvent = Protocol.Page.FrameRequestedNavigationEvent;
-import TargetInfo = Protocol.Target.TargetInfo;
-
-import type { IBrowserNetworkEvents } from "@ulixee/unblocked-specification/agent/browser/IBrowserNetworkEvents";
-import type { IConsoleEvents } from "@ulixee/unblocked-specification/agent/browser/IConsole";
-import { Console } from "./Console";
 
 export const DEFAULT_PAGE = "about:blank";
 export const ISOLATED_WORLD = "__agent_world__";
@@ -345,7 +334,7 @@ export default class FramesManager extends TypedEventEmitter<IFrameManagerEvents
 
 	public async onFrameTargetAttached(
 		devtoolsSession: DevtoolsSession,
-		target: TargetInfo,
+		target: Protocol.Target.TargetInfo,
 	): Promise<void> {
 		await this.isReady;
 
@@ -428,7 +417,7 @@ export default class FramesManager extends TypedEventEmitter<IFrameManagerEvents
 
 	private async onFrameNavigated(
 		devtoolsSession: DevtoolsSession,
-		navigatedEvent: FrameNavigatedEvent,
+		navigatedEvent: Protocol.Page.FrameNavigatedEvent,
 	): Promise<void> {
 		await this.isReady;
 		const startUrl = this.main?.url;
@@ -457,7 +446,7 @@ export default class FramesManager extends TypedEventEmitter<IFrameManagerEvents
 	}
 
 	private async onFrameStoppedLoading(
-		event: FrameStoppedLoadingEvent,
+		event: Protocol.Page.FrameStoppedLoadingEvent,
 	): Promise<void> {
 		await this.isReady;
 		const { frameId } = event;
@@ -466,7 +455,7 @@ export default class FramesManager extends TypedEventEmitter<IFrameManagerEvents
 	}
 
 	private async onFrameRequestedNavigation(
-		navigatedEvent: FrameRequestedNavigationEvent,
+		navigatedEvent: Protocol.Page.FrameRequestedNavigationEvent,
 	): Promise<void> {
 		await this.isReady;
 		const { frameId, url, reason, disposition } = navigatedEvent;
@@ -474,7 +463,7 @@ export default class FramesManager extends TypedEventEmitter<IFrameManagerEvents
 	}
 
 	private async onFrameNavigatedWithinDocument(
-		navigatedEvent: NavigatedWithinDocumentEvent,
+		navigatedEvent: Protocol.Page.NavigatedWithinDocumentEvent,
 	): Promise<void> {
 		await this.isReady;
 		const { frameId, url } = navigatedEvent;
@@ -483,7 +472,7 @@ export default class FramesManager extends TypedEventEmitter<IFrameManagerEvents
 
 	private async onFrameDetached(
 		devtoolsSession: DevtoolsSession,
-		frameDetachedEvent: FrameDetachedEvent,
+		frameDetachedEvent: Protocol.Page.FrameDetachedEvent,
 	): Promise<void> {
 		await this.isReady;
 		const { frameId, reason } = frameDetachedEvent;
@@ -505,7 +494,7 @@ export default class FramesManager extends TypedEventEmitter<IFrameManagerEvents
 
 	private async onFrameAttached(
 		devtoolsSession: DevtoolsSession,
-		frameAttachedEvent: FrameAttachedEvent,
+		frameAttachedEvent: Protocol.Page.FrameAttachedEvent,
 	): Promise<void> {
 		await this.isReady;
 		const { frameId, parentFrameId } = frameAttachedEvent;
@@ -528,7 +517,7 @@ export default class FramesManager extends TypedEventEmitter<IFrameManagerEvents
 
 	private async onLifecycleEvent(
 		devtoolsSession: DevtoolsSession,
-		event: LifecycleEventEvent,
+		event: Protocol.Page.LifecycleEventEvent,
 	): Promise<void> {
 		await this.isReady;
 		const { frameId, name, loaderId, timestamp } = event;
@@ -553,7 +542,7 @@ export default class FramesManager extends TypedEventEmitter<IFrameManagerEvents
 
 	private recurseFrameTree(
 		devtoolsSession: DevtoolsSession,
-		frameTree: FrameTree,
+		frameTree: Protocol.Page.FrameTree,
 	): void {
 		const { frame, childFrames } = frameTree;
 		if (devtoolsSession === this.devtoolsSession) {

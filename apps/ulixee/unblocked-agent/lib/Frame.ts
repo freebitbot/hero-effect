@@ -26,7 +26,7 @@ import type {
 	IElementInteractVerification,
 	IInteractionGroups,
 } from "@ulixee/unblocked-specification/agent/interact/IInteractions";
-import Protocol from "devtools-protocol";
+import type Protocol from "devtools-protocol";
 import ProtocolError from "../errors/ProtocolError";
 import type IWaitForOptions from "../interfaces/IWaitForOptions";
 import ConsoleMessage from "./ConsoleMessage";
@@ -41,9 +41,6 @@ import { JsPath } from "./JsPath";
 import MouseListener from "./MouseListener";
 import { NavigationLoader } from "./NavigationLoader";
 import type Page from "./Page";
-
-import PageFrame = Protocol.Page.Frame;
-import FrameNavigatedEvent = Protocol.Page.FrameNavigatedEvent;
 
 const ContextNotFoundCode = -32000;
 const InPageNavigationLoaderPrefix = "inpage";
@@ -140,7 +137,7 @@ export default class Frame
 	private readonly parentFrame: Frame | null;
 	private defaultLoaderId: string;
 	private startedLoaderId: string;
-	private internalFrame: PageFrame;
+	private internalFrame: Protocol.Page.Frame;
 	private closedWithError: Error;
 	private isClosing = false;
 	private defaultContextCreated: Resolvable<void>;
@@ -174,7 +171,7 @@ export default class Frame
 
 	constructor(
 		framesManager: FramesManager,
-		internalFrame: PageFrame,
+		internalFrame: Protocol.Page.Frame,
 		devtoolsSession: DevtoolsSession,
 		logger: IBoundLog,
 		checkIfAttached: () => boolean,
@@ -650,7 +647,7 @@ export default class Frame
 		this.emit("frame-requested-navigation", { frame: this, url, reason });
 	}
 
-	public onAttached(internalFrame: PageFrame): void {
+	public onAttached(internalFrame: Protocol.Page.Frame): void {
 		this.internalFrame = internalFrame;
 		this.updateUrl();
 		if (!internalFrame.loaderId) return;
@@ -674,8 +671,8 @@ export default class Frame
 	}
 
 	public onNavigated(
-		frame: PageFrame,
-		navigatedEvent: FrameNavigatedEvent,
+		frame: Protocol.Page.Frame,
+		navigatedEvent: Protocol.Page.FrameNavigatedEvent,
 	): void {
 		this.internalFrame = frame;
 		this.updateUrl();

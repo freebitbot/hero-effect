@@ -42,7 +42,7 @@ import {
 	InteractionCommand,
 } from "@ulixee/unblocked-specification/agent/interact/IInteractions";
 import type IResourceMeta from "@ulixee/unblocked-specification/agent/net/IResourceMeta";
-import Protocol from "devtools-protocol";
+import type Protocol from "devtools-protocol";
 import type IWaitForOptions from "../interfaces/IWaitForOptions";
 import type BrowserContext from "./BrowserContext";
 import type DevtoolsSession from "./DevtoolsSession";
@@ -54,12 +54,6 @@ import Mouse from "./Mouse";
 import NetworkManager from "./NetworkManager";
 import { Worker } from "./Worker";
 
-import FileChooserOpenedEvent = Protocol.Page.FileChooserOpenedEvent;
-import JavascriptDialogClosedEvent = Protocol.Page.JavascriptDialogClosedEvent;
-import JavascriptDialogOpeningEvent = Protocol.Page.JavascriptDialogOpeningEvent;
-import Viewport = Protocol.Page.Viewport;
-import WindowOpenEvent = Protocol.Page.WindowOpenEvent;
-import TargetInfo = Protocol.Target.TargetInfo;
 
 export interface IPageCreateOptions {
 	groupName?: string;
@@ -469,7 +463,7 @@ export default class Page
 			`Expected options.quality to be between 0 and 100 (inclusive), got ${quality}`,
 		);
 
-		let clip: Viewport = clipRect;
+		let clip: Protocol.Page.Viewport = clipRect;
 		if (clip) {
 			clip.x = Math.round(clip.x);
 			clip.y = Math.round(clip.y);
@@ -508,7 +502,7 @@ export default class Page
 
 	onWorkerAttached(
 		devtoolsSession: DevtoolsSession,
-		targetInfo: TargetInfo,
+		targetInfo: Protocol.Target.TargetInfo,
 	): Promise<Error | void> {
 		const targetId = targetInfo.targetId;
 
@@ -806,18 +800,18 @@ export default class Page
 		this.emit("crashed", { error: new Error("Target Crashed") });
 	}
 
-	private onWindowOpen(event: WindowOpenEvent): void {
+	private onWindowOpen(event: Protocol.Page.WindowOpenEvent): void {
 		this.windowOpenParams = event;
 	}
 
 	private onJavascriptDialogOpening(
-		dialog: JavascriptDialogOpeningEvent,
+		dialog: Protocol.Page.JavascriptDialogOpeningEvent,
 	): void {
 		this.activeDialog = dialog;
 		this.emit("dialog-opening", { dialog });
 	}
 
-	private onJavascriptDialogClosed(event: JavascriptDialogClosedEvent): void {
+	private onJavascriptDialogClosed(event: Protocol.Page.JavascriptDialogClosedEvent): void {
 		this.activeDialog = null;
 		this.emit("dialog-closed", {
 			wasConfirmed: event.result,
@@ -835,7 +829,7 @@ export default class Page
 			.catch(() => null);
 	}
 
-	private onFileChooserOpened(event: FileChooserOpenedEvent): void {
+	private onFileChooserOpened(event: Protocol.Page.FileChooserOpenedEvent): void {
 		const frame = this.framesManager.framesById.get(event.frameId);
 		frame
 			.trackBackendNodeAsNodePointer(event.backendNodeId)
