@@ -1,7 +1,7 @@
 import EventSubscriber from "@ulixee/commons/lib/EventSubscriber";
 import { TypedEventEmitter } from "@ulixee/commons/lib/eventUtils";
 import type Protocol from "devtools-protocol";
-import type BrowserContext from "./BrowserContext";
+import BrowserContext from "./BrowserContext";
 import type DevtoolsSession from "./DevtoolsSession";
 import Frame from "./Frame";
 

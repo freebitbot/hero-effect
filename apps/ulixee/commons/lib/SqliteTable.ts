@@ -1,15 +1,13 @@
 // eslint-disable-next-line import/no-unresolved
-import type {
-	Database as SqliteDatabase,
-	Statement,
-} from "@ulixee/bun-better-sqlite3";
+import type { Database } from "@ulixee/bun-better-sqlite3";
+import type BunStatement from "@ulixee/bun-better-sqlite3/src/statement";
 
 type SqliteTypes = "INTEGER" | "TEXT" | "BLOB" | "DATETIME";
 type IRecord = (string | number | Buffer | bigint)[];
 
 export default abstract class SqliteTable<T> {
-	protected readonly insertStatement: Statement;
-	protected readonly insertByKeyStatement: Statement;
+	protected readonly insertStatement: BunStatement;
+	protected readonly insertByKeyStatement: BunStatement;
 	protected defaultSortOrder?: string;
 	protected insertCallbackFn?: (records: T[]) => void;
 
@@ -20,7 +18,7 @@ export default abstract class SqliteTable<T> {
 	private lastSubscriptionPublishTime: number;
 
 	protected constructor(
-		readonly db: SqliteDatabase,
+		readonly db: Database,
 		readonly tableName: string,
 		readonly columns: [keyof T, SqliteTypes, string?][],
 		private insertOrReplace = false,

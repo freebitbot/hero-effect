@@ -107,6 +107,7 @@ export default class ChromeApp {
 
 		const envVar = process.env[this.executablePathEnvVar];
 		this.executablePath = envVar ?? Path.join(this.versionDir, relativePath);
+
 		if (overriddenFullVersion && !envVar) {
 			this.symlinkVersionDir = Path.join(
 				this.browsersDir,
