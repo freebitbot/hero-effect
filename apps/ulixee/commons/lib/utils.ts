@@ -113,18 +113,26 @@ export function getObjectFunctionProperties(object: any): Set<PropertyKey> {
 	return functionKeys;
 }
 
-const stoppingPoints = new Set([
-	EventEmitter.prototype,
-	Object.prototype,
-	Object,
-	Function.prototype,
-	TypedEventEmitter,
-]);
+let stoppingPoints: Set<any> | undefined;
+
+function getStoppingPoints(): Set<any> {
+	if (!stoppingPoints) {
+		stoppingPoints = new Set([
+			EventEmitter.prototype,
+			Object.prototype,
+			Object,
+			Function.prototype,
+			TypedEventEmitter,
+		]);
+	}
+	return stoppingPoints;
+}
 
 export function bindFunctions(self: any): void {
 	let proto = Object.getPrototypeOf(self);
 	const keys = new Set();
-	while (proto && !stoppingPoints.has(proto)) {
+	const stopPoints = getStoppingPoints();
+	while (proto && !stopPoints.has(proto)) {
 		for (const key of getObjectFunctionProperties(proto)) {
 			// ensure the last class to define the function is the one that gets bound
 			if (keys.has(key)) continue;
