@@ -5,7 +5,7 @@ import type IScriptInvocationMeta from "@ulixee/hero-interfaces/IScriptInvocatio
 import type ISessionCreateOptions from "@ulixee/hero-interfaces/ISessionCreateOptions";
 import type IViewport from "@ulixee/unblocked-specification/agent/browser/IViewport";
 import type IDeviceProfile from "@ulixee/unblocked-specification/plugin/IDeviceProfile";
-import type { Database as SqliteDatabase } from "better-sqlite3";
+import type { SqliteDatabase } from "../type";
 
 export default class SessionTable extends SqliteTable<ISessionRecord> {
 	private id: string;

@@ -1,7 +1,7 @@
 import SqliteTable from "@ulixee/commons/lib/SqliteTable";
 import TypeSerializer from "@ulixee/commons/lib/TypeSerializer";
 import type { IDomStorageEvents } from "@ulixee/unblocked-agent/lib/DomStorageTracker";
-import type { Database as SqliteDatabase } from "better-sqlite3";
+import type { SqliteDatabase } from "../type";
 
 export default class StorageChangesTable extends SqliteTable<IStorageChangesEntry> {
 	private changesByTabIdAndTime: {

@@ -6,7 +6,7 @@ import {
 	type NavigationStatus,
 } from "@ulixee/unblocked-specification/agent/browser/INavigation";
 import { LoadStatus } from "@ulixee/unblocked-specification/agent/browser/Location";
-import type { Database as SqliteDatabase } from "better-sqlite3";
+import type { SqliteDatabase } from "../type";
 
 export default class FrameNavigationsTable extends SqliteTable<IFrameNavigationRecord> {
 	public idCounter = 0;

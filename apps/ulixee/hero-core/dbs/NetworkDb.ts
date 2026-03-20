@@ -1,11 +1,10 @@
-import Database = require("better-sqlite3");
-
 import * as fs from "node:fs";
 import * as Path from "node:path";
 import type SqliteTable from "@ulixee/commons/lib/SqliteTable";
-import type { Database as SqliteDatabase, Transaction } from "better-sqlite3";
+import Database from "../../sqlite3/src/database";
 import env from "../env";
 import CertificatesTable from "../models/CertificatesTable";
+import type { SqliteDatabase, Transaction } from "../type";
 
 export default class NetworkDb {
 	public readonly certificates: CertificatesTable;

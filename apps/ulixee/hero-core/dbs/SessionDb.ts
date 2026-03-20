@@ -1,6 +1,5 @@
 import type SqliteTable from "@ulixee/commons/lib/SqliteTable";
-import type { Database as SqliteDatabase, Transaction } from "better-sqlite3";
-import * as Database from "better-sqlite3";
+import Database from "../../sqlite3/src/database";
 import env from "../env";
 import AwaitedEventsTable from "../models/AwaitedEventsTable";
 import CommandsTable from "../models/CommandsTable";
@@ -28,6 +27,7 @@ import SocketsTable from "../models/SocketsTable";
 import StorageChangesTable from "../models/StorageChangesTable";
 import TabsTable from "../models/TabsTable";
 import WebsocketMessagesTable from "../models/WebsocketMessagesTable";
+import type { SqliteDatabase, Transaction } from "../type";
 
 interface IDbOptions {
 	readonly?: boolean;

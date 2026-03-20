@@ -1,4 +1,5 @@
-import { Database as BunDatabase, type SQLQueryBindings } from "bun:sqlite";
+import type { Database as BunDatabase, SQLQueryBindings } from "bun:sqlite";
+
 import type {
 	ColumnDefinition,
 	SerializeOptions,
@@ -6,12 +7,7 @@ import type {
 	Transaction,
 } from "better-sqlite3";
 
-export {
-	type BunDatabase,
-	type ColumnDefinition,
-	type SerializeOptions,
-	type Transaction,
-};
+export type { BunDatabase, ColumnDefinition, SerializeOptions, Transaction };
 
 export interface VirtualTableOptions {
 	rows: (...params: unknown[]) => Generator;

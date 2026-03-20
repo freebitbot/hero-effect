@@ -3,7 +3,7 @@ import {
 	DomActionType,
 	type IDomChangeEvent,
 } from "@ulixee/hero-interfaces/IDomChangeEvent";
-import type { Database as SqliteDatabase } from "better-sqlite3";
+import type { SqliteDatabase } from "../type";
 
 export default class DomChangesTable extends SqliteTable<IDomChangeRecord> {
 	public countByTimestamp = new Map<number, number>();

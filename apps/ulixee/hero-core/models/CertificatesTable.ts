@@ -1,5 +1,5 @@
 import SqliteTable from "@ulixee/commons/lib/SqliteTable";
-import type { Database as SqliteDatabase, Statement } from "better-sqlite3";
+import type { SqliteDatabase, Statement } from "../type";
 
 export default class CertificatesTable extends SqliteTable<ICertificateRecord> {
 	private readonly getQuery: Statement;

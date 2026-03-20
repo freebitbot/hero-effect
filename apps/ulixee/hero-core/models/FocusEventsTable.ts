@@ -3,7 +3,7 @@ import type {
 	FocusEventType,
 	IFocusEvent,
 } from "@ulixee/hero-interfaces/IFocusEvent";
-import type { Database as SqliteDatabase } from "better-sqlite3";
+import type { SqliteDatabase } from "../type";
 
 export default class FocusEventsTable extends SqliteTable<IFocusRecord> {
 	constructor(db: SqliteDatabase) {

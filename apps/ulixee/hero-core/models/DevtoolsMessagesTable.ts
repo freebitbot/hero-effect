@@ -2,8 +2,8 @@
 
 import SqliteTable from "@ulixee/commons/lib/SqliteTable";
 import type DevtoolsSessionLogger from "@ulixee/unblocked-agent/lib/DevtoolsSessionLogger";
-import type { Database as SqliteDatabase } from "better-sqlite3";
 import InjectedScripts from "../lib/InjectedScripts";
+import type { SqliteDatabase } from "../type";
 
 export default class DevtoolsMessagesTable extends SqliteTable<IDevtoolsMessageRecord> {
 	private pageIds = new IdAssigner();

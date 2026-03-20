@@ -1,6 +1,6 @@
 import SqliteTable from "@ulixee/commons/lib/SqliteTable";
 import TypeSerializer from "@ulixee/commons/lib/TypeSerializer";
-import type { Database as SqliteDatabase } from "better-sqlite3";
+import type { SqliteDatabase } from "../type";
 
 export default class OutputTable extends SqliteTable<IOutputChangeRecord> {
 	constructor(db: SqliteDatabase) {

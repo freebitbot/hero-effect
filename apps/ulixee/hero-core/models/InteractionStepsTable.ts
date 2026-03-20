@@ -6,7 +6,7 @@ import {
 	type IKeyboardCommand,
 	isMousePositionXY,
 } from "@ulixee/unblocked-specification/agent/interact/IInteractions";
-import type { Database as SqliteDatabase } from "better-sqlite3";
+import type { SqliteDatabase } from "../type";
 
 export default class InteractionStepsTable extends SqliteTable<IInteractionStepRecord> {
 	constructor(db: SqliteDatabase) {
