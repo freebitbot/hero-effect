@@ -1,5 +1,5 @@
 import SqliteTable from "@ulixee/commons/lib/SqliteTable";
-import type { Database as SqliteDatabase } from "better-sqlite3";
+import type { SqliteDatabase } from "../type";
 
 export default class SocketsTable extends SqliteTable<ISocketRecord> {
 	constructor(db: SqliteDatabase) {

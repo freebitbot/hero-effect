@@ -1,7 +1,7 @@
 import SqliteTable from "@ulixee/commons/lib/SqliteTable";
 import type IDetachedElement from "@ulixee/hero-interfaces/IDetachedElement";
-import type { Database as SqliteDatabase } from "better-sqlite3";
 import { formatJsPath } from "../lib/CommandFormatter";
+import type { SqliteDatabase } from "../type";
 
 export default class DetachedElementsTable extends SqliteTable<
 	IDetachedElement & { id?: number }

@@ -3,6 +3,7 @@
 	"description": "The core browser API used to run Hero",
 	"dependencies": {
 		"@ulixee/awaited-dom": "1.4.2",
+		"@ulixee/bun-better-sqlite3": "workspace:*",
 		"@ulixee/commons": "workspace:*",
 		"@ulixee/default-browser-emulator": "workspace:*",
 		"@ulixee/default-human-emulator": "workspace:*",
@@ -13,13 +14,11 @@
 		"@ulixee/unblocked-agent": "workspace:*",
 		"@ulixee/unblocked-agent-mitm": "workspace:*",
 		"@ulixee/unblocked-specification": "workspace:*",
-		"better-sqlite3": "^11.1.2",
 		"moment": "^2.29.4",
 		"nanoid": "^3.3.11",
 		"ws": "^8.18.0"
 	},
 	"devDependencies": {
-		"@types/better-sqlite3": "^7.6.11",
 		"@ulixee/chrome-app": "1.0.3",
 		"@ulixee/hero": "workspace:*"
 	}

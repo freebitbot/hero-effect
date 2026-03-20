@@ -4,7 +4,7 @@ import type IResourceSummary from "@ulixee/hero-interfaces/IResourceSummary";
 import type IResourceProcessingDetails from "@ulixee/unblocked-agent/interfaces/IResourceProcessingDetails";
 import type IResourceMeta from "@ulixee/unblocked-specification/agent/net/IResourceMeta";
 import type IResourceType from "@ulixee/unblocked-specification/agent/net/IResourceType";
-import type { Database as SqliteDatabase } from "better-sqlite3";
+import type { SqliteDatabase } from "../type";
 
 export default class ResourcesTable extends SqliteTable<IResourcesRecord> {
 	constructor(db: SqliteDatabase) {
@@ -385,7 +385,7 @@ export default class ResourcesTable extends SqliteTable<IResourcesRecord> {
 			: "";
 		const records: Partial<IResourcesRecord>[] = this.db
 			.prepare(
-				`select frameId, requestUrl, responseUrl, statusCode, requestMethod, id, tabId, type, redirectedToUrl, responseHeaders 
+				`select frameId, requestUrl, responseUrl, statusCode, requestMethod, id, tabId, type, redirectedToUrl, responseHeaders
 from ${this.tableName}${whereClause}`,
 			)
 			.all();

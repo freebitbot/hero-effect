@@ -1,7 +1,7 @@
 import SqliteTable from "@ulixee/commons/lib/SqliteTable";
 import TypeSerializer from "@ulixee/commons/lib/TypeSerializer";
 import type IDataSnippet from "@ulixee/hero-interfaces/IDataSnippet";
-import type { Database as SqliteDatabase } from "better-sqlite3";
+import type { SqliteDatabase } from "../type";
 
 export default class SnippetsTable extends SqliteTable<IDataSnippet> {
 	constructor(db: SqliteDatabase) {
