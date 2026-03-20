@@ -81,3 +81,5 @@ devenv.local.nix
 # direnv
 .direnv
 /double-agent/collect/certs/server.key
+
+apps/browser-emulator-builder/data/*

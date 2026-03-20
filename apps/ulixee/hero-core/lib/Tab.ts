@@ -21,8 +21,6 @@ import type {
 } from "@ulixee/hero-interfaces/ITabOptions";
 import type IWaitForOptions from "@ulixee/hero-interfaces/IWaitForOptions";
 import type IWaitForResourceOptions from "@ulixee/hero-interfaces/IWaitForResourceOptions";
-import MirrorNetwork from "./MirrorNetwork";
-import MirrorPage from "./MirrorPage";
 import type { IJsPath } from "@ulixee/js-path";
 import type BrowserContext from "@ulixee/unblocked-agent/lib/BrowserContext";
 import type FrameNavigations from "@ulixee/unblocked-agent/lib/FrameNavigations";
@@ -57,6 +55,8 @@ import type { ICommandableTarget } from "./CommandRunner";
 import DomStateListener from "./DomStateListener";
 import FrameEnvironment from "./FrameEnvironment";
 import InjectedScripts from "./InjectedScripts";
+import MirrorNetwork from "./MirrorNetwork";
+import MirrorPage from "./MirrorPage";
 import type Session from "./Session";
 
 export default class Tab

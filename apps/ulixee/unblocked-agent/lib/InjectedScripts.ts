@@ -1,22 +1,21 @@
-import * as fs from "node:fs";
+import { resolve } from "node:path";
+import tsTransform from "@ulixee/commons/lib/BunTranspiler";
 import { stringifiedTypeSerializerClass } from "@ulixee/commons/lib/TypeSerializer";
 import type { TNewDocumentCallbackFn } from "@ulixee/unblocked-specification/agent/browser/IPage";
 import type DevtoolsSession from "./DevtoolsSession";
 import type FramesManager from "./FramesManager";
 
 const pageScripts = {
-	NodeTracker: fs.readFileSync(
-		`${__dirname}/../injected-scripts/NodeTracker.js`,
-		"utf8",
+	NodeTracker: tsTransform(
+		resolve(__dirname, `../injected-scripts/NodeTracker.ts`),
 	),
-	jsPath: fs.readFileSync(`${__dirname}/../injected-scripts/jsPath.js`, "utf8"),
-	MouseEvents: fs.readFileSync(
-		`${__dirname}/../injected-scripts/MouseEvents.js`,
-		"utf8",
+
+	jsPath: tsTransform(resolve(__dirname, `../injected-scripts/jsPath.ts`)),
+	MouseEvents: tsTransform(
+		resolve(__dirname, `../injected-scripts/MouseEvents.ts`),
 	),
-	PaintEvents: fs.readFileSync(
-		`${__dirname}/../injected-scripts/PaintEvents.js`,
-		"utf8",
+	PaintEvents: tsTransform(
+		resolve(__dirname, `../injected-scripts/PaintEvents.ts`),
 	),
 };
 
