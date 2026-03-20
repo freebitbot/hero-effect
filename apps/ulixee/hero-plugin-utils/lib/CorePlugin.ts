@@ -1,4 +1,3 @@
-import type { IBoundLog } from "@ulixee/commons/interfaces/ILog";
 import type ICorePlugin from "@ulixee/hero-interfaces/ICorePlugin";
 import {
 	CorePluginClassDecorator,
@@ -20,18 +19,18 @@ export default class CorePlugin implements ICorePlugin {
 
 	protected readonly browserEngine: IBrowserEngine;
 	protected readonly plugins: ICorePlugins;
-	protected readonly logger: IBoundLog;
+	// TODO: IBoundLog - protected readonly logger: IBoundLog;
 
 	constructor({
 		emulationProfile,
 		corePlugins,
-		logger,
+		// TODO: IBoundLog - logger,
 		sessionSummary,
 	}: ICorePluginCreateOptions) {
 		this.id = (this.constructor as ICorePluginClass).id;
 		this.browserEngine = emulationProfile.browserEngine;
 		this.plugins = corePlugins;
-		this.logger = logger;
+		// TODO: IBoundLog - this.logger = logger;
 		this.sessionSummary = sessionSummary ?? { id: undefined, options: {} };
 	}
 }

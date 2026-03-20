@@ -1,8 +1,6 @@
 import * as fs from "node:fs";
-import type { IBoundLog } from "@ulixee/commons/interfaces/ILog";
 import EventSubscriber from "@ulixee/commons/lib/EventSubscriber";
 import { TypedEventEmitter } from "@ulixee/commons/lib/eventUtils";
-import Log from "@ulixee/commons/lib/Logger";
 import Queue from "@ulixee/commons/lib/Queue";
 import Resolvable from "@ulixee/commons/lib/Resolvable";
 import type { IFrontendDomChangeEvent } from "@ulixee/hero-interfaces/IDomChangeEvent";
@@ -22,8 +20,6 @@ import InjectedScripts, { CorePageInjectedScript } from "./InjectedScripts";
 import type { Tab } from "./index";
 import type MirrorNetwork from "./MirrorNetwork";
 import type { ITabEventParams } from "./Tab";
-
-const { log } = Log(module);
 
 const installedScriptsSymbol = Symbol.for("MirrorPageScripts");
 
@@ -64,7 +60,6 @@ export default class MirrorPage extends TypedEventEmitter<{
 	private isLoadedDocumentDirty = false;
 	private subscribeToTab: Tab;
 	private loadQueue = new Queue(null, 1);
-	private logger: IBoundLog;
 	private loadedPaintIndex = -1;
 
 	private get useIsolatedContext(): boolean {
@@ -80,7 +75,6 @@ export default class MirrorPage extends TypedEventEmitter<{
 		super();
 		this.setDomRecording(domRecording);
 		this.onPageEvents = this.onPageEvents.bind(this);
-		this.logger = log.createChild(module);
 	}
 
 	public async attachToPage(
@@ -89,7 +83,6 @@ export default class MirrorPage extends TypedEventEmitter<{
 		setReady = true,
 	): Promise<void> {
 		this.page = page;
-		this.logger = log.createChild(module, { sessionId });
 		let readyResolvable: Resolvable<void>;
 		if (setReady) {
 			readyResolvable = new Resolvable<void>();
@@ -99,10 +92,10 @@ export default class MirrorPage extends TypedEventEmitter<{
 			this.events.once(page, "close", this.close.bind(this));
 			if (this.debugLogging) {
 				this.events.on(page, "console", (msg) => {
-					this.logger.info("MirrorPage.console", msg);
+					console.log("[MirrorPage.console]", msg);
 				});
 				this.events.on(page, "crashed", (msg) => {
-					this.logger.info("MirrorPage.crashed", msg);
+					console.log("[MirrorPage.crashed]", msg);
 				});
 			}
 
@@ -131,7 +124,7 @@ export default class MirrorPage extends TypedEventEmitter<{
 			}
 			await Promise.all(promises);
 		} catch (error) {
-			this.logger.error("ERROR creating mirror page", { error });
+			console.error("[MirrorPage.createError]", { error });
 			readyResolvable.reject(error);
 		} finally {
 			if (readyResolvable) readyResolvable.resolve();
@@ -147,7 +140,6 @@ export default class MirrorPage extends TypedEventEmitter<{
 		if (this.isReady) return await this.isReady;
 
 		this.sessionId = sessionId;
-		this.logger = log.createChild(module, { sessionId });
 		const ready = new Resolvable<void>();
 		this.isReady = ready.promise;
 		try {
@@ -255,7 +247,7 @@ export default class MirrorPage extends TypedEventEmitter<{
 				isLoadingDocument = true;
 
 				if (this.debugLogging) {
-					this.logger.info("MirrorPage.navigate", {
+					console.log("[MirrorPage.navigate]", {
 						newPaintIndex,
 						url: loadingDocument.url,
 					});
@@ -280,7 +272,7 @@ export default class MirrorPage extends TypedEventEmitter<{
 
 			if (newPaintIndex >= 0) {
 				if (this.debugLogging) {
-					this.logger.info("MirrorPage.loadPaintEvents", {
+					console.log("[MirrorPage.loadPaintEvents]", {
 						newPaintIndex,
 					});
 				}
@@ -394,9 +386,7 @@ export default class MirrorPage extends TypedEventEmitter<{
 					return frame;
 				}
 			} catch (error) {
-				this.logger.warn("Error matching frame nodeId to environment", {
-					error,
-				});
+				console.warn("[MirrorPage.matchFrameError]", { error });
 				// just keep looking?
 			}
 		}

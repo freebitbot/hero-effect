@@ -4,7 +4,6 @@ import * as Fs from "node:fs";
 import { arch } from "node:os";
 import * as readline from "node:readline";
 import { TypedEventEmitter } from "@ulixee/commons/lib/eventUtils";
-import Log from "@ulixee/commons/lib/Logger";
 import Resolvable from "@ulixee/commons/lib/Resolvable";
 import ShutdownHandler from "@ulixee/commons/lib/ShutdownHandler";
 import { bindFunctions } from "@ulixee/commons/lib/utils";
@@ -12,8 +11,6 @@ import type IBrowserEngine from "@ulixee/unblocked-specification/agent/browser/I
 import env from "../env";
 import { PipeTransport } from "./PipeTransport";
 import { WebsocketTransport } from "./WebsocketTransport";
-
-const { log } = Log(module);
 
 export default class BrowserProcess extends TypedEventEmitter<{ close: void }> {
 	public readonly transport: PipeTransport | WebsocketTransport;
@@ -63,11 +60,7 @@ export default class BrowserProcess extends TypedEventEmitter<{ close: void }> {
 
 	private launch(): ChildProcess {
 		const { name, executablePath, launchArguments } = this.browserEngine;
-		log.info(`${name}.LaunchProcess`, {
-			sessionId: null,
-			executablePath,
-			launchArguments,
-		});
+		console.log("[BrowserProcess]", { name, action: "LaunchProcess", executablePath, launchArguments });
 
 		let spawnFile = executablePath;
 		if (
@@ -143,7 +136,7 @@ export default class BrowserProcess extends TypedEventEmitter<{ close: void }> {
 		const name = this.browserEngine.name;
 
 		readline.createInterface({ input: stdout }).on("line", (line) => {
-			if (line) log.stats(`${name}.stdout`, { message: line, sessionId: null });
+			if (line) console.log("[BrowserProcess]", { name, source: "stdout", message: line });
 		});
 		readline.createInterface({ input: stderr }).on("line", (line) => {
 			if (!line) return;
@@ -160,7 +153,7 @@ export default class BrowserProcess extends TypedEventEmitter<{ close: void }> {
 			if (this.launchStderr.length > 100) {
 				this.launchStderr = this.launchStderr.slice(-100);
 			}
-			log.warn(`${name}.stderr`, { message: line, sessionId: null });
+			console.log("[BrowserProcess]", { name, source: "stderr", message: line });
 		});
 
 		this.launchedProcess.once("exit", this.onChildProcessExit);
@@ -223,11 +216,7 @@ export default class BrowserProcess extends TypedEventEmitter<{ close: void }> {
 			// drown
 		}
 
-		log.info(`${this.browserEngine.name}.ProcessExited`, {
-			exitCode,
-			signal,
-			sessionId: null,
-		});
+		console.log("[BrowserProcess]", { name: this.browserEngine.name, action: "ProcessExited", exitCode, signal });
 
 		this.emit("close");
 		this.removeAllListeners();

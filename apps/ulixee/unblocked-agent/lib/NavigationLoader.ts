@@ -1,4 +1,3 @@
-import type { IBoundLog } from "@ulixee/commons/interfaces/ILog";
 import Resolvable from "@ulixee/commons/lib/Resolvable";
 import type {
 	ILifecycleEvents,
@@ -15,11 +14,13 @@ export class NavigationLoader {
 	public url: string;
 
 	private afterStoppedLoadingTimeout: NodeJS.Timeout;
-	private logger: IBoundLog;
+	// @ts-expect-error IBoundLog deprecated
+	private logger;
 
 	constructor(
 		readonly id: string,
-		logger: IBoundLog,
+		// @ts-expect-error IBoundLog deprecated
+		logger,
 	) {
 		this.logger = logger.createChild(module, {
 			loaderId: this.id,

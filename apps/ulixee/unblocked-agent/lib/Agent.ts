@@ -1,7 +1,5 @@
-import type { IBoundLog } from "@ulixee/commons/interfaces/ILog";
 import EventSubscriber from "@ulixee/commons/lib/EventSubscriber";
 import { TypedEventEmitter } from "@ulixee/commons/lib/eventUtils";
-import Log from "@ulixee/commons/lib/Logger";
 import Resolvable from "@ulixee/commons/lib/Resolvable";
 import "@ulixee/commons/lib/SourceMapSupport";
 import { RequestSession } from "@ulixee/unblocked-agent-mitm";
@@ -23,8 +21,6 @@ import type Page from "./Page";
 import Plugins from "./Plugins";
 import Pool from "./Pool";
 
-const { log } = Log(module);
-
 export interface IAgentCreateOptions
 	extends Omit<IEmulationProfile, keyof IEmulationOptions> {
 	id?: string;
@@ -37,7 +33,6 @@ export default class Agent extends TypedEventEmitter<{ close: void }> {
 	public readonly id: string;
 	public browserContext: BrowserContext;
 	public readonly mitmRequestSession: RequestSession;
-	public readonly logger: IBoundLog;
 	public readonly plugins: Plugins;
 
 	public get emulationProfile(): IEmulationProfile {
@@ -88,24 +83,18 @@ export default class Agent extends TypedEventEmitter<{ close: void }> {
 			this.closeBrowserOnClose = true;
 		}
 
-		this.logger =
-			options.logger?.createChild(module) ??
-			log.createChild(module, {
-				sessionId: this.id,
-			});
-
 		this.plugins = new Plugins(options, options.plugins, options.pluginConfigs);
 		this.mitmRequestSession = new RequestSession(
 			this.id,
 			this.plugins,
-			this.logger,
+			undefined,
 			this.plugins.profile.upstreamProxyUrl,
 			this.plugins.profile.upstreamProxyUseLocalDns,
 		);
 		this.enableMitm =
 			!env.disableMitm && !this.plugins.profile.options.disableMitm;
 
-		this.logger.info("Agent created", {
+		console.log("[Agent]", {
 			id: this.id,
 			incognito: this.isIncognito,
 			hasHooks: !!this.plugins.hasHooks,
@@ -148,8 +137,9 @@ export default class Agent extends TypedEventEmitter<{ close: void }> {
 				}
 			}
 
-			this.logger.info("Agent Opening in Pool", {
+			console.log("[Agent]", {
 				id: this.id,
+				action: "Opening in Pool",
 				browserId: browser.id,
 				mitmEnabled: this.enableMitm,
 				usingIsolatedMitm: !!this.isolatedMitm,
@@ -182,24 +172,24 @@ export default class Agent extends TypedEventEmitter<{ close: void }> {
 	public async close(): Promise<void> {
 		if (this.isClosing) return this.isClosing;
 
-		const id = this.logger.info("Agent.Closing");
+		console.log("[Agent]", { action: "Closing", id: this.id });
 		this.isClosing = new Resolvable();
 		try {
 			await this.browserContext?.close();
 		} catch (error) {
-			this.logger.warn("Agent.CloseBrowserContextError", { error });
+			console.log("[Agent]", { action: "CloseBrowserContextError", id: this.id, error });
 		}
 
 		try {
 			this.mitmRequestSession.close();
 		} catch (error) {
-			this.logger.warn("Agent.CloseMitmRequestSessionError", { error });
+			console.log("[Agent]", { action: "CloseMitmRequestSessionError", id: this.id, error });
 		}
 
 		try {
 			this.isolatedMitm?.close();
 		} catch (error) {
-			this.logger.warn("Agent.CloseIsolatedError", { error });
+			console.log("[Agent]", { action: "CloseIsolatedError", id: this.id, error });
 		}
 
 		try {
@@ -208,9 +198,9 @@ export default class Agent extends TypedEventEmitter<{ close: void }> {
 			this.plugins.onClose();
 			this.cleanup();
 		} catch (error) {
-			this.logger.warn("Agent.CloseError", { parentLogId: id, error });
+			console.log("[Agent]", { action: "CloseError", id: this.id, error });
 		} finally {
-			this.logger.stats("Agent.Closed", { parentLogId: id });
+			console.log("[Agent]", { action: "Closed", id: this.id });
 			this.isClosing.resolve();
 		}
 		return this.isClosing;
@@ -220,7 +210,6 @@ export default class Agent extends TypedEventEmitter<{ close: void }> {
 		browser: Browser,
 	): Promise<BrowserContext> {
 		this.browserContext = await browser.newContext({
-			logger: this.logger,
 			proxy: this.proxyConnectionInfo,
 			hooks: this.plugins,
 			isIncognito: this.isIncognito,

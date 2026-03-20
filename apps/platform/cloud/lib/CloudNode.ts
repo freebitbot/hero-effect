@@ -1,5 +1,4 @@
 import UlixeeHostsConfig from "@ulixee/commons/config/hosts";
-import Log from "@ulixee/commons/lib/Logger";
 import Resolvable from "@ulixee/commons/lib/Resolvable";
 import ShutdownHandler from "@ulixee/commons/lib/ShutdownHandler";
 import { bindFunctions, isPortInUse } from "@ulixee/commons/lib/utils";
@@ -12,8 +11,6 @@ import CoreRouter from "./CoreRouter";
 import RoutableServer from "./RoutableServer";
 
 const isTestEnv = process.env.NODE_ENV === "test";
-
-const { log } = Log(module);
 
 export default class CloudNode {
 	public publicServer!: RoutableServer;
@@ -82,7 +79,6 @@ export default class CloudNode {
 
 	public async listen(): Promise<this> {
 		if (this.isStarting) return this.isStarting;
-		const startLogId = log.info("CloudNode.start");
 		this.isStarting = new Resolvable<this>();
 
 		try {
@@ -95,11 +91,10 @@ export default class CloudNode {
 			this.isReady.resolve();
 		} finally {
 			this.isStarting.resolve(this);
-			log.stats("CloudNode.started", {
+			console.log("[CloudNode]", {
+				action: "started",
 				publicHost: await this.publicServer.host,
 				cloudConfiguration: this.cloudConfiguration,
-				parentLogId: startLogId,
-				sessionId: null,
 			});
 		}
 		return this;
@@ -110,7 +105,7 @@ export default class CloudNode {
 			return this.isClosing;
 		}
 		const resolvable = new Resolvable<void>();
-		const logid = log.stats("CloudNode.Closing");
+		console.log("[CloudNode]", { action: "Closing" });
 		try {
 			this.isClosing = resolvable.promise;
 
@@ -128,12 +123,10 @@ export default class CloudNode {
 			await this.publicServer.close();
 			resolvable.resolve();
 		} catch (error: any) {
-			log.error("Error closing socket connections", {
-				error,
-			});
+			console.error("[CloudNode]", { action: "Error closing socket connections", error });
 			resolvable.reject(error);
 		} finally {
-			log.stats("CloudNode.Closed", { parentLogId: logid, sessionId: null });
+			console.log("[CloudNode]", { action: "Closed" });
 		}
 		return resolvable.promise;
 	}

@@ -1,6 +1,5 @@
 import EventSubscriber from "@ulixee/commons/lib/EventSubscriber";
 import { TypedEventEmitter } from "@ulixee/commons/lib/eventUtils";
-import Log from "@ulixee/commons/lib/Logger";
 import type IApiHandlers from "../interfaces/IApiHandlers";
 import type IConnectionToClient from "../interfaces/IConnectionToClient";
 import type { IConnectionToClientEvents } from "../interfaces/IConnectionToClient";
@@ -8,8 +7,6 @@ import type ICoreEventPayload from "../interfaces/ICoreEventPayload";
 import type ICoreRequestPayload from "../interfaces/ICoreRequestPayload";
 import type ICoreResponsePayload from "../interfaces/ICoreResponsePayload";
 import type ITransport from "../interfaces/ITransport";
-
-const { log } = Log(module);
 
 export default class ConnectionToClient<
 		IClientApiHandlers extends IApiHandlers,
@@ -82,7 +79,8 @@ export default class ConnectionToClient<
 			data = await handler(...args);
 		} catch (error) {
 			error.stack ??= error.message;
-			log.error(`Error running api`, {
+			console.error("[ConnectionToClient]", {
+				action: "Error running api",
 				error,
 				sessionId: args[0]?.heroSessionId,
 			});

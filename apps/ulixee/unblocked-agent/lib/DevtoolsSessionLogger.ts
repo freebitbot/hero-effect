@@ -1,4 +1,3 @@
-import type { IBoundLog } from "@ulixee/commons/interfaces/ILog";
 import EventSubscriber from "@ulixee/commons/lib/EventSubscriber";
 import { TypedEventEmitter } from "@ulixee/commons/lib/eventUtils";
 import type Protocol from "devtools-protocol";
@@ -43,7 +42,6 @@ export default class DevtoolsSessionLogger extends TypedEventEmitter<IDevtoolsLo
 		{ maxLength: number; path: string | string[] }[]
 	>;
 
-	private logger: IBoundLog;
 	private events = new EventSubscriber();
 	private fetchRequestIdToNetworkId = new Map<string, string>();
 	private devtoolsSessions = new WeakSet<DevtoolsSession>();
@@ -62,7 +60,6 @@ export default class DevtoolsSessionLogger extends TypedEventEmitter<IDevtoolsLo
 		this.truncateMessageResponses =
 			DevtoolsSessionLogger.defaultTruncateMessageResponses;
 		this.truncateParams = DevtoolsSessionLogger.defaultTruncateParams;
-		this.logger = browserContext.logger.createChild(module);
 		this.storeEventsWithoutListeners = true;
 	}
 
@@ -70,7 +67,7 @@ export default class DevtoolsSessionLogger extends TypedEventEmitter<IDevtoolsLo
 		this.events.close();
 		this.browserContextInitiatedMessageIds.clear();
 		this.sentMessagesById = {};
-		this.browserContext = null;
+		// Note: browserContext is not cleared as it's used in isOtherBrowserContextTarget
 	}
 
 	public subscribeToDevtoolsMessages(
@@ -265,17 +262,6 @@ export default class DevtoolsSessionLogger extends TypedEventEmitter<IDevtoolsLo
 			}
 		}
 		this.emit("devtools-message", event);
-
-		this.logger.stats(`${event.direction}:${event.method}`, {
-			pageId: event.pageTargetId,
-			frameId: event.frameId,
-			requestId: event.requestId,
-			messageId: event.id,
-			params: event.params,
-			result: event.result,
-			error: event.error,
-			devtoolsSessionId: event.sessionId,
-		});
 	}
 }
 

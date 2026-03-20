@@ -1,7 +1,6 @@
 import WebSocket = require("ws");
 
 import type { IncomingMessage, ServerResponse } from "node:http";
-import Logger from "@ulixee/commons/lib/Logger";
 import { toUrl } from "@ulixee/commons/lib/utils";
 import type ICoreConfigureOptions from "@ulixee/hero-interfaces/ICoreConfigureOptions";
 import type IConnectionToClient from "@ulixee/net/interfaces/IConnectionToClient";
@@ -10,8 +9,6 @@ import WsTransportToClient from "@ulixee/net/lib/WsTransportToClient";
 import type ICloudApiContext from "../interfaces/ICloudApiContext";
 import type CloudNode from "./CloudNode";
 import type { IHttpHandleFn } from "./RoutableServer";
-
-const { log } = Logger(module);
 
 export default class CoreRouter {
 	// @deprecated - use CloudNode.heroConfiguration
@@ -80,7 +77,6 @@ export default class CoreRouter {
 
 	private getApiContext(): ICloudApiContext {
 		return {
-			logger: log.createChild(module, {}),
 			cloudConfiguration: this.cloudNode.cloudConfiguration,
 			nodeAddress: this.nodeAddress,
 			version: this.cloudNode.version,

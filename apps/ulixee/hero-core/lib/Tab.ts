@@ -1,10 +1,8 @@
-import type { IBoundLog } from "@ulixee/commons/interfaces/ILog";
 import { CanceledPromiseError } from "@ulixee/commons/interfaces/IPendingWaitEvent";
 import type ISourceCodeLocation from "@ulixee/commons/interfaces/ISourceCodeLocation";
 import TimeoutError from "@ulixee/commons/interfaces/TimeoutError";
 import EventSubscriber from "@ulixee/commons/lib/EventSubscriber";
 import { TypedEventEmitter } from "@ulixee/commons/lib/eventUtils";
-import Log from "@ulixee/commons/lib/Logger";
 import Resolvable from "@ulixee/commons/lib/Resolvable";
 import Timer from "@ulixee/commons/lib/Timer";
 import { createPromise } from "@ulixee/commons/lib/utils";
@@ -61,8 +59,6 @@ import FrameEnvironment from "./FrameEnvironment";
 import InjectedScripts from "./InjectedScripts";
 import type Session from "./Session";
 
-const { log } = Log(module);
-
 export default class Tab
 	extends TypedEventEmitter<ITabEventParams>
 	implements ISessionMeta, ICommandableTarget, IRemoteEventListener
@@ -83,7 +79,6 @@ export default class Tab
 	public isReady: Promise<void>;
 	public readonly mirrorPage: MirrorPage;
 
-	protected readonly logger: IBoundLog;
 	private readonly mirrorNetwork: MirrorNetwork;
 
 	private detachedElementsPendingHTML = new Set<Resolvable<IDetachedElement>>();
@@ -143,16 +138,6 @@ export default class Tab
 		this.page = page;
 		this.parentTabId = parentTabId;
 		this.createdAtCommandId = session.commands.lastId;
-		this.logger = log.createChild(module, {
-			tabId: this.id,
-			sessionId: session.id,
-		});
-		this.setEventsToLog(this.logger, [
-			"child-tab-created",
-			"close",
-			"dialog",
-			"websocket-message",
-		]);
 
 		for (const frame of page.frames) {
 			const frameEnvironment = new FrameEnvironment(this, frame);
@@ -352,7 +337,7 @@ export default class Tab
 	public async close(): Promise<void> {
 		if (this.isClosing) return;
 		this.isClosing = true;
-		const parentLogId = this.logger.stats("Tab.Closing");
+		console.log("[Tab.Closing]");
 		const errors: Error[] = [];
 
 		await this.pendingCollects();
@@ -420,7 +405,7 @@ export default class Tab
 		this.frameEnvironmentsById.clear();
 		this.frameEnvironmentsByDevtoolsId.clear();
 
-		this.logger.stats("Tab.Closed", { parentLogId, errors });
+		console.log("[Tab.Closed]", { errors });
 	}
 
 	public async setOrigin(origin: string): Promise<void> {
@@ -676,7 +661,7 @@ export default class Tab
 			.then(() => this.getElementHtml(detachedElement))
 			.then(resolvable.resolve)
 			.catch((error) => {
-				this.logger.warn("DetachedElement.collectHTML:Error", {
+				console.warn("[Tab.DetachedElement.collectHTML:Error]", {
 					error,
 					id: detachedElement.id,
 				});
@@ -716,7 +701,7 @@ export default class Tab
 				asset: detachedElement,
 			});
 		} catch (error) {
-			this.logger.warn("Tab.getElementHtml: ERROR", {
+			console.warn("[Tab.getElementHtml: ERROR]", {
 				Element: detachedElement,
 				error,
 			});
@@ -1101,7 +1086,7 @@ export default class Tab
 		if (event.name === InjectedScripts.PageEventsCallbackName) {
 			const { frameId, payload } = event;
 			if (!frameId || !this.frameEnvironmentsById.has(frameId)) {
-				log.warn("DomRecorder.bindingCalledBeforeExecutionTracked", {
+				console.warn("[Tab.DomRecorder.bindingCalledBeforeExecutionTracked]", {
 					sessionId: this.sessionId,
 					payload,
 				});
@@ -1202,7 +1187,7 @@ export default class Tab
 
 	private onPageError(event: IPageEvents["page-error"]): void {
 		const { error, frameId } = event;
-		this.logger.info("Window.pageError", { error, frameId });
+		console.log("[Tab.Window.pageError]", { error, frameId });
 		this.session.db.pageLogs.insert(
 			this.id,
 			frameId,
@@ -1215,11 +1200,11 @@ export default class Tab
 	private onConsole(event: IPageEvents["console"]): void {
 		const { frameId, type, message, location } = event;
 
-		let level = "info";
 		if (message.startsWith("ERROR:") && message.includes(injectedSourceUrl)) {
-			level = "error";
+			console.error("[Tab.Window.console]", { message });
+		} else {
+			console.log("[Tab.Window.console]", { message });
 		}
-		this.logger[level]("Window.console", { message });
 		this.session.db.pageLogs.insert(
 			this.id,
 			frameId,
@@ -1233,8 +1218,11 @@ export default class Tab
 	private onTargetCrashed(event: IPageEvents["crashed"]): void {
 		const error = event.error;
 
-		const errorLevel = event.fatal ? "error" : "info";
-		this.logger[errorLevel]("BrowserEngine.Tab.crashed", { error });
+		if (event.fatal) {
+			console.error("[Tab.BrowserEngine.Tab.crashed]", { error });
+		} else {
+			console.log("[Tab.BrowserEngine.Tab.crashed]", { error });
+		}
 		this.session.db.pageLogs.insert(
 			this.id,
 			this.mainFrameId,
@@ -1270,7 +1258,7 @@ export default class Tab
 		openParams?: { url: string; windowName: string },
 	): Tab {
 		const tab = new Tab(session, page, parentTabId);
-		tab.logger.info("Tab.created", {
+		console.log("[Tab.created]", {
 			parentTabId,
 			openParams,
 		});

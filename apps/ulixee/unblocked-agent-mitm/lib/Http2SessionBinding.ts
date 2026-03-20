@@ -1,19 +1,14 @@
 import type { Http2Session } from "node:http2";
-import type { IBoundLog } from "@ulixee/commons/interfaces/ILog";
 import type { IEventSubscriber } from "@ulixee/commons/interfaces/IRegisteredEventListener";
 import { bindFunctions } from "@ulixee/commons/lib/utils";
 
 export default class Http2SessionBinding {
-	private logger: IBoundLog;
-
 	constructor(
 		readonly clientSession: Http2Session,
 		readonly serverSession: Http2Session,
 		readonly events: IEventSubscriber,
-		logger: IBoundLog,
-		logData: any,
+		_logData: any,
 	) {
-		this.logger = logger.createChild(module, logData);
 		bindFunctions(this);
 		this.bind();
 	}
@@ -29,29 +24,19 @@ export default class Http2SessionBinding {
 		this.events.on(serverSession, "goaway", this.onServerGoaway);
 
 		this.events.on(serverSession, "remoteSettings", (remoteSettings) => {
-			this.logger.stats("Http2Client.remoteSettings", {
-				remoteSettings,
-			});
+			console.log("[Http2Client.remoteSettings]", { remoteSettings });
 		});
 
 		this.events.on(serverSession, "frameError", (frameType, errorCode) => {
-			this.logger.warn("Http2Client.frameError", {
-				frameType,
-				errorCode,
-			});
+			console.warn("[Http2Client.frameError]", { frameType, errorCode });
 		});
 
 		this.events.on(serverSession, "altsvc", (alt, altOrigin) => {
-			this.logger.stats("Http2.altsvc", {
-				altOrigin,
-				alt,
-			});
+			console.log("[Http2.altsvc]", { altOrigin, alt });
 		});
 
 		this.events.on(serverSession, "origin", (origins) => {
-			this.logger.stats("Http2.origin", {
-				origins,
-			});
+			console.log("[Http2.origin]", { origins });
 		});
 	}
 
@@ -61,15 +46,13 @@ export default class Http2SessionBinding {
 	}
 
 	private onServerClose(): void {
-		this.logger.info("Http2Client.close");
+		console.info("[Http2Client.close]");
 		if (!this.clientSession || this.clientSession.destroyed) return;
 		this.clientSession.close();
 	}
 
 	private onServerError(error: Error): void {
-		this.logger.warn("Http2Client.error", {
-			error,
-		});
+		console.warn("[Http2Client.error]", { error });
 		if (!this.clientSession || this.clientSession.destroyed) return;
 		this.clientSession.destroy(error);
 	}
@@ -79,7 +62,7 @@ export default class Http2SessionBinding {
 		lastStreamID?: number,
 		opaqueData?: NodeJS.ArrayBufferView,
 	): void {
-		this.logger.stats("Http2.goaway", {
+		console.log("[Http2.goaway]", {
 			code,
 			lastStreamID,
 			opaqueData: opaqueData

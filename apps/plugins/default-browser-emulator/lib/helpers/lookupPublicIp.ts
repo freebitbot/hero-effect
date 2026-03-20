@@ -3,7 +3,6 @@ import * as http from "node:http";
 import * as http2 from "node:http2";
 import * as https from "node:https";
 import * as url from "node:url";
-import Logger from "@ulixee/commons/lib/Logger";
 import ShutdownHandler from "@ulixee/commons/lib/ShutdownHandler";
 import MitmSocket from "@ulixee/unblocked-agent-mitm-socket";
 import MitmSocketSession from "@ulixee/unblocked-agent-mitm-socket/lib/MitmSocketSession";
@@ -12,8 +11,6 @@ import type IHttpSocketWrapper from "@ulixee/unblocked-specification/agent/net/I
 
 let sharedSession: MitmSocketSession;
 let cachedMachineIp: string;
-
-const { log } = Logger(module);
 
 export default async function lookupPublicIp(
 	ipLookupServiceUrl: string = IpLookupServices.ipify,
@@ -50,14 +47,13 @@ export default async function lookupPublicIp(
 	// create a temp agent if not using a MITM
 	if (proxyUrl && !agent) {
 		if (!sharedSession) {
-			sharedSession = new MitmSocketSession(log, {
+			sharedSession = new MitmSocketSession({
 				rejectUnauthorized: false,
 			});
 			ShutdownHandler.register(() => sharedSession.close());
 		}
 		socketWrapper = new MitmSocket(
 			`session${ipLookupServiceUrl}`,
-			log,
 			socketOptions,
 		);
 	}

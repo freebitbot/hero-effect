@@ -1,7 +1,5 @@
-import type { IBoundLog } from "@ulixee/commons/interfaces/ILog";
 import EventSubscriber from "@ulixee/commons/lib/EventSubscriber";
 import { TypedEventEmitter } from "@ulixee/commons/lib/eventUtils";
-import Log from "@ulixee/commons/lib/Logger";
 import { bindFunctions } from "@ulixee/commons/lib/utils";
 import type IDomStateAssertionBatch from "@ulixee/hero-interfaces/IDomStateAssertionBatch";
 import type IDomStateListenArgs from "@ulixee/hero-interfaces/IDomStateListenArgs";
@@ -10,8 +8,6 @@ import type { IJsPath } from "@ulixee/js-path";
 import { createHash } from "crypto";
 import CommandRunner from "./CommandRunner";
 import type Tab from "./Tab";
-
-const { log } = Log(module);
 
 export interface IDomStateEvents {
 	resolved: { didMatch: boolean; error?: Error };
@@ -59,7 +55,6 @@ export default class DomStateListener extends TypedEventEmitter<IDomStateEvents>
 	private runAgainTime = 0;
 	private watchedFrameIds = new Set<number>();
 	private events = new EventSubscriber();
-	private readonly logger: IBoundLog;
 
 	constructor(
 		public readonly jsPathId: string,
@@ -76,10 +71,6 @@ export default class DomStateListener extends TypedEventEmitter<IDomStateEvents>
 		this.id = key.join("-");
 		this.name = options.name;
 		this.url = options.url;
-
-		this.logger = log.createChild(module, {
-			sessionId: tab.sessionId,
-		});
 
 		const commands = tab.session.commands;
 		// make sure to clear out any meta
@@ -162,7 +153,7 @@ export default class DomStateListener extends TypedEventEmitter<IDomStateEvents>
 			failCounts.dom +
 			failCounts.storage;
 		const validAssertions = totalAssertions - failedCount;
-		this.logger.stats("BatchAssert results", {
+		console.log("[DomStateListener.BatchAssert results]", {
 			batchId,
 			validAssertions,
 			minValidAssertions,
@@ -218,7 +209,7 @@ export default class DomStateListener extends TypedEventEmitter<IDomStateEvents>
 			}
 		}
 
-		this.logger.stats("Loading BatchAssert", {
+		console.log("[DomStateListener.BatchAssert]", {
 			batchId,
 			minValidAssertions: batch.minValidAssertions,
 			domAssertionCount,

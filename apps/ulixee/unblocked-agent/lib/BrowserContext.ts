@@ -1,9 +1,7 @@
 import { URL } from "node:url";
-import type { IBoundLog } from "@ulixee/commons/interfaces/ILog";
 import { CanceledPromiseError } from "@ulixee/commons/interfaces/IPendingWaitEvent";
 import EventSubscriber from "@ulixee/commons/lib/EventSubscriber";
 import { TypedEventEmitter } from "@ulixee/commons/lib/eventUtils";
-import Log from "@ulixee/commons/lib/Logger";
 import Resolvable from "@ulixee/commons/lib/Resolvable";
 import { assert } from "@ulixee/commons/lib/utils";
 import type IBrowserContext from "@ulixee/unblocked-specification/agent/browser/IBrowserContext";
@@ -28,10 +26,8 @@ import Resources from "./Resources";
 import WebsocketMessages from "./WebsocketMessages";
 import type { Worker } from "./Worker";
 
-const { log } = Log(module);
-
 export interface IBrowserContextCreateOptions {
-	logger?: IBoundLog;
+	logger?: any;
 	proxy?: IProxyConnectionOptions;
 	hooks?: IBrowserContextHooks & IInteractHooks;
 	isIncognito?: boolean;
@@ -43,7 +39,7 @@ export default class BrowserContext
 	extends TypedEventEmitter<IBrowserContextEvents>
 	implements IBrowserContext
 {
-	public logger: IBoundLog;
+	public logger: any;
 	public lastOpenedPage: Page;
 
 	public resources: Resources;
@@ -94,13 +90,13 @@ export default class BrowserContext
 		this.browser = browser;
 		this.proxy = options?.proxy;
 		this.isIncognito = isIncognito;
-		this.logger = options?.logger ?? log;
+		this.logger = options?.logger;
 		this.hooks = options?.hooks ?? {};
 		this.secretKey = options?.secretKey;
 		this.commandMarker =
 			options?.commandMarker ?? new DefaultCommandMarker(this);
 		this.resources = new Resources(this);
-		this.websocketMessages = new WebsocketMessages(this.logger);
+		this.websocketMessages = new WebsocketMessages();
 		this.devtoolsSessionLogger = new DevtoolsSessionLogger(this);
 
 		this.devtoolsSessionLogger.subscribeToDevtoolsMessages(
@@ -129,9 +125,6 @@ export default class BrowserContext
 			this,
 		);
 		this.id = browserContextId;
-		this.logger = this.logger.createChild(module, {
-			browserContextId,
-		});
 	}
 
 	async newPage(options?: IPageCreateOptions): Promise<Page> {
@@ -345,7 +338,7 @@ export default class BrowserContext
 		const resolvable = new Resolvable<void>();
 		this.isClosing = resolvable.promise;
 		try {
-			const logId = this.logger.info("BrowserContext.Closing");
+			console.log("[BrowserContext]", { action: "Closing", id: this.id });
 			for (const waitingPage of this.waitForPageAttachedById.values()) {
 				waitingPage.reject(
 					new CanceledPromiseError("BrowserContext shutting down"),
@@ -380,7 +373,7 @@ export default class BrowserContext
 			this.devtoolsSessionLogger.close();
 			this.removeAllListeners();
 			this.cleanup();
-			this.logger.stats("BrowserContext.Closed", { parentLogId: logId });
+			console.log("[BrowserContext]", { action: "Closed", id: this.id });
 		} finally {
 			resolvable.resolve();
 		}
@@ -489,7 +482,7 @@ export default class BrowserContext
 	}
 
 	private cleanup(): void {
-		this.devtoolsSessionLogger = null;
+		this.devtoolsSessionLogger = null as any;
 		this.workersById.clear();
 		this.pagesById.clear();
 		this.pagesByTabId.clear();

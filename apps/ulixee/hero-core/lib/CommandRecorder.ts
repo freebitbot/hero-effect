@@ -1,16 +1,12 @@
-import type { IBoundLog } from "@ulixee/commons/interfaces/ILog";
-import Log from "@ulixee/commons/lib/Logger";
 import type { ICommandableTarget } from "./CommandRunner";
 import type Session from "./Session";
 import Tab from "./Tab";
 
-const { log } = Log(module);
 type AsyncFunc = (...args: any[]) => Promise<any>;
 
 export default class CommandRecorder {
 	public readonly fnNames = new Set<string>();
 	private readonly fnMap = new Map<string, AsyncFunc>();
-	private logger: IBoundLog;
 	private isClosed = false;
 
 	constructor(
@@ -27,11 +23,6 @@ export default class CommandRecorder {
 			owner[fn.name] = this.runCommandFn.bind(this, fn.name);
 			this.fnNames.add(fn.name);
 		}
-		this.logger = log.createChild(module, {
-			tabId,
-			sessionId: session.id,
-			frameId,
-		});
 	}
 
 	public cleanup(): void {
@@ -86,7 +77,7 @@ export default class CommandRecorder {
 		commands.willRunCommand(commandMeta);
 		tab?.willRunCommand(commandMeta);
 
-		const id = this.logger.info("Command.run", commandMeta);
+		console.log("[Command.run]", commandMeta);
 
 		let result: T;
 		try {
@@ -101,10 +92,9 @@ export default class CommandRecorder {
 			const mainFrame =
 				frame ?? (tab ?? session.getLastActiveTab())?.mainFrameEnvironment;
 			commands.onFinished(commandMeta, result, mainFrame?.navigations?.top?.id);
-			this.logger.stats("Command.done", {
+			console.log("[Command.done]", {
 				id: commandMeta.id,
 				result,
-				parentLogId: id,
 			});
 		}
 	}

@@ -1,5 +1,4 @@
 import addGlobalInstance from "@ulixee/commons/lib/addGlobalInstance";
-import Log from "@ulixee/commons/lib/Logger";
 import type ICoreCommandRequestPayload from "@ulixee/hero-interfaces/ICoreCommandRequestPayload";
 import type ICoreConfigureOptions from "@ulixee/hero-interfaces/ICoreConfigureOptions";
 import type ICoreListenerPayload from "@ulixee/hero-interfaces/ICoreListenerPayload";
@@ -15,8 +14,6 @@ import CoreCommandQueue from "../lib/CoreCommandQueue";
 import type CoreSession from "../lib/CoreSession";
 import CoreSessions from "../lib/CoreSessions";
 import DisconnectedFromCoreError from "./DisconnectedFromCoreError";
-
-const { log } = Log(module);
 
 export default class ConnectionToHeroCore extends ConnectionToCore<any, {}> {
 	public readonly commandQueue: CoreCommandQueue;
@@ -100,7 +97,7 @@ export default class ConnectionToHeroCore extends ConnectionToCore<any, {}> {
 				(!this.options.maxConcurrency ||
 					maxConcurrency < this.options.maxConcurrency)
 			) {
-				log.info("Overriding max concurrency with Core value", {
+				console.log("[ConnectionToHeroCore]", {
 					maxConcurrency,
 					sessionId: null,
 				});

@@ -1,4 +1,3 @@
-import type { IBoundLog } from "@ulixee/commons/interfaces/ILog";
 import type IBrowserEngine from "../agent/browser/IBrowserEngine";
 import type IBrowserUserConfig from "../agent/browser/IBrowserUserConfig";
 import type IViewport from "../agent/browser/IViewport";
@@ -7,7 +6,7 @@ import type IGeolocation from "./IGeolocation";
 import type IUserAgentOption from "./IUserAgentOption";
 
 export default interface IEmulationProfile<T = any> {
-	logger?: IBoundLog;
+	// TODO: IBoundLog - logger?: IBoundLog;
 	userAgentOption?: IUserAgentOption;
 	windowNavigatorPlatform?: string;
 	deviceProfile?: IDeviceProfile;

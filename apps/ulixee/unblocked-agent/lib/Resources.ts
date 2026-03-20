@@ -1,4 +1,3 @@
-import type { IBoundLog } from "@ulixee/commons/interfaces/ILog";
 import { CanceledPromiseError } from "@ulixee/commons/interfaces/IPendingWaitEvent";
 import EventSubscriber from "@ulixee/commons/lib/EventSubscriber";
 import { TypedEventEmitter } from "@ulixee/commons/lib/eventUtils";
@@ -39,7 +38,8 @@ export default class Resources
 
 	public readonly resourcesById = new Map<number, IResourceMeta>();
 	public readonly cookiesByDomain = new Map<string, Record<string, ICookie>>();
-	protected logger: IBoundLog;
+	// @ts-expect-error IBoundLog deprecated
+	protected logger;
 
 	private navigationConnectTimeoutMs: number;
 	private readonly browserRequestIdToTabId = new Map<string, number>();

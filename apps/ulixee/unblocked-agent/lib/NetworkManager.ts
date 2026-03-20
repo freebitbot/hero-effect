@@ -1,5 +1,4 @@
 import { URL } from "node:url";
-import type { IBoundLog } from "@ulixee/commons/interfaces/ILog";
 import { CanceledPromiseError } from "@ulixee/commons/interfaces/IPendingWaitEvent";
 import EventSubscriber from "@ulixee/commons/lib/EventSubscriber";
 import { TypedEventEmitter } from "@ulixee/commons/lib/eventUtils";
@@ -23,7 +22,8 @@ interface IResourcePublishing {
 const MEGABYTE = 1024 * 1024;
 
 export default class NetworkManager extends TypedEventEmitter<IBrowserNetworkEvents> {
-	protected readonly logger: IBoundLog;
+	// @ts-expect-error IBoundLog deprecated
+	protected readonly logger;
 	private readonly devtools: DevtoolsSession;
 	private readonly attemptedAuthentications = new Set<string>();
 	private readonly redirectsById = new Map<string, IBrowserResourceRequest[]>();
@@ -52,7 +52,8 @@ export default class NetworkManager extends TypedEventEmitter<IBrowserNetworkEve
 
 	constructor(
 		devtoolsSession: DevtoolsSession,
-		logger: IBoundLog,
+		// @ts-expect-error IBoundLog deprecated
+		logger,
 		proxyConnectionOptions?: IProxyConnectionOptions,
 		public secretKey?: string,
 	) {

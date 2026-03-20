@@ -1,8 +1,6 @@
-import type { IBoundLog } from "@ulixee/commons/interfaces/ILog";
 import type IResolvablePromise from "@ulixee/commons/interfaces/IResolvablePromise";
 import EventSubscriber from "@ulixee/commons/lib/EventSubscriber";
 import { TypedEventEmitter } from "@ulixee/commons/lib/eventUtils";
-import Log from "@ulixee/commons/lib/Logger";
 import Resolvable from "@ulixee/commons/lib/Resolvable";
 import { bindFunctions } from "@ulixee/commons/lib/utils";
 import type { Session, Tab } from "@ulixee/hero-core";
@@ -11,15 +9,12 @@ import type { IFrameNavigationEvents } from "@ulixee/unblocked-specification/age
 import { ContentPaint } from "@ulixee/unblocked-specification/agent/browser/INavigation";
 import { LoadStatus } from "@ulixee/unblocked-specification/agent/browser/Location";
 
-const { log } = Log(module);
-
 export default class TimelineWatch extends TypedEventEmitter<{
 	updated: void;
 }> {
 	private closeTimer: IResolvablePromise;
 	private readonly events = new EventSubscriber();
 	private extendTimelineUntilTimestamp: number;
-	private logger: IBoundLog;
 
 	constructor(
 		readonly heroSession: Session,
@@ -30,7 +25,6 @@ export default class TimelineWatch extends TypedEventEmitter<{
 	) {
 		super();
 		bindFunctions(this);
-		this.logger = log.createChild(module, { sessionId: heroSession.id });
 
 		this.events.on(heroSession, "tab-created", this.onTabCreated);
 		this.events.on(heroSession, "will-close", this.onHeroSessionWillClose);
@@ -65,13 +59,10 @@ export default class TimelineWatch extends TypedEventEmitter<{
 			const promises: Promise<any>[] = [];
 			for (const tab of this.heroSession.tabsById.values()) {
 				if (!tab.navigations.hasLoadStatus(status)) {
-					this.logger.info(
-						"Delaying session close until page has load status.",
-						{
-							status,
-							tabId: tab.id,
-						},
-					);
+					console.log("[TimelineWatch]", {
+						status,
+						tabId: tab.id,
+					});
 					promises.push(
 						tab.navigationsObserver
 							.waitForLoad(status)
@@ -90,9 +81,9 @@ export default class TimelineWatch extends TypedEventEmitter<{
 			: 0;
 		let delayPromise: Promise<void>;
 		if (delay > 0) {
-			this.logger.info(
-				`Delaying session close for ${delay}ms after last command.`,
-			);
+			console.log("[TimelineWatch]", {
+				delay,
+			});
 			delayPromise = new Promise<void>((resolve) => setTimeout(resolve, delay));
 		}
 		if (loadPromise || delayPromise) {

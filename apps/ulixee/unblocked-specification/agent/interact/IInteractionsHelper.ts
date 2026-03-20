@@ -1,4 +1,3 @@
-import type { IBoundLog } from "@ulixee/commons/interfaces/ILog";
 import type { IJsPath, INodePointer, INodeVisibility } from "@ulixee/js-path";
 import type IPoint from "../browser/IPoint";
 import type IRect from "../browser/IRect";
@@ -9,7 +8,7 @@ export default interface IInteractionsHelper {
 	mousePosition: IPoint;
 	scrollOffset: Promise<IPoint>;
 	viewportSize: IViewportSize;
-	logger: IBoundLog;
+	// TODO: IBoundLog - logger: IBoundLog;
 	doesBrowserAnimateScrolling: boolean;
 
 	createMousedownTrigger(nodeId: number): Promise<{

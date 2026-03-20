@@ -1,5 +1,3 @@
-import type { IBoundLog } from "@ulixee/commons/interfaces/ILog";
-import Log from "@ulixee/commons/lib/Logger";
 import type IBrowser from "@ulixee/unblocked-specification/agent/browser/IBrowser";
 import type IBrowserEngine from "@ulixee/unblocked-specification/agent/browser/IBrowserEngine";
 import type IBrowserUserConfig from "@ulixee/unblocked-specification/agent/browser/IBrowserUserConfig";
@@ -60,8 +58,6 @@ const userAgentOptions = new UserAgentOptions(dataLoader, browserEngineOptions);
 
 export const defaultBrowserEngine = browserEngineOptions.default;
 
-const { log } = Log(module);
-
 export interface IEmulatorOptions {
 	userAgentSelector?: string;
 }
@@ -85,7 +81,6 @@ export default class DefaultBrowserEmulator<T = IEmulatorOptions>
 	public static id = name;
 	// Should the system attempt to manipulate tcp settings to match the emulated OS. NOTE that this can affect tcp performance.
 	public static enableTcpEmulation = false;
-	public readonly logger: IBoundLog;
 	public readonly emulationProfile: IEmulationProfile<T>;
 	public readonly config: IBrowserEmulatorConfig;
 
@@ -121,7 +116,6 @@ export default class DefaultBrowserEmulator<T = IEmulatorOptions>
 		config?: IBrowserEmulatorConfig,
 	) {
 		this.config = config ?? defaultConfig;
-		this.logger = emulationProfile.logger ?? log.createChild(module);
 		this.emulationProfile = emulationProfile;
 		this.data = dataLoader.as(emulationProfile.userAgentOption) as any;
 		this.userAgentData = this.getUserAgentData();
@@ -194,15 +188,12 @@ export default class DefaultBrowserEmulator<T = IEmulatorOptions>
 				profile.upstreamProxyUrl,
 			);
 			if (upstreamProxyIpMask.proxyIp === upstreamProxyIpMask.publicIp) {
-				this.logger.error(
-					"upstreamProxyIpMask Lookup showing same IP for Proxy and Machine IP. Please check these settings.",
-					{
-						...upstreamProxyIpMask,
-					},
-				);
+				console.error("[DefaultBrowserEmulator]", "upstreamProxyIpMask Lookup showing same IP for Proxy and Machine IP. Please check these settings.", {
+					...upstreamProxyIpMask,
+				});
 				return;
 			}
-			this.logger.info("PublicIp Lookup", {
+			console.log("[DefaultBrowserEmulator]", "PublicIp Lookup", {
 				...upstreamProxyIpMask,
 			});
 			this.domOverridesBuilder.add(InjectedScript.WEBRTC, {
@@ -327,10 +318,9 @@ export default class DefaultBrowserEmulator<T = IEmulatorOptions>
 			emulationProfile.userAgentOption &&
 			!userAgentOptions.hasDataSupport(emulationProfile.userAgentOption)
 		) {
-			emulationProfile.logger?.info(
-				"DefaultBrowserEmulator doesn't have data file for the provided userAgentOption",
-				{ userAgentOption: emulationProfile.userAgentOption },
-			);
+			console.log("[DefaultBrowserEmulator]", "doesn't have data file for the provided userAgentOption", {
+				userAgentOption: emulationProfile.userAgentOption,
+			});
 			return false;
 		}
 
@@ -345,12 +335,9 @@ export default class DefaultBrowserEmulator<T = IEmulatorOptions>
 				emulationProfile.userAgentOption = userAgentOption;
 			} catch (e) {
 				if (emulationProfile.customEmulatorConfig?.userAgentSelector) {
-					emulationProfile.logger?.error(
-						"Failed to instantiate a default browser engine.",
-						{
-							error: e,
-						},
-					);
+					console.error("[DefaultBrowserEmulator]", "Failed to instantiate a default browser engine.", {
+						error: e,
+					});
 				}
 				return false;
 			}
@@ -362,13 +349,10 @@ export default class DefaultBrowserEmulator<T = IEmulatorOptions>
 						emulationProfile.userAgentOption,
 					);
 			} catch (e) {
-				emulationProfile.logger?.error(
-					"Failed to get a browser engine for the configured userAgentOption",
-					{
-						error: e,
-						userAgentOption: emulationProfile.userAgentOption,
-					},
-				);
+				console.error("[DefaultBrowserEmulator]", "Failed to get a browser engine for the configured userAgentOption", {
+					error: e,
+					userAgentOption: emulationProfile.userAgentOption,
+				});
 				return false;
 			}
 		}

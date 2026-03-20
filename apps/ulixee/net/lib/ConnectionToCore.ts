@@ -2,7 +2,6 @@ import { CanceledPromiseError } from "@ulixee/commons/interfaces/IPendingWaitEve
 import type IResolvablePromise from "@ulixee/commons/interfaces/IResolvablePromise";
 import EventSubscriber from "@ulixee/commons/lib/EventSubscriber";
 import { TypedEventEmitter } from "@ulixee/commons/lib/eventUtils";
-import Log from "@ulixee/commons/lib/Logger";
 import Resolvable from "@ulixee/commons/lib/Resolvable";
 import SessionClosedOrMissingError from "@ulixee/commons/lib/SessionClosedOrMissingError";
 import { bindFunctions } from "@ulixee/commons/lib/utils";
@@ -15,8 +14,6 @@ import type ICoreResponsePayload from "../interfaces/ICoreResponsePayload";
 import type ITransport from "../interfaces/ITransport";
 import type IUnixTime from "../interfaces/IUnixTime";
 import PendingMessages from "./PendingMessages";
-
-const { log } = Log(module);
 
 export interface IConnectionToCoreEvents<IEventSpec> {
 	disconnected: Error | null;
@@ -116,10 +113,7 @@ export default class ConnectionToCore<
 		this.disconnectAction = disconnectAction;
 
 		try {
-			const logid = log.stats("ConnectionToCore.Disconnecting", {
-				host: this.transport.host,
-				sessionId: null,
-			});
+			console.log("[ConnectionToCore]", { action: "Disconnecting", host: this.transport.host });
 			this.pendingMessages.cancel(new DisconnectedError(this.transport.host));
 
 			await this.beforeDisconnectHook();
@@ -127,11 +121,7 @@ export default class ConnectionToCore<
 			this.transport.disconnect?.();
 			await this.onConnectionTerminated();
 			this.connectAction = null;
-			log.stats("ConnectionToCore.Disconnected", {
-				parentLogId: logid,
-				host: this.transport.host,
-				sessionId: null,
-			});
+			console.log("[ConnectionToCore]", { action: "Disconnected", host: this.transport.host });
 		} finally {
 			disconnectAction.resolvable.resolve();
 		}
@@ -288,10 +278,7 @@ export default class ConnectionToCore<
 			disconnectAction.isCallingHook = true;
 			await this.hooks.beforeDisconnectFn?.(disconnectAction);
 		} catch (err) {
-			log.error("Error in beforeDisconnect hook", {
-				sessionId: null,
-				error: err,
-			});
+			console.error("[ConnectionToCore]", { action: "beforeDisconnectHook error", error: err });
 		} finally {
 			disconnectAction.isCallingHook = false;
 		}

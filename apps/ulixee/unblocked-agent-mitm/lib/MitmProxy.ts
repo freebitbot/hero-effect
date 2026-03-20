@@ -6,7 +6,6 @@ import type { Socket } from "node:net";
 import * as net from "node:net";
 import { CanceledPromiseError } from "@ulixee/commons/interfaces/IPendingWaitEvent";
 import EventSubscriber from "@ulixee/commons/lib/EventSubscriber";
-import Log from "@ulixee/commons/lib/Logger";
 import { createPromise } from "@ulixee/commons/lib/utils";
 import CertificateGenerator, {
 	type ICertificateStore,
@@ -18,7 +17,6 @@ import RequestSession from "../handlers/RequestSession";
 import type ICertificateGenerator from "../interfaces/ICertificateGenerator";
 import type IMitmProxyOptions from "../interfaces/IMitmProxyOptions";
 
-const { log } = Log(module);
 const emptyResponse = `<html lang="en"><body></body></html>`;
 
 /**
@@ -123,7 +121,7 @@ export default class MitmProxy {
 		if (this.isClosing) return;
 		this.isClosing = true;
 
-		const startLogId = log.info("MitmProxy.Closing", {
+		console.info("[MitmProxy.Closing]", {
 			sessionId: this.isolatedProxyForSessionId,
 		});
 		const errors: Error[] = [];
@@ -169,9 +167,8 @@ export default class MitmProxy {
 		}
 		this.events.close("error");
 
-		log.stats("MitmProxy.Closed", {
+		console.info("[MitmProxy.Closed]", {
 			sessionId: this.isolatedProxyForSessionId,
-			parentLogId: startLogId,
 			closeErrors: errors,
 		});
 	}
@@ -244,7 +241,7 @@ export default class MitmProxy {
 		if (requestSession?.isClosing) return;
 
 		if (!requestSession) {
-			log.warn("MitmProxy.RequestWithoutSession", {
+			console.warn("[MitmProxy.RequestWithoutSession]", {
 				sessionId,
 				isSSL,
 				host:
@@ -271,7 +268,7 @@ export default class MitmProxy {
 			});
 		} catch (error) {
 			// this can only happen during processing of request
-			log.warn("MitmProxy.ErrorProcessingRequest", {
+			console.warn("[MitmProxy.ErrorProcessingRequest]", {
 				sessionId,
 				isSSL,
 				error,
@@ -308,7 +305,7 @@ export default class MitmProxy {
 		if (requestSession?.isClosing) return;
 
 		if (!requestSession) {
-			log.warn("MitmProxy.UpgradeRequestWithoutSession", {
+			console.warn("[MitmProxy.UpgradeRequestWithoutSession]", {
 				sessionId,
 				isSSL,
 				host: clientToProxyRequest.headers.host,
@@ -466,7 +463,7 @@ export default class MitmProxy {
 			if (error instanceof CanceledPromiseError) {
 				return false;
 			}
-			log.warn("Connect.AlpnLookupError", {
+			console.warn("[Connect.AlpnLookupError]", {
 				hostname,
 				error,
 				sessionId,
@@ -478,11 +475,17 @@ export default class MitmProxy {
 	/////// ERROR HANDLING ///////////////////////////////////////////////////////
 
 	private onGenericHttpError(isHttp2: boolean, error: Error): void {
-		const logLevel = this.isClosing ? "stats" : "error";
-		log[logLevel](`Mitm.Http${isHttp2 ? "2" : ""}ServerError`, {
-			sessionId: this.isolatedProxyForSessionId,
-			error,
-		});
+		if (this.isClosing) {
+			console.info(`[Mitm.Http${isHttp2 ? "2" : ""}ServerError]`, {
+				sessionId: this.isolatedProxyForSessionId,
+				error,
+			});
+		} else {
+			console.error(`[Mitm.Http${isHttp2 ? "2" : ""}ServerError]`, {
+				sessionId: this.isolatedProxyForSessionId,
+				error,
+			});
+		}
 	}
 
 	private tryCloseConnectSocket(socket: net.Socket): void {
@@ -501,7 +504,7 @@ export default class MitmProxy {
 			return;
 		}
 		const kind = isHttp2 ? "Http2.SessionError" : "Http.ClientError";
-		log.error(`Mitm.${kind}`, {
+		console.error(`[Mitm.${kind}]`, {
 			sessionId: this.isolatedProxyForSessionId,
 			error,
 			socketAddress: socket.address(),
@@ -521,18 +524,18 @@ export default class MitmProxy {
 	): void {
 		const errorCodes = [(error as any).errno, (error as any).code];
 		if (errorCodes.includes("ECONNRESET")) {
-			log.info(`Got ECONNRESET on Proxy Connect, ignoring.`, {
+			console.info(`[Got ECONNRESET on Proxy Connect, ignoring.]`, {
 				sessionId: this.isolatedProxyForSessionId,
 				hostname,
 			});
 		} else if (errorCodes.includes("ECONNABORTED")) {
-			log.info(`Got ECONNABORTED on Proxy Connect, ignoring.`, {
+			console.info(`[Got ECONNABORTED on Proxy Connect, ignoring.]`, {
 				sessionId: this.isolatedProxyForSessionId,
 				hostname,
 			});
 		} else if (errorCodes.includes("ERR_STREAM_UNSHIFT_AFTER_END_EVENT")) {
-			log.info(
-				`Got ERR_STREAM_UNSHIFT_AFTER_END_EVENT on Proxy Connect, ignoring.`,
+			console.info(
+				`[Got ERR_STREAM_UNSHIFT_AFTER_END_EVENT on Proxy Connect, ignoring.]`,
 				{
 					sessionId: this.isolatedProxyForSessionId,
 					hostname,
@@ -540,20 +543,29 @@ export default class MitmProxy {
 				},
 			);
 		} else if (errorCodes.includes("EPIPE")) {
-			log.info(`Got EPIPE on Proxy Connect, ignoring.`, {
+			console.info(`[Got EPIPE on Proxy Connect, ignoring.]`, {
 				sessionId: this.isolatedProxyForSessionId,
 				hostname,
 				errorKind,
 			});
 		} else {
-			const logLevel = this.isClosing ? "stats" : "error";
-			log[logLevel]("MitmConnectError", {
-				sessionId: this.isolatedProxyForSessionId,
-				errorKind,
-				error,
-				errorCodes,
-				hostname,
-			});
+			if (this.isClosing) {
+				console.info("[MitmConnectError]", {
+					sessionId: this.isolatedProxyForSessionId,
+					errorKind,
+					error,
+					errorCodes,
+					hostname,
+				});
+			} else {
+				console.error("[MitmConnectError]", {
+					sessionId: this.isolatedProxyForSessionId,
+					errorKind,
+					error,
+					errorCodes,
+					hostname,
+				});
+			}
 		}
 	}
 

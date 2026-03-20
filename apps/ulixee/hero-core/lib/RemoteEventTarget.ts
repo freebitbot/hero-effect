@@ -1,11 +1,8 @@
-import Logger from "@ulixee/commons/lib/Logger";
 import type ICoreListenerPayload from "@ulixee/hero-interfaces/ICoreListenerPayload";
 import type ISessionMeta from "@ulixee/hero-interfaces/ISessionMeta";
 import type { IJsPath } from "@ulixee/js-path";
 import type { IRemoteEventListener } from "../interfaces/IRemoteEventListener";
 import type Session from "./Session";
-
-const { log } = Logger(module);
 
 export default class RemoteEventTarget {
 	private listeners = new Set<string>();
@@ -56,7 +53,7 @@ export default class RemoteEventTarget {
 				this.session.commands.getRemoteEventListener(listenerId)?.type !==
 				"close"
 			) {
-				log.stats("Canceling event broadcast. Session is closing", {
+				console.log("[RemoteEventTarget] Canceling event broadcast. Session is closing", {
 					sessionId: this.session.id,
 					listenerId,
 					meta: this.meta,

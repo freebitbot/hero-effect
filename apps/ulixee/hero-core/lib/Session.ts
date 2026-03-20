@@ -1,14 +1,10 @@
 import * as Path from "node:path";
-import type { IBoundLog } from "@ulixee/commons/interfaces/ILog";
 import Callsite from "@ulixee/commons/lib/Callsite";
 import EventSubscriber from "@ulixee/commons/lib/EventSubscriber";
 import { TypedEventEmitter } from "@ulixee/commons/lib/eventUtils";
-import Log, {
-	type ILogEntry,
-	LogEvents,
-	loggerSessionIdNames,
-} from "@ulixee/commons/lib/Logger";
-import type { IEmulatorOptions } from "@ulixee/default-browser-emulator";
+import Resolvable from "@ulixee/commons/lib/Resolvable";
+import Timer from "@ulixee/commons/lib/Timer";
+import { createPromise } from "@ulixee/commons/lib/utils";
 import type { ISessionSummary } from "@ulixee/hero-interfaces/ICorePlugin";
 import type IDataSnippet from "@ulixee/hero-interfaces/IDataSnippet";
 import type IDetachedElement from "@ulixee/hero-interfaces/IDetachedElement";
@@ -53,8 +49,6 @@ import Tab from "./Tab";
 import UserProfile from "./UserProfile";
 
 const { version } = require("../package.json");
-
-const { log } = Log(module);
 
 export default class Session
 	extends TypedEventEmitter<{
@@ -138,12 +132,10 @@ export default class Session
 
 	public agent: Agent;
 
-	protected readonly logger: IBoundLog;
 	protected hasLoadedUserProfile = false;
 	protected commandRecorder: CommandRecorder;
 	protected _isClosing = false;
 	protected isResettingState = false;
-	protected readonly logSubscriptionId: number;
 	protected events = new EventSubscriber();
 
 	private get sessionRegistry(): ISessionRegistry {
@@ -181,10 +173,6 @@ export default class Session
 		this.db = this.sessionRegistry.create(this.id, customPath);
 		this.commands = new Commands(this.db);
 
-		this.logger = log.createChild(module, { sessionId: this.id });
-		loggerSessionIdNames.set(this.id, options.sessionName);
-		this.logSubscriptionId = LogEvents.subscribe(this.recordLog.bind(this));
-
 		this.activateAgent(options);
 	}
 
@@ -220,7 +208,7 @@ export default class Session
 	}
 
 	public flush(): Promise<void> {
-		this.logger.info("SessionFlushing");
+		console.log("[Session.flush]");
 		return Promise.resolve();
 	}
 
@@ -476,7 +464,7 @@ export default class Session
 			}
 			await Promise.allSettled(promises);
 		} catch (error) {
-			this.logger.warn("Session.CloseTabsError", { error });
+			console.warn("[Session.CloseTabsError]", { error });
 		}
 	}
 
@@ -500,21 +488,19 @@ export default class Session
 
 		this.awaitedEventEmitter.emit("close");
 		this.emit("closing");
-		const start = this.logger.info("Session.Closing");
+		console.log("[Session.Closing]");
 
 		await this.closeTabs().catch(() => null);
 		await this.agent?.close()?.catch(() => null);
 
-		this.logger.stats("Session.Closed", {
-			parentLogId: start,
-		});
+		console.log("[Session.Closed]");
 
 		const closedEvent = { waitForPromise: null };
 		try {
 			this.emit("closed", closedEvent);
 			await closedEvent.waitForPromise;
 		} catch (error) {
-			this.logger.warn("Session.closeError", { error });
+			console.warn("[Session.closeError]", { error });
 		}
 
 		this.events.close();
@@ -526,7 +512,7 @@ export default class Session
 			this.db.session.close(Date.now());
 			this.db.flush();
 		} catch (error) {
-			this.logger.warn("Session.closeDbSessionError", { error });
+			console.warn("[Session.closeDbSessionError]", { error });
 		}
 
 		// NOTE: need to get sessionRegistry before cleaning up!
@@ -547,8 +533,6 @@ export default class Session
 		const databasePath = this.db.path;
 		Session.events.emit("closed", { id: this.id, databasePath });
 		delete Session.byId[this.id];
-		LogEvents.unsubscribe(this.logSubscriptionId);
-		loggerSessionIdNames.delete(this.id);
 	}
 
 	public addRemoteEventListener(
@@ -637,7 +621,6 @@ export default class Session
 		this.agent = this.core.pool.createAgent({
 			options,
 			customEmulatorConfig,
-			logger: this.logger,
 			deviceProfile: userProfile?.deviceProfile,
 			id: this.id,
 			commandMarker: this.commands,
@@ -869,15 +852,6 @@ export default class Session
 		return tab;
 	}
 
-	private recordLog(entry: ILogEntry): void {
-		if (entry.sessionId === this.id || !entry.sessionId) {
-			if (entry.action === "Window.runCommand")
-				entry.data = { id: entry.data.id };
-			if (entry.action === "Window.ranCommand") entry.data = null;
-			this.db.sessionLogs.insert(entry);
-		}
-	}
-
 	private recordTab(tab: Tab, parentTabId?: number): void {
 		this.db.tabs.insert(
 			tab.id,
@@ -1030,7 +1004,7 @@ ${data}`,
 					await session.resume(options);
 					tab = session.getLastActiveTab();
 					isSessionResume = true;
-					session.logger.info("Continuing session", { options });
+					console.log("[Session.continuing]", { options });
 				}
 			}
 			if (!session) {
@@ -1060,7 +1034,7 @@ ${data}`,
 				const resumed = Session.get(resumeSessionId);
 				// Bind the new session close to the original one if it's still open
 				if (resumed) {
-					resumed.logger.info("Session resumed from start.", { options });
+					console.log("[Session.resumedFromStart]", { options });
 					resumed.events.once(resumed, "closed", () =>
 						Session.get(newId)?.close(true),
 					);

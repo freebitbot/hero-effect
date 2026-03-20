@@ -2,7 +2,6 @@ import * as os from "node:os";
 import * as Path from "node:path";
 import { CanceledPromiseError } from "@ulixee/commons/interfaces/IPendingWaitEvent";
 import { TypedEventEmitter } from "@ulixee/commons/lib/eventUtils";
-import Log from "@ulixee/commons/lib/Logger";
 import Resolvable from "@ulixee/commons/lib/Resolvable";
 import type IBrowser from "@ulixee/unblocked-specification/agent/browser/IBrowser";
 import type { IBrowserEvents } from "@ulixee/unblocked-specification/agent/browser/IBrowser";
@@ -28,8 +27,6 @@ import DevtoolsPreferences from "./DevtoolsPreferences";
 import type DevtoolsSession from "./DevtoolsSession";
 import type Page from "./Page";
 import type { IPageCreateOptions } from "./Page";
-
-const { log } = Log(module);
 
 const instanceId = nanoid(5);
 
@@ -134,11 +131,7 @@ export default class Browser
 			return this;
 		}
 
-		const parentLogId = log.info("Browser.Launching", {
-			sessionId: null,
-			name: this.engine.name,
-			fullVersion: this.engine.fullVersion,
-		});
+		console.log("[Browser]", { action: "Launching", name: this.engine.name, fullVersion: this.engine.fullVersion });
 
 		try {
 			this.isLaunchStarted = true;
@@ -167,13 +160,7 @@ export default class Browser
 			this.process.once("close", () => this.emit("close"));
 
 			this.launchPromise.resolve();
-			log.stats("Browser.Launched", {
-				...this.version,
-				executablePath: this.engine.executablePath,
-				desiredFullVersion: this.engine.fullVersion,
-				sessionId: null,
-				parentLogId,
-			});
+			console.log("[Browser]", { action: "Launched", ...this.version, executablePath: this.engine.executablePath, desiredFullVersion: this.engine.fullVersion });
 
 			if (this.engine.isHeaded)
 				this.preferencesInterceptor = new DevtoolsPreferences(this.engine);
@@ -205,12 +192,7 @@ export default class Browser
 			);
 
 			this.launchPromise.reject(launchError);
-			log.stats("Browser.LaunchError", {
-				launchError,
-				parentLogId,
-				chromeStderr: this.process.launchStderr.join("\n"),
-				sessionId: null,
-			});
+			console.log("[Browser]", { action: "LaunchError", launchError, chromeStderr: this.process.launchStderr.join("\n") });
 			setImmediate(() => this.emit("close"));
 		} finally {
 			await this.launchPromise.promise;
@@ -295,7 +277,7 @@ export default class Browser
 		if (!this.isLaunchStarted) return;
 		if (this.isShuttingDown) return this.isShuttingDown;
 
-		const parentLogId = log.stats("Browser.Closing");
+		console.log("[Browser]", { action: "Closing", id: this.id });
 
 		try {
 			// if we started to get ready, clear out now
@@ -322,15 +304,11 @@ export default class Browser
 
 			return await this.isShuttingDown;
 		} catch (error) {
-			log.error("Browser.Closing:Error", {
-				parentLogId,
-				sessionId: null,
-				error,
-			});
+			console.log("[Browser]", { action: "Closing:Error", id: this.id, error });
 		} finally {
 			this.emit("close");
 			this.removeAllListeners();
-			log.stats("Browser.Closed", { parentLogId, sessionId: null });
+			console.log("[Browser]", { action: "Closed", id: this.id });
 		}
 	}
 
@@ -478,7 +456,7 @@ export default class Browser
 				!this.connectOnlyToPageTargets[targetInfo.targetId])
 		) {
 			if (this.debugLog) {
-				log.stats("Not connecting to target", { event, sessionId: null });
+				console.log("[Browser]", { action: "Not connecting to target", event });
 			}
 
 			if (event.waitingForDebugger) {
@@ -500,7 +478,7 @@ export default class Browser
 			return;
 		}
 		if (this.debugLog) {
-			log.stats("onAttachedToTarget", { event, sessionId: null });
+			console.log("[Browser]", { action: "onAttachedToTarget", event });
 		}
 		if (
 			this.connectOnlyToPageTargets &&
@@ -508,10 +486,7 @@ export default class Browser
 			!this.browserContextsById.has(targetInfo.browserContextId)
 		) {
 			if (this.debugLog) {
-				log.stats("Creating BrowserContext for connectOnlyToPageTargets.", {
-					browserContextId: targetInfo.browserContextId,
-					sessionId: null,
-				});
+				console.log("[Browser]", { action: "Creating BrowserContext for connectOnlyToPageTargets", browserContextId: targetInfo.browserContextId });
 			}
 			const context = new BrowserContext(this, false);
 			context.hooks = this.browserContextCreationHooks ?? {};
@@ -600,7 +575,7 @@ export default class Browser
 	): Promise<void> {
 		const { targetInfo } = event;
 		if (this.debugLog) {
-			log.stats("onTargetCreated", { targetInfo, sessionId: null });
+			console.log("[Browser]", { action: "onTargetCreated", targetInfo });
 		}
 		this.browserContextsById
 			.get(targetInfo.browserContextId)
@@ -615,7 +590,7 @@ export default class Browser
 	private onTargetDestroyed(event: Protocol.Target.TargetDestroyedEvent): void {
 		const { targetId } = event;
 		if (this.debugLog) {
-			log.stats("onTargetDestroyed", { targetId, sessionId: null });
+			console.log("[Browser]", { action: "onTargetDestroyed", targetId });
 		}
 		for (const context of this.browserContextsById.values()) {
 			context.targetDestroyed(targetId);

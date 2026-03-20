@@ -1,6 +1,5 @@
 import addGlobalInstance from "@ulixee/commons/lib/addGlobalInstance";
 import { TypedEventEmitter } from "@ulixee/commons/lib/eventUtils";
-import { loggerSessionIdNames } from "@ulixee/commons/lib/Logger";
 import type IDataSnippet from "@ulixee/hero-interfaces/IDataSnippet";
 import type IDetachedElement from "@ulixee/hero-interfaces/IDetachedElement";
 import type IDetachedResource from "@ulixee/hero-interfaces/IDetachedResource";
@@ -73,7 +72,6 @@ export default class CoreSession
 			sessionId,
 		};
 		this.connectionToCore = connectionToCore;
-		loggerSessionIdNames.set(sessionId, sessionName);
 		this.commandQueue = new CoreCommandQueue(
 			{ sessionId, sessionName },
 			connectionToCore,
@@ -224,7 +222,6 @@ export default class CoreSession
 			}
 		} finally {
 			this.emit("close");
-			loggerSessionIdNames.delete(this.sessionId);
 		}
 	}
 

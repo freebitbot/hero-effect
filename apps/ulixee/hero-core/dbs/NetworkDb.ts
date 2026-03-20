@@ -2,13 +2,10 @@ import Database = require("better-sqlite3");
 
 import * as fs from "node:fs";
 import * as Path from "node:path";
-import Log from "@ulixee/commons/lib/Logger";
 import type SqliteTable from "@ulixee/commons/lib/SqliteTable";
 import type { Database as SqliteDatabase, Transaction } from "better-sqlite3";
 import env from "../env";
 import CertificatesTable from "../models/CertificatesTable";
-
-const { log } = Log(module);
 
 export default class NetworkDb {
 	public readonly certificates: CertificatesTable;
@@ -44,8 +41,7 @@ export default class NetworkDb {
 						clearInterval(this.saveInterval);
 						this.db = null;
 					}
-					log.error("NetworkDb.flushError", {
-						sessionId: null,
+					console.error("[NetworkDb] flushError", {
 						error,
 						table: table.tableName,
 					});

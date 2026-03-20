@@ -1,4 +1,3 @@
-import Log from "@ulixee/commons/lib/Logger";
 import Resolvable from "@ulixee/commons/lib/Resolvable";
 import type ICoreCommandRequestPayload from "@ulixee/hero-interfaces/ICoreCommandRequestPayload";
 import type ISessionMeta from "@ulixee/hero-interfaces/ISessionMeta";
@@ -7,8 +6,6 @@ import DisconnectedError from "@ulixee/net/errors/DisconnectedError";
 import type ConnectionToHeroCore from "../connections/ConnectionToHeroCore";
 import type ICommandCounter from "../interfaces/ICommandCounter";
 import type CallsiteLocator from "./CallsiteLocator";
-
-const { log } = Log(module);
 
 type IListenerFn = (...args: any[]) => void;
 type IInterceptorFn = (...args: any[]) => any;
@@ -112,7 +109,7 @@ export default class CoreEventHeap {
 			})
 			.catch((error) => {
 				if (error instanceof DisconnectedError) return;
-				log.warn("removeEventListener Error: ", {
+				console.log("[CoreEventHeap]", {
 					error,
 					sessionId: this.meta?.sessionId,
 				});
@@ -137,7 +134,7 @@ export default class CoreEventHeap {
 				return null;
 			})
 			.catch((error) => {
-				log.error("incomingEvent Error: ", {
+				console.log("[CoreEventHeap]", {
 					error,
 					sessionId: this.meta?.sessionId,
 				});

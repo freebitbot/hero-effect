@@ -1,8 +1,6 @@
 import type { ClientHttp2Stream, ServerHttp2Stream } from "node:http2";
 import * as http2 from "node:http2";
-import type { IBoundLog } from "@ulixee/commons/interfaces/ILog";
 import { CanceledPromiseError } from "@ulixee/commons/interfaces/IPendingWaitEvent";
-import Log, { hasBeenLoggedSymbol } from "@ulixee/commons/lib/Logger";
 import type IMitmRequestContext from "../interfaces/IMitmRequestContext";
 import ResourceState from "../interfaces/ResourceState";
 import MitmRequestContext from "../lib/MitmRequestContext";
@@ -10,12 +8,9 @@ import HeadersHandler from "./HeadersHandler";
 import InterceptorHandler from "./InterceptorHandler";
 import type RequestSession from "./RequestSession";
 
-const { log } = Log(module);
-
 export default class Http2PushPromiseHandler {
 	private readonly context: IMitmRequestContext;
 	private onResponseHeadersPromise: Promise<void>;
-	private logger: IBoundLog;
 	private get session(): RequestSession {
 		return this.context.requestSession;
 	}
@@ -30,17 +25,13 @@ export default class Http2PushPromiseHandler {
 	) {
 		const session = parentContext.requestSession;
 		const sessionId = session.sessionId;
-		this.logger = session.logger.createChild(module);
-		log.info("Http2Client.pushReceived", { sessionId, requestHeaders, flags });
-		this.logger.info("Http2Client.pushReceived", { requestHeaders, flags });
+		console.info("[Http2Client.pushReceived]", { sessionId, requestHeaders, flags });
 		this.context = MitmRequestContext.createFromHttp2Push(
 			parentContext,
 			rawHeaders,
 		);
 		this.context.events.on(serverPushStream, "error", (error) => {
-			this.logger.warn("Http2.ProxyToServer.PushStreamError", {
-				error,
-			});
+			console.warn("[Http2.ProxyToServer.PushStreamError]", { error });
 		});
 
 		this.context.serverToProxyResponse = serverPushStream;
@@ -102,9 +93,7 @@ export default class Http2PushPromiseHandler {
 				this.onClientPushPromiseCreated.bind(this),
 			);
 		} catch (error) {
-			this.logger.warn("Http2.ClientToProxy.CreatePushStreamError", {
-				error,
-			});
+			console.warn("[Http2.ClientToProxy.CreatePushStreamError]", { error });
 		}
 	}
 
@@ -120,16 +109,12 @@ export default class Http2PushPromiseHandler {
 		const events = this.context.events;
 
 		if (createPushStreamError) {
-			this.logger.warn("Http2.ClientToProxy.PushStreamError", {
-				error: createPushStreamError,
-			});
+			console.warn("[Http2.ClientToProxy.PushStreamError]", { error: createPushStreamError });
 			return;
 		}
 
 		events.on(proxyToClientPushStream, "error", (pushError) => {
-			this.logger.warn("Http2.ClientToProxy.PushStreamError", {
-				error: pushError,
-			});
+			console.warn("[Http2.ClientToProxy.PushStreamError]", { error: pushError });
 		});
 
 		events.on(serverToProxyPushStream, "headers", (additional) => {
@@ -227,12 +212,8 @@ export default class Http2PushPromiseHandler {
 			error,
 		});
 
-		if (
-			!isCanceled &&
-			!this.session?.isClosing &&
-			!error[hasBeenLoggedSymbol]
-		) {
-			this.logger.info(`MitmHttpRequest.${kind}`, {
+		if (!isCanceled && !this.session?.isClosing) {
+			console.info(`[MitmHttpRequest.${kind}]`, {
 				request: `H2PUSH: ${this.context.url.href}`,
 				error,
 			});

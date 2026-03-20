@@ -1,4 +1,3 @@
-import type { IBoundLog } from "@ulixee/commons/interfaces/ILog";
 import { CanceledPromiseError } from "@ulixee/commons/interfaces/IPendingWaitEvent";
 import EventSubscriber from "@ulixee/commons/lib/EventSubscriber";
 import { TypedEventEmitter } from "@ulixee/commons/lib/eventUtils";
@@ -27,7 +26,8 @@ export class Worker
 	public hasLoadedResponse = false;
 	public readonly devtoolsSession: DevtoolsSession;
 
-	protected readonly logger: IBoundLog;
+	// @ts-expect-error IBoundLog deprecated
+	protected readonly logger;
 
 	private readonly initializationSent = createPromise<void>();
 	private readonly networkManager: NetworkManager;
@@ -51,7 +51,8 @@ export class Worker
 		browserContext: BrowserContext,
 		parentNetworkManager: NetworkManager,
 		devtoolsSession: DevtoolsSession,
-		logger: IBoundLog,
+		// @ts-expect-error IBoundLog deprecated
+		logger,
 		targetInfo: Protocol.Target.TargetInfo,
 	) {
 		super();

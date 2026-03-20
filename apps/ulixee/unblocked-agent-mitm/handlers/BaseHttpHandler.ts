@@ -1,15 +1,12 @@
 import type * as http from "node:http";
 import type * as http2 from "node:http2";
 import type { ClientHttp2Stream } from "node:http2";
-import Log from "@ulixee/commons/lib/Logger";
 import type IMitmRequestContext from "../interfaces/IMitmRequestContext";
 import ResourceState from "../interfaces/ResourceState";
 import type HttpResponseCache from "../lib/HttpResponseCache";
 import MitmRequestContext from "../lib/MitmRequestContext";
 import HeadersHandler from "./HeadersHandler";
 import InterceptorHandler from "./InterceptorHandler";
-
-const { log } = Log(module);
 
 export default abstract class BaseHttpHandler {
 	public readonly context: IMitmRequestContext;
@@ -55,7 +52,7 @@ export default abstract class BaseHttpHandler {
 
 			if (await InterceptorHandler.shouldIntercept(context)) {
 				context.setState(ResourceState.Intercepted);
-				log.info(`Http.RequestBlocked`, {
+				console.info("[Http.RequestBlocked]", {
 					sessionId: session.sessionId,
 					url: context.url.href,
 				});

@@ -3,14 +3,11 @@ import WebSocket = require("ws");
 import type { IncomingMessage, ServerResponse } from "node:http";
 import * as Http from "node:http";
 import type { AddressInfo, ListenOptions, Socket } from "node:net";
-import Log from "@ulixee/commons/lib/Logger";
 import Resolvable from "@ulixee/commons/lib/Resolvable";
 import { bindFunctions, createPromise } from "@ulixee/commons/lib/utils";
 import { isWsOpen } from "@ulixee/net/lib/WsUtils";
 
 import pkg from "../package.json";
-
-const { log } = Log(module);
 
 export type IHttpHandleFn = (
 	req: Http.IncomingMessage,
@@ -142,9 +139,7 @@ export default class RoutableServer {
 		const resolvable = new Resolvable<void>();
 		try {
 			this.isClosing = resolvable.promise;
-			const logid = log.stats("RoutingServer.Closing", {
-				sessionId: null,
-			});
+			console.log("[RoutableServer]", { action: "Closing" });
 
 			for (const ws of this.wsServer.clients) {
 				if (isWsOpen(ws)) ws.terminate();
@@ -156,16 +151,10 @@ export default class RoutableServer {
 			}
 
 			if (this.httpServer.listening) this.httpServer.unref().close();
-			log.stats("RoutingServer.Closed", {
-				parentLogId: logid,
-				sessionId: null,
-			});
+			console.log("[RoutableServer]", { action: "Closed" });
 			resolvable.resolve();
 		} catch (error: any) {
-			log.error("Error closing socket connections", {
-				error,
-				sessionId: null,
-			});
+			console.error("[RoutableServer]", { action: "Error closing socket connections", error });
 			resolvable.reject(error);
 		}
 		return resolvable.promise;
@@ -229,9 +218,6 @@ export default class RoutableServer {
 	}
 
 	private onHttpError(error: Error): void {
-		log.warn("Error on WebsocketServer.httpServer", {
-			error,
-			sessionId: null,
-		});
+		console.warn("[RoutableServer]", { action: "Error on WebsocketServer.httpServer", error });
 	}
 }

@@ -1,10 +1,6 @@
-import type { IBoundLog } from "@ulixee/commons/interfaces/ILog";
 import { CanceledPromiseError } from "@ulixee/commons/interfaces/IPendingWaitEvent";
-import Log from "@ulixee/commons/lib/Logger";
 import Resolvable from "@ulixee/commons/lib/Resolvable";
 import BaseIpcHandler from "./BaseIpcHandler";
-
-const { log } = Log(module);
 
 export interface ICertificateStore {
 	get(host: string): { key: Buffer; pem: Buffer };
@@ -18,8 +14,6 @@ export interface ICertificateStore {
 
 let certRequestId = 0;
 export default class CertificateGenerator extends BaseIpcHandler {
-	protected logger: IBoundLog = log.createChild(module);
-
 	private pendingCertsById = new Map<
 		number,
 		Resolvable<{ cert: string; expireDate: number }>
@@ -98,7 +92,7 @@ export default class CertificateGenerator extends BaseIpcHandler {
 			if (message.status === "init") {
 				toLog.privateKey = `-----BEGIN RSA PRIVATE KEY-----\n...key used by man-in-the-middle removed for logs...\n-----END RSA PRIVATE KEY-----\n`;
 			}
-			this.logger.info("CertificateGenerator.onMessage", {
+			console.log("[CertificateGenerator]", "CertificateGenerator.onMessage", {
 				...toLog,
 			});
 		}
@@ -110,7 +104,7 @@ export default class CertificateGenerator extends BaseIpcHandler {
 		}
 
 		if (!message.id) {
-			this.logger.warn("CertificateGenerator.unprocessableMessage", {
+			console.log("[CertificateGenerator]", "CertificateGenerator.unprocessableMessage", {
 				message,
 			});
 			return;
@@ -118,7 +112,7 @@ export default class CertificateGenerator extends BaseIpcHandler {
 
 		const pending = this.pendingCertsById.get(message.id);
 		if (!pending) {
-			this.logger.warn("CertificateGenerator.unprocessableMessage:notFound", {
+			console.log("[CertificateGenerator]", "CertificateGenerator.unprocessableMessage:notFound", {
 				message,
 			});
 			return;

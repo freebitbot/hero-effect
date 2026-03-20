@@ -1,4 +1,3 @@
-import type { IBoundLog } from "@ulixee/commons/interfaces/ILog";
 import type ICorePlugin from "@ulixee/hero-interfaces/ICorePlugin";
 import type {
 	ICorePluginClass,
@@ -34,7 +33,6 @@ export default class CorePlugins implements ICorePlugins {
 	}
 
 	private instanceById: { [id: string]: ICorePlugin } = {};
-	private readonly logger: IBoundLog;
 	private agent: Agent;
 	private getSessionSummary: IOptionsCreate["getSessionSummary"];
 	private pluginConfigs: PluginConfigs;
@@ -54,8 +52,6 @@ export default class CorePlugins implements ICorePlugins {
 				id: null,
 				options: {},
 			});
-
-		this.logger = agent.logger.createChild(module);
 
 		for (const plugin of Object.values(corePluginsById)) {
 			const config = this.pluginConfigs[plugin.id];
@@ -108,7 +104,7 @@ export default class CorePlugins implements ICorePlugins {
 				...args,
 			);
 		}
-		this.logger.warn(`Plugin (${toPluginId}) could not be found for command`);
+		console.warn(`[CorePlugins] Plugin (${toPluginId}) could not be found for command`);
 	}
 
 	// ADDING PLUGINS TO THE STACK
@@ -119,7 +115,6 @@ export default class CorePlugins implements ICorePlugins {
 		const config = this.pluginConfigs[CorePlugin.id];
 		const corePlugin = new CorePlugin({
 			emulationProfile: this.agent.emulationProfile,
-			logger: this.logger,
 			corePlugins: this,
 			sessionSummary: this.sessionSummary,
 			customConfig: typeof config === "boolean" ? undefined : config,
@@ -136,8 +131,8 @@ export default class CorePlugins implements ICorePlugins {
 			for (const corePluginId of corePluginIds) {
 				if (this.instanceById[corePluginId]) continue;
 				if (this.corePluginsById[corePluginId]) continue;
-				this.logger.info(
-					`Dynamically requiring ${corePluginId} requested by ${clientPluginId}`,
+				console.log(
+					`[CorePlugins] Dynamically requiring ${corePluginId} requested by ${clientPluginId}`,
 				);
 				const Plugin = requirePlugins<ICorePluginClass>(
 					corePluginId,

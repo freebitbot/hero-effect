@@ -1,15 +1,11 @@
-import type { IBoundLog } from "@ulixee/commons/interfaces/ILog";
 import type MitmSocket from "..";
 import BaseIpcHandler, { type IGoIpcOpts } from "./BaseIpcHandler";
 
 export default class MitmSocketSession extends BaseIpcHandler {
-	protected logger: IBoundLog;
-
 	private readonly socketsById = new Map<number, MitmSocket>();
 
-	constructor(logger: IBoundLog, options: IGoIpcOpts) {
+	constructor(options: IGoIpcOpts) {
 		super({ ...options, mode: "proxy" });
-		this.logger = logger.createChild(module);
 	}
 
 	public async requestSocket(socket: MitmSocket): Promise<void> {
@@ -30,7 +26,7 @@ export default class MitmSocketSession extends BaseIpcHandler {
 			if (this.isClosing) {
 				return null;
 			}
-			this.logger.info("MitmSocketSession.requestSocketError", {
+			console.log("[MitmSocketSession]", "MitmSocketSession.requestSocketError", {
 				error,
 			});
 		}
@@ -40,7 +36,7 @@ export default class MitmSocketSession extends BaseIpcHandler {
 		if (this.isClosing) return;
 		const message = JSON.parse(rawMessage);
 		if (this.options.debug) {
-			this.logger.info("MitmSocketSession.onMessage", {
+			console.log("[MitmSocketSession]", "MitmSocketSession.onMessage", {
 				...message,
 			});
 		}

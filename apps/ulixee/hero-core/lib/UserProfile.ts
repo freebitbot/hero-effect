@@ -1,5 +1,4 @@
 import { CanceledPromiseError } from "@ulixee/commons/interfaces/IPendingWaitEvent";
-import Log from "@ulixee/commons/lib/Logger";
 import { assert } from "@ulixee/commons/lib/utils";
 import type IUserProfile from "@ulixee/hero-interfaces/IUserProfile";
 import type Page from "@ulixee/unblocked-agent/lib/Page";
@@ -7,8 +6,6 @@ import type IDomStorage from "@ulixee/unblocked-specification/agent/browser/IDom
 import type { IDomStorageForOrigin } from "@ulixee/unblocked-specification/agent/browser/IDomStorage";
 import InjectedScripts from "./InjectedScripts";
 import type Session from "./Session";
-
-const { log } = Log(module);
 
 export default class UserProfile {
 	public static async export(session: Session): Promise<IUserProfile> {
@@ -109,7 +106,7 @@ export default class UserProfile {
 		if (!origins.length) return;
 		const sessionId = session.id;
 
-		const parentLogId = log.info("UserProfile.installStorage", {
+		console.log("[UserProfile.installStorage]", {
 			sessionId,
 			storageDomains: origins?.length,
 		});
@@ -199,7 +196,7 @@ ${script}
 			await browserContext.initializePage(page);
 		} finally {
 			browserContext.resources.isCollecting = true;
-			log.stats("UserProfile.installedStorage", { sessionId, parentLogId });
+			console.log("[UserProfile.installedStorage]", { sessionId });
 		}
 
 		session.browserContext.domStorage = {};

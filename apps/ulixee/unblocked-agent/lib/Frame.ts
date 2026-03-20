@@ -1,5 +1,4 @@
 import { URL } from "node:url";
-import type { IBoundLog } from "@ulixee/commons/interfaces/ILog";
 import { CanceledPromiseError } from "@ulixee/commons/interfaces/IPendingWaitEvent";
 import type IRegisteredEventListener from "@ulixee/commons/interfaces/IRegisteredEventListener";
 import EventSubscriber from "@ulixee/commons/lib/EventSubscriber";
@@ -111,7 +110,8 @@ export default class Frame
 	public jsPath: JsPath;
 	public activeLoaderId: string;
 	public navigationLoadersById: { [loaderId: string]: NavigationLoader } = {};
-	public readonly logger: IBoundLog;
+	// @ts-expect-error IBoundLog deprecated
+	public readonly logger;
 	public get hooks(): IInteractHooks {
 		return this.page.browserContext.hooks;
 	}
@@ -173,7 +173,8 @@ export default class Frame
 		framesManager: FramesManager,
 		internalFrame: Protocol.Page.Frame,
 		devtoolsSession: DevtoolsSession,
-		logger: IBoundLog,
+		// @ts-expect-error IBoundLog deprecated
+		logger,
 		checkIfAttached: () => boolean,
 		parentFrame: Frame | null,
 	) {

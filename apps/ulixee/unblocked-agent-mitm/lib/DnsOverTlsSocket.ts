@@ -1,4 +1,3 @@
-import type { IBoundLog } from "@ulixee/commons/interfaces/ILog";
 import { CanceledPromiseError } from "@ulixee/commons/interfaces/IPendingWaitEvent";
 import type IResolvablePromise from "@ulixee/commons/interfaces/IResolvablePromise";
 import EventSubscriber from "@ulixee/commons/lib/EventSubscriber";
@@ -34,7 +33,6 @@ export default class DnsOverTlsSocket {
 	private readonly onClose?: () => void;
 
 	private requestSession: RequestSession | undefined;
-	private logger: IBoundLog;
 	private events = new EventSubscriber();
 
 	constructor(
@@ -43,7 +41,6 @@ export default class DnsOverTlsSocket {
 		onClose?: () => void,
 	) {
 		this.requestSession = requestSession;
-		this.logger = requestSession.logger.createChild(module);
 		this.dnsSettings = dnsSettings;
 		this.onClose = onClose;
 	}
@@ -71,7 +68,6 @@ export default class DnsOverTlsSocket {
 			this.dnsSettings.dnsOverTlsConnection || {};
 		this.mitmSocket = new MitmSocket(
 			this.requestSession.sessionId,
-			this.requestSession.logger,
 			{
 				host,
 				servername,
@@ -107,9 +103,7 @@ export default class DnsOverTlsSocket {
 					entry.resolvable.resolve(newHost);
 				}
 			} catch (error) {
-				this.logger.info("Error re-connecting to dns", {
-					error,
-				});
+				console.info("[DnsOverTlsSocket]", "Error re-connecting to dns", { error });
 			}
 		});
 	}
