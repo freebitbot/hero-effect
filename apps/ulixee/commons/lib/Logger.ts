@@ -4,65 +4,145 @@ import type ILog from "../interfaces/ILog";
 import type { ILogData } from "../interfaces/ILog";
 
 declare global {
+	/**
+	 * @deprecated
+	 */
 	function UlixeeLogCreator(module: NodeModule): {
 		log: ILog;
 	};
 
-	// eslint-disable-next-line no-var,vars-on-top
+	/**
+	 * @deprecated
+	 */
 	var UlxLogPrototype: Log;
-	// eslint-disable-next-line no-var,vars-on-top
+
+	/**
+	 * @deprecated
+	 */
 	var UlxLogFilters: any;
-	// eslint-disable-next-line no-var,vars-on-top
+	/**
+	 * @deprecated
+	 */
+	var UlixeeLogInstances: any;
+
+	/**
+	 * @deprecated
+	 */
 	var UlxLoggerSessionIdNames: Map<string, string>;
-	// eslint-disable-next-line no-var,vars-on-top
+
+	/**
+	 * @deprecated
+	 */
 	var UlxSubscriptions: Map<number, (log: ILogEntry) => any>;
 }
 
+/**
+ * @deprecated
+ */
 const hasBeenLoggedSymbol = Symbol.for("UlxHasBeenLogged");
 
 global.UlxLogFilters ??= {
+	/**
+	 * @deprecated
+	 */
 	envValue: null as string,
+	/**
+	 * @deprecated
+	 */
 	active: [] as RegExp[],
+	/**
+	 * @deprecated
+	 */
 	skip: [] as RegExp[],
+	/**
+	 * @deprecated
+	 */
 	namespaces: { active: new Set<string>(), inactive: new Set<string>() },
+	/**
+	 * @deprecated
+	 */
 	enabledNamesCache: {} as { [namespace: string]: boolean },
 };
 
+/**
+ * @deprecated
+ */
 const logFilters = global.UlxLogFilters;
 
+/**
+ * @deprecated
+ */
 let logId = 0;
+
+/**
+ * @deprecated
+ */
 class Log implements ILog {
+	/**
+	 * @deprecated
+	 */
 	public readonly level: LogLevel;
+	/**
+	 * @deprecated
+	 */
 	public useColors =
 		process.env.NODE_DISABLE_COLORS !== "true" &&
 		process.env.NODE_DISABLE_COLORS !== "1";
 
+	/**
+	 * @deprecated
+	 */
 	public readonly boundContext: any = {};
+	/**
+	 * @deprecated
+	 */
 	private readonly module: string;
+
+	/**
+	 * @deprecated
+	 */
 	private logtimeById: { [parentId: number]: number } = {};
 
+	/**
+	 * @deprecated
+	 */
 	constructor(module: NodeModule, boundContext?: any) {
 		this.module = module ? extractPathFromModule(module) : "";
 		if (boundContext) this.boundContext = boundContext;
 		this.level = isEnabled(this.module) ? "stats" : "error";
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public stats(action: string, data?: ILogData): number {
 		return this.log("stats", action, data);
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public info(action: string, data?: ILogData): number {
 		return this.log("info", action, data);
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public warn(action: string, data?: ILogData): number {
 		return this.log("warn", action, data);
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public error(action: string, data?: ILogData | { error: Error }): number {
 		return this.log("error", action, data);
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public createChild(module, boundContext?: any): ILog {
 		const Constructor = this.constructor;
 		// @ts-expect-error
@@ -72,10 +152,16 @@ class Log implements ILog {
 		});
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public flush(): void {
 		// no-op
 	}
 
+	/**
+	 * @deprecated
+	 */
 	protected logToConsole(level: LogLevel, entry: ILogEntry): void {
 		const printablePath = entry.module
 			.replace(".js", "")
@@ -103,6 +189,9 @@ class Log implements ILog {
 		);
 	}
 
+	/**
+	 * @deprecated
+	 */
 	private log(level: LogLevel, action: string, data?: ILogData | any): number {
 		let logData: object;
 		let sessionId: string = this.boundContext.sessionId;
@@ -143,6 +232,9 @@ class Log implements ILog {
 	}
 }
 
+/**
+ * @deprecated
+ */
 function translateValueToPrintable(key: string, value: any, depth = 0): any {
 	if (value === undefined || value === null) return;
 
@@ -193,6 +285,9 @@ function translateValueToPrintable(key: string, value: any, depth = 0): any {
 	}
 }
 
+/**
+ * @deprecated
+ */
 export function translateToPrintable(
 	data: any,
 	result?: { error?: Error; printData: any },
@@ -228,6 +323,9 @@ export function translateToPrintable(
 	return result;
 }
 
+/**
+ * @deprecated
+ */
 const logLevels = { stats: 0, info: 1, warn: 2, error: 3 };
 
 if (!global.UlixeeLogCreator) {
@@ -256,19 +354,35 @@ export default function logger(module: NodeModule): ILogBuilder {
 
 global.UlxLoggerSessionIdNames ??= new Map<string, string>();
 global.UlxSubscriptions ??= new Map();
+
+/**
+ * @deprecated
+ */
 const loggerSessionIdNames = global.UlxLoggerSessionIdNames;
 
+/**
+ * @deprecated
+ */
 class LogEvents {
+	/**
+	 * @deprecated
+	 */
 	public static unsubscribe(subscriptionId: number): void {
 		global.UlxSubscriptions.delete(subscriptionId);
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public static subscribe(onLogFn: (log: ILogEntry) => any): number {
 		const id = global.UlxSubscriptions.size + 1;
 		global.UlxSubscriptions.set(id, onLogFn);
 		return id;
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public static broadcast(entry: ILogEntry): void {
 		for (const sub of global.UlxSubscriptions.values()) {
 			sub(entry);
@@ -280,12 +394,18 @@ global.UlixeeLogInstances ??= { Log, LogEvents };
 
 export { hasBeenLoggedSymbol, Log, LogEvents, loggerSessionIdNames };
 
+/**
+ * @deprecated
+ */
 export function injectLogger(
 	builder: (module: NodeModule) => ILogBuilder,
 ): void {
 	global.UlixeeLogCreator = builder;
 }
 
+/**
+ * @deprecated
+ */
 export interface ILogEntry {
 	id: number;
 	timestamp: Date;
@@ -298,13 +418,26 @@ export interface ILogEntry {
 	millis?: number;
 }
 
+/**
+ * @deprecated
+ */
 type LogLevel = keyof typeof logLevels;
 
+/**
+ * @deprecated
+ */
 interface ILogBuilder {
 	log: ILog;
 }
 
+/**
+ * @deprecated
+ */
 const moduleNamesByPath: { [fullPath: string]: string } = {};
+
+/**
+ * @deprecated
+ */
 function extractPathFromModule(module: NodeModule): string {
 	const fullPath =
 		typeof module === "string" ? module : module.filename || module.id || "";
@@ -321,6 +454,9 @@ function extractPathFromModule(module: NodeModule): string {
 
 /// LOG FILTERING //////////////////////////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * @deprecated
+ */
 export function registerNamespaceMapping(
 	filter: string = process.env.DEBUG,
 ): void {
@@ -375,6 +511,9 @@ export function registerNamespaceMapping(
 	}
 }
 
+/**
+ * @deprecated
+ */
 function isEnabled(modulePath: string): boolean {
 	if (
 		process.env.ULX_DEBUG === "1" ||
