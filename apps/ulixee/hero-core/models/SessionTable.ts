@@ -144,18 +144,21 @@ export default class SessionTable extends SqliteTable<ISessionRecord> {
 	public updateConfiguration(configuration: IHeroMeta): void {
 		const toUpdate = {
 			viewport: JSON.stringify(configuration.viewport),
-			timezoneId: configuration.timezoneId,
-			locale: configuration.locale,
-			publicIp: configuration.upstreamProxyIpMask?.publicIp,
-			proxyIp: configuration.upstreamProxyIpMask?.proxyIp,
+			timezoneId: configuration.timezoneId || "",
+			locale: configuration.locale || "",
+			publicIp: configuration.upstreamProxyIpMask?.publicIp || "",
+			proxyIp: configuration.upstreamProxyIpMask?.proxyIp || "",
+			id: this.id,
 		};
 		this.heroMeta = null;
 
+		console.info("SessionTable.updateConfiguration", toUpdate);
+
 		this.db
 			.prepare(
-				`UPDATE ${this.tableName} SET viewport=:viewport, timezoneId=:timezoneId, locale=:locale, publicIp=:publicIp, proxyIp=:proxyIp WHERE id=?`,
+				`UPDATE ${this.tableName} SET viewport=:viewport, timezoneId=:timezoneId, locale=:locale, publicIp=:publicIp, proxyIp=:proxyIp WHERE id=:id`,
 			)
-			.run(this.id, toUpdate);
+			.run(toUpdate);
 		if (this.insertCallbackFn) this.insertCallbackFn([]);
 	}
 

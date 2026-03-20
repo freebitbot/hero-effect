@@ -154,15 +154,14 @@ export default class DomOverridesBuilder {
 	): void {
 		let script = cache[name];
 		if (!script) {
-			if (!fs.existsSync(`${__dirname}/../injected-scripts/${name}.js`)) {
+			const file = resolve(__dirname, `../injected-scripts/${name}.ts`);
+
+			if (!fs.existsSync(file)) {
 				throw new Error(
 					`Browser-Emulator injected script doesn\`t exist: ${name}`,
 				);
 			}
-			script = fs.readFileSync(
-				`${__dirname}/../injected-scripts/${name}.js`,
-				"utf8",
-			);
+			script = tsTransform(file);
 		}
 		if (shouldCache) cache[name] = script;
 

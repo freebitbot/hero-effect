@@ -535,7 +535,7 @@ export default class Page
 		if (this.isClosing || this.closePromise.isResolved)
 			return this.closePromise.promise;
 		this.isClosing = true;
-		const parentLogId = console.stats("Page.Closing");
+		const parentLogId = console.info("Page.Closing");
 		options ??= {};
 		const timeoutMs = options.timeoutMs ?? 30e3;
 		try {
@@ -566,7 +566,7 @@ export default class Page
 			}
 			await this.closePromise.promise;
 		} finally {
-			console.stats("Page.Closed", { parentLogId });
+			console.info("Page.Closed", { parentLogId });
 		}
 	}
 
@@ -709,13 +709,13 @@ export default class Page
 		);
 
 		if (this.opener && this.opener.popupInitializeFn) {
-			console.stats("Popup triggered", {
+			console.info("Popup triggered", {
 				targetId: this.targetId,
 				opener: this.opener.targetId,
 			});
 			await this.opener.isReady;
 			if (this.opener.isClosed) {
-				console.stats("Popup canceled", {
+				console.info("Popup canceled", {
 					targetId: this.targetId,
 				});
 				return;
@@ -728,7 +728,7 @@ export default class Page
 				if (this.isClosed) return;
 			}
 			await this.opener.popupInitializeFn(this, this.opener.windowOpenParams);
-			console.stats("Popup initialized", {
+			console.info("Popup initialized", {
 				targetId: this.targetId,
 				windowOpenParams: this.opener.windowOpenParams,
 			});

@@ -126,6 +126,7 @@ export default class Database implements IDatabaseBase {
 				readonly: this.readonly,
 				create: this.#options?.fileMustExist ?? false,
 				safeIntegers: this.#options?.safeIntegers ?? false,
+				strict: true,
 			});
 			this.open = true;
 		} catch (e) {

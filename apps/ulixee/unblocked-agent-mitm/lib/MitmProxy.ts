@@ -571,7 +571,9 @@ export default class MitmProxy {
 
 	private async addSecureContext(hostname: string): Promise<void> {
 		if (this.isClosing) return;
-		if (hostname.includes(":")) hostname = hostname.split(":").shift();
+		if (hostname.includes(":")) {
+			hostname = hostname.split(":").shift();
+		}
 
 		this.secureContexts[hostname] ??= this.certificateGenerator
 			.getCertificate(hostname)

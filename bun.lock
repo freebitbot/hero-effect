@@ -489,13 +489,13 @@
       "name": "@ulixee/commons",
       "dependencies": {
         "@jridgewell/trace-mapping": "^0.3.18",
+        "@ulixee/bun-better-sqlite3": "workspace:*",
         "bech32": "^2.0.0",
         "devtools-protocol": "^0.0.1137505",
         "https-proxy-agent": "^7.0.5",
-        "semver": "^7.3.7",
+        "semver": "7.7.4",
       },
       "devDependencies": {
-        "@types/better-sqlite3": "^7.6.11",
         "source-map-js": "^1.0.2",
       },
     },
@@ -536,6 +536,7 @@
       "name": "@ulixee/hero-core",
       "dependencies": {
         "@ulixee/awaited-dom": "1.4.2",
+        "@ulixee/bun-better-sqlite3": "workspace:*",
         "@ulixee/commons": "workspace:*",
         "@ulixee/default-browser-emulator": "workspace:*",
         "@ulixee/default-human-emulator": "workspace:*",
@@ -546,13 +547,11 @@
         "@ulixee/unblocked-agent": "workspace:*",
         "@ulixee/unblocked-agent-mitm": "workspace:*",
         "@ulixee/unblocked-specification": "workspace:*",
-        "better-sqlite3": "^11.1.2",
         "moment": "^2.29.4",
         "nanoid": "^3.3.11",
         "ws": "^8.18.0",
       },
       "devDependencies": {
-        "@types/better-sqlite3": "^7.6.11",
         "@ulixee/chrome-app": "1.0.3",
         "@ulixee/hero": "workspace:*",
       },
@@ -648,6 +647,13 @@
         "selenium-webdriver": "4.4.0",
       },
     },
+    "apps/ulixee/sqlite3": {
+      "name": "@ulixee/bun-better-sqlite3",
+      "devDependencies": {
+        "@types/better-sqlite3": "7.6.13",
+        "@types/bun": "latest",
+      },
+    },
     "apps/ulixee/unblocked-agent": {
       "name": "@ulixee/unblocked-agent",
       "dependencies": {
@@ -682,6 +688,7 @@
     },
     "apps/ulixee/unblocked-agent-mitm-socket": {
       "name": "@ulixee/unblocked-agent-mitm-socket",
+      "version": "2.0.0-alpha.34",
       "dependencies": {
         "@ulixee/commons": "workspace:*",
         "@ulixee/unblocked-specification": "workspace:*",
@@ -1075,6 +1082,8 @@
     "@types/yauzl": ["@types/yauzl@2.10.3", "", { "dependencies": { "@types/node": "*" } }, "sha512-oJoftv0LSuaDZE3Le4DbKX+KS9G36NzOeSap90UIK0yMA/NhKJhqlSGtNDORNRaIbQfzjXDrQa0ytJ6mNRGz/Q=="],
 
     "@ulixee/awaited-dom": ["@ulixee/awaited-dom@1.4.2", "", { "dependencies": { "@ulixee/js-path": "^2.0.0-alpha.18" } }, "sha512-o32b+rBzB+6qPVzLK7wB0+TcPJ0BqM81zGmZ+dCCxDMGHo030ip0bW7TBf212YvCIEFDWJNIhrLTZ8SYZd1Dkw=="],
+
+    "@ulixee/bun-better-sqlite3": ["@ulixee/bun-better-sqlite3@workspace:apps/ulixee/sqlite3"],
 
     "@ulixee/chrome-139-0": ["@ulixee/chrome-139-0@7258.155.11", "", { "dependencies": { "@ulixee/chrome-app": "^1.0.3" } }, "sha512-z3nzSzXa+OHRwxTguShz7dF3JfUQfYTpRomUss2j7koR3YbHQtH9u2W5zq6YfS23ouI3t3w5NeuM0EXnNIpG5g=="],
 
@@ -2228,6 +2237,8 @@
 
     "@ulixee/awaited-dom/@ulixee/js-path": ["@ulixee/js-path@2.0.0-alpha.34", "", {}, "sha512-Q/JHg9LW2uSV7J1eoEta8XUlyntv26ZOE6fBkyhQ2GO+IR1rzRv10qmy8k02q8eKRgtNdvPGPEm8iO2A/nz08g=="],
 
+    "@ulixee/bun-better-sqlite3/@types/bun": ["@types/bun@1.3.11", "", { "dependencies": { "bun-types": "1.3.11" } }, "sha512-5vPne5QvtpjGpsGYXiFyycfpDF2ECyPcTSsFBMa0fraoxiQyMJ3SmuQIGhzPg2WJuWxVBoxWJ2kClYTcw/4fAg=="],
+
     "@ulixee/chrome-app/@types/tar": ["@types/tar@4.0.5", "", { "dependencies": { "@types/minipass": "*", "@types/node": "*" } }, "sha512-cgwPhNEabHaZcYIy5xeMtux2EmYBitfqEceBUi2t5+ETy4dW6kswt6WX4+HqLeiiKOo42EXbGiDmVJ2x+vi37Q=="],
 
     "@ulixee/chrome-versions/@types/tar": ["@types/tar@4.0.5", "", { "dependencies": { "@types/minipass": "*", "@types/node": "*" } }, "sha512-cgwPhNEabHaZcYIy5xeMtux2EmYBitfqEceBUi2t5+ETy4dW6kswt6WX4+HqLeiiKOo42EXbGiDmVJ2x+vi37Q=="],
@@ -2486,6 +2497,8 @@
 
     "@jest/types/chalk/supports-color": ["supports-color@7.2.0", "", { "dependencies": { "has-flag": "^4.0.0" } }, "sha512-qpCAvRl9stuOHveKsn7HncJRvv501qIacKzQlO/+Lwxc9+0q2wLyv4Dfvt80/DPn2pqOBsJdDiogXGR9+OvwRw=="],
 
+    "@ulixee/bun-better-sqlite3/@types/bun/bun-types": ["bun-types@1.3.11", "", { "dependencies": { "@types/node": "*" } }, "sha512-1KGPpoxQWl9f6wcZh57LvrPIInQMn2TQ7jsgxqpRzg+l0QPOFvJVH7HmvHo/AiPgwXy+/Thf6Ov3EdVn1vOabg=="],
+
     "@ulixee/chrome-app/@types/tar/@types/node": ["@types/node@18.19.130", "", { "dependencies": { "undici-types": "~5.26.4" } }, "sha512-GRaXQx6jGfL8sKfaIDD6OupbIHBr9jv7Jnaml9tB7l4v068PAOXqfcujMMo5PhbIs6ggR1XODELqahT2R8v0fg=="],
 
     "@ulixee/chrome-versions/@types/tar/@types/node": ["@types/node@18.19.130", "", { "dependencies": { "undici-types": "~5.26.4" } }, "sha512-GRaXQx6jGfL8sKfaIDD6OupbIHBr9jv7Jnaml9tB7l4v068PAOXqfcujMMo5PhbIs6ggR1XODELqahT2R8v0fg=="],
@@ -2617,6 +2630,8 @@
     "@jest/transform/chalk/supports-color/has-flag": ["has-flag@4.0.0", "", {}, "sha512-EykJT/Q1KjTWctppgIAgfSO0tKVuZUjhgMr17kqTumMl6Afv3EISleU7qZUzoXDFTAHTDC4NOoG/ZxU3EvlMPQ=="],
 
     "@jest/types/chalk/supports-color/has-flag": ["has-flag@4.0.0", "", {}, "sha512-EykJT/Q1KjTWctppgIAgfSO0tKVuZUjhgMr17kqTumMl6Afv3EISleU7qZUzoXDFTAHTDC4NOoG/ZxU3EvlMPQ=="],
+
+    "@ulixee/bun-better-sqlite3/@types/bun/bun-types/@types/node": ["@types/node@18.19.130", "", { "dependencies": { "undici-types": "~5.26.4" } }, "sha512-GRaXQx6jGfL8sKfaIDD6OupbIHBr9jv7Jnaml9tB7l4v068PAOXqfcujMMo5PhbIs6ggR1XODELqahT2R8v0fg=="],
 
     "@ulixee/hero-core/@ulixee/chrome-app/https-proxy-agent/agent-base": ["agent-base@6.0.2", "", { "dependencies": { "debug": "4" } }, "sha512-RZNwNclF7+MS/8bDg70amg32dyeZGZxiDuQmZxKLAlQjr3jGyLx+4Kkk58UO7D2QdgFIQCovuSuZESne6RG6XQ=="],
 

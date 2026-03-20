@@ -32,7 +32,11 @@ export default class BrowserEngine implements IBrowserEngine {
 
 		// changes at version 90
 		this.doesBrowserAnimateScrolling = browserEngineOption.majorVersion > 90;
-		this.executablePath = this.engineFetcher.executablePath;
+
+		this.executablePath =
+			"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
+		// this.executablePath = this.engineFetcher.executablePath;
+
 		this.executablePathEnvVar = this.engineFetcher.executablePathEnvVar;
 		this.isInstalled = this.engineFetcher.isInstalled;
 	}

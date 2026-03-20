@@ -1,4 +1,4 @@
-import type Database from "../../sqlite3/src/database";
+import type { Database } from "@ulixee/bun-better-sqlite3";
 import type BunStatement from "../../sqlite3/src/statement";
 import type { Transaction as BaseTransaction } from "../../sqlite3/src/types";
 
