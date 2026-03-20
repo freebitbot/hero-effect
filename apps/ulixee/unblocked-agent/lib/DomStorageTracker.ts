@@ -30,9 +30,6 @@ export default class DomStorageTracker extends TypedEventEmitter<IDomStorageEven
 
 	public isEnabled = false;
 
-	// @ts-expect-error IBoundLog deprecated
-	protected readonly logger;
-
 	private readonly events = new EventSubscriber();
 	private readonly devtoolsSession: DevtoolsSession;
 	private readonly page: Page;
@@ -47,8 +44,6 @@ export default class DomStorageTracker extends TypedEventEmitter<IDomStorageEven
 		page: Page,
 		storageByOrigin: IDomStorage,
 		networkManager: NetworkManager,
-		// @ts-expect-error IBoundLog deprecated
-		logger,
 		isEnabled: boolean,
 		session?: DevtoolsSession,
 	) {
@@ -59,7 +54,6 @@ export default class DomStorageTracker extends TypedEventEmitter<IDomStorageEven
 		this.devtoolsSession = session;
 		this.networkManager = networkManager;
 		this.storageByOrigin = storageByOrigin ?? {};
-		this.logger = logger.createChild(module);
 
 		this.onDomStorageAdded = this.onDomStorageAdded.bind(this);
 
@@ -155,7 +149,7 @@ export default class DomStorageTracker extends TypedEventEmitter<IDomStorageEven
 			})
 			.catch((error) => {
 				if (error instanceof CanceledPromiseError) return;
-				this.logger.info("Failed to watch Frame origin for storage changes", {
+				console.info("Failed to watch Frame origin for storage changes", {
 					securityOrigin,
 					error,
 				});
@@ -367,7 +361,7 @@ export default class DomStorageTracker extends TypedEventEmitter<IDomStorageEven
 		} catch (error) {
 			if (error instanceof CanceledPromiseError) return;
 			if (error.code === -32000) return;
-			this.logger.info("DomStorageTracker.onIndexedDBListUpdated:ERROR", {
+			console.info("DomStorageTracker.onIndexedDBListUpdated:ERROR", {
 				error,
 				event,
 			});
@@ -426,7 +420,7 @@ export default class DomStorageTracker extends TypedEventEmitter<IDomStorageEven
 		} catch (error) {
 			if (error instanceof CanceledPromiseError) return;
 			if (error.code === -32000) return;
-			this.logger.info("DomStorageTracker.onIndexedDBContentUpdated", {
+			console.info("DomStorageTracker.onIndexedDBContentUpdated", {
 				error,
 				event,
 			});

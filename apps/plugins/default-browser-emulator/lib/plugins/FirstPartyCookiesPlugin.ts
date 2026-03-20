@@ -42,11 +42,7 @@ export default class FirstPartyCookiesPlugin implements IHooksProvider {
 		[site: string]: IResolvablePromise;
 	} = {};
 
-	// TODO: IBoundLog - private readonly logger: IBoundLog;
-
-	constructor(readonly emulationProfile: IEmulationProfile) {
-		// TODO: IBoundLog - this.logger = emulationProfile.logger?.createChild(module);
-	}
+	constructor(readonly emulationProfile: IEmulationProfile) {}
 
 	public onLoadUserProfileCookies(cookies, storage): void {
 		this.loadProfileCookies(cookies, storage);
@@ -86,7 +82,9 @@ export default class FirstPartyCookiesPlugin implements IHooksProvider {
 			try {
 				await this.setCookie(setCookie, resource);
 			} catch (error) {
-				console.warn("[FirstPartyCookiesPlugin] Could not set cookie", { error });
+				console.warn("[FirstPartyCookiesPlugin] Could not set cookie", {
+					error,
+				});
 			}
 		}
 	}
@@ -105,7 +103,10 @@ export default class FirstPartyCookiesPlugin implements IHooksProvider {
 					const { cookie, origin } = JSON.parse(payload);
 					await this.cookieJar.setCookie(cookie, origin);
 				} catch (error) {
-					console.warn("[FirstPartyCookiesPlugin] Error setting cookie from page", { error });
+					console.warn(
+						"[FirstPartyCookiesPlugin] Error setting cookie from page",
+						{ error },
+					);
 				}
 			},
 		});

@@ -19,12 +19,8 @@ export class DefaultCommandMarker implements ICommandMarker {
 
 	private commandMarkerId = 0;
 	private waitForLocationStartingMark = 0;
-	// @ts-expect-error IBoundLog deprecated
-	private logger;
 
-	constructor(readonly browserContext: BrowserContext) {
-		this.logger = browserContext.logger.createChild(module);
-	}
+	constructor(readonly browserContext: BrowserContext) {}
 
 	incrementMark(action: string): void {
 		this.commandMarkerId += 1;
@@ -43,7 +39,7 @@ export class DefaultCommandMarker implements ICommandMarker {
 
 	getStartingCommandIdFor(marker: "waitForLocation"): number {
 		if (marker === "waitForLocation") {
-			this.logger.info(`Starting Mark for ${marker}`, {
+			console.info(`Starting Mark for ${marker}`, {
 				startingMark: this.waitForLocationStartingMark,
 				markers: this.markers,
 			});

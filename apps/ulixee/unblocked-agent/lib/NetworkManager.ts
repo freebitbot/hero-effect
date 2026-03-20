@@ -22,8 +22,6 @@ interface IResourcePublishing {
 const MEGABYTE = 1024 * 1024;
 
 export default class NetworkManager extends TypedEventEmitter<IBrowserNetworkEvents> {
-	// @ts-expect-error IBoundLog deprecated
-	protected readonly logger;
 	private readonly devtools: DevtoolsSession;
 	private readonly attemptedAuthentications = new Set<string>();
 	private readonly redirectsById = new Map<string, IBrowserResourceRequest[]>();
@@ -52,14 +50,12 @@ export default class NetworkManager extends TypedEventEmitter<IBrowserNetworkEve
 
 	constructor(
 		devtoolsSession: DevtoolsSession,
-		// @ts-expect-error IBoundLog deprecated
-		logger,
+
 		proxyConnectionOptions?: IProxyConnectionOptions,
 		public secretKey?: string,
 	) {
 		super();
 		this.devtools = devtoolsSession;
-		this.logger = logger.createChild(module);
 		this.proxyConnectionOptions = proxyConnectionOptions;
 		bindFunctions(this);
 		const session = this.devtools;
@@ -239,7 +235,7 @@ export default class NetworkManager extends TypedEventEmitter<IBrowserNetworkEve
 			})
 			.catch((error) => {
 				if (error instanceof CanceledPromiseError) return;
-				this.logger.info("NetworkManager.continueWithAuthError", {
+				console.info("NetworkManager.continueWithAuthError", {
 					error,
 					requestId: event.requestId,
 					url: event.request.url,
@@ -293,7 +289,7 @@ export default class NetworkManager extends TypedEventEmitter<IBrowserNetworkEve
 			await this.devtools.send("Fetch.continueRequest", continueDetails);
 		} catch (error) {
 			if (error instanceof CanceledPromiseError) return;
-			this.logger.info("NetworkManager.continueRequestError", {
+			console.info("NetworkManager.continueRequestError", {
 				error,
 				requestId: networkRequest.requestId,
 				url: networkRequest.request.url,
@@ -323,7 +319,7 @@ export default class NetworkManager extends TypedEventEmitter<IBrowserNetworkEve
 				frameId: networkRequest.frameId,
 			};
 		} catch (error) {
-			this.logger.warn("NetworkManager.onRequestPausedError", {
+			console.warn("NetworkManager.onRequestPausedError", {
 				error,
 				url: networkRequest.request.url,
 				browserRequestId: networkRequest.requestId,
@@ -408,7 +404,7 @@ export default class NetworkManager extends TypedEventEmitter<IBrowserNetworkEve
 				frameId: networkRequest.frameId,
 			};
 		} catch (error) {
-			this.logger.warn("NetworkManager.onNetworkRequestWillBeSentError", {
+			console.warn("NetworkManager.onNetworkRequestWillBeSentError", {
 				error,
 				url: networkRequest.request.url,
 				browserRequestId: networkRequest.requestId,

@@ -22,7 +22,6 @@ import type {
 	IMitmRequestPendingBrowserRequest,
 	IResourceEvents,
 } from "../interfaces/IResourceEvents";
-import type BrowserContext from "./BrowserContext";
 
 export default class Resources
 	extends TypedEventEmitter<IResourceEvents>
@@ -38,8 +37,6 @@ export default class Resources
 
 	public readonly resourcesById = new Map<number, IResourceMeta>();
 	public readonly cookiesByDomain = new Map<string, Record<string, ICookie>>();
-	// @ts-expect-error IBoundLog deprecated
-	protected logger;
 
 	private navigationConnectTimeoutMs: number;
 	private readonly browserRequestIdToTabId = new Map<string, number>();
@@ -54,11 +51,6 @@ export default class Resources
 	private readonly mitmRequestsPendingBrowserRequest: IMitmRequestPendingBrowserRequest[] =
 		[];
 	private events = new EventSubscriber();
-
-	constructor(private browserContext: BrowserContext) {
-		super();
-		this.logger = browserContext.logger.createChild(module);
-	}
 
 	public getForTab(tabId: number): IResourceMeta[] {
 		const resources: IResourceMeta[] = [];
@@ -430,7 +422,7 @@ export default class Resources
 
 	protected onMitmRequest(request: IRequestSessionRequestEvent): void {
 		if (!this.isCollecting) return;
-		this.logger.info("MitmRequest", {
+		console.info("MitmRequest", {
 			url: request.url.href,
 			method: request.request.method,
 			id: request.id,
@@ -520,7 +512,7 @@ export default class Resources
 	): IResourceMeta {
 		const resourceId = resourceFailedEvent.id;
 		if (!resourceId) {
-			this.logger.warn("Resources.BrowserRequestFailedWithoutId", {
+			console.warn("Resources.BrowserRequestFailedWithoutId", {
 				resourceFailedEvent,
 				error,
 			});
@@ -557,7 +549,7 @@ export default class Resources
 			});
 			return resource;
 		} catch (saveError) {
-			this.logger.warn("Resources.captureResourceFailed::ErrorSaving", {
+			console.warn("Resources.captureResourceFailed::ErrorSaving", {
 				error: saveError,
 				resourceFailedEvent,
 			});

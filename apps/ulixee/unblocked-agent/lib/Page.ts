@@ -53,7 +53,6 @@ import Mouse from "./Mouse";
 import NetworkManager from "./NetworkManager";
 import { Worker } from "./Worker";
 
-
 export interface IPageCreateOptions {
 	groupName?: string;
 	runPageScripts?: boolean;
@@ -100,8 +99,6 @@ export default class Page
 	public readonly tabId: number;
 	public activeDialog: IDialog;
 
-	// @ts-expect-error IBoundLog deprecated
-	public readonly logger;
 	private isClosing = false;
 
 	public get mainFrame(): Frame {
@@ -132,8 +129,7 @@ export default class Page
 		devtoolsSession: DevtoolsSession,
 		targetId: string,
 		browserContext: BrowserContext,
-		// @ts-expect-error IBoundLog deprecated
-		logger,
+
 		opener: Page | null,
 		pageOptions?: IPageCreateOptions,
 	) {
@@ -149,15 +145,12 @@ export default class Page
 		this.runPageScripts = pageOptions?.runPageScripts !== false;
 
 		this.groupName = pageOptions?.groupName;
-		this.logger = logger.createChild(module, {
-			targetId,
-		});
-		this.logger.info("Page.created");
+
+		console.info("Page.created");
 		this.keyboard = new Keyboard(devtoolsSession);
 		this.mouse = new Mouse(devtoolsSession, this.keyboard);
 		this.networkManager = new NetworkManager(
 			devtoolsSession,
-			this.logger,
 			this.browserContext.proxy,
 			this.browserContext.secretKey,
 		);
@@ -165,19 +158,11 @@ export default class Page
 			this,
 			browserContext.domStorage,
 			this.networkManager,
-			this.logger,
 			pageOptions?.enableDomStorageTracker ?? true,
 		);
 		this.framesManager = new FramesManager(this, devtoolsSession);
 
 		this.storeEventsWithoutListeners = true;
-		this.setEventsToLog(this.logger, [
-			"frame-created",
-			"websocket-frame",
-			"websocket-handshake",
-			"navigation-response",
-			"worker",
-		]);
 
 		this.framesManager.addEventEmitter(this, [
 			"frame-created",
@@ -215,7 +200,7 @@ export default class Page
 
 		this.isReady = this.initialize().catch((error) => {
 			if (error instanceof CanceledPromiseError && this.isClosing) return;
-			this.logger.error("Page.initializationError", {
+			console.error("Page.initializationError", {
 				error,
 			});
 			throw error;
@@ -514,7 +499,6 @@ export default class Page
 			this.browserContext,
 			this.networkManager,
 			devtoolsSession,
-			this.logger,
 			targetInfo,
 		);
 
@@ -551,7 +535,7 @@ export default class Page
 		if (this.isClosing || this.closePromise.isResolved)
 			return this.closePromise.promise;
 		this.isClosing = true;
-		const parentLogId = this.logger.stats("Page.Closing");
+		const parentLogId = console.stats("Page.Closing");
 		options ??= {};
 		const timeoutMs = options.timeoutMs ?? 30e3;
 		try {
@@ -582,7 +566,7 @@ export default class Page
 			}
 			await this.closePromise.promise;
 		} finally {
-			this.logger.stats("Page.Closed", { parentLogId });
+			console.stats("Page.Closed", { parentLogId });
 		}
 	}
 
@@ -617,7 +601,7 @@ export default class Page
 			// clear memory
 			this.cleanup();
 		} catch (error) {
-			this.logger.error("Page.didClose().error", {
+			console.error("Page.didClose().error", {
 				error,
 			});
 		} finally {
@@ -725,13 +709,13 @@ export default class Page
 		);
 
 		if (this.opener && this.opener.popupInitializeFn) {
-			this.logger.stats("Popup triggered", {
+			console.stats("Popup triggered", {
 				targetId: this.targetId,
 				opener: this.opener.targetId,
 			});
 			await this.opener.isReady;
 			if (this.opener.isClosed) {
-				this.logger.stats("Popup canceled", {
+				console.stats("Popup canceled", {
 					targetId: this.targetId,
 				});
 				return;
@@ -744,7 +728,7 @@ export default class Page
 				if (this.isClosed) return;
 			}
 			await this.opener.popupInitializeFn(this, this.opener.windowOpenParams);
-			this.logger.stats("Popup initialized", {
+			console.stats("Popup initialized", {
 				targetId: this.targetId,
 				windowOpenParams: this.opener.windowOpenParams,
 			});
@@ -781,7 +765,7 @@ export default class Page
 			return devtoolsSession
 				.send("Runtime.runIfWaitingForDebugger")
 				.catch((error) => {
-					this.logger.error("Runtime.runIfWaitingForDebugger.Error", {
+					console.error("Runtime.runIfWaitingForDebugger.Error", {
 						error,
 						devtoolsSessionId: sessionId,
 					});
@@ -809,7 +793,9 @@ export default class Page
 		this.emit("dialog-opening", { dialog });
 	}
 
-	private onJavascriptDialogClosed(event: Protocol.Page.JavascriptDialogClosedEvent): void {
+	private onJavascriptDialogClosed(
+		event: Protocol.Page.JavascriptDialogClosedEvent,
+	): void {
 		this.activeDialog = null;
 		this.emit("dialog-closed", {
 			wasConfirmed: event.result,
@@ -827,7 +813,9 @@ export default class Page
 			.catch(() => null);
 	}
 
-	private onFileChooserOpened(event: Protocol.Page.FileChooserOpenedEvent): void {
+	private onFileChooserOpened(
+		event: Protocol.Page.FileChooserOpenedEvent,
+	): void {
 		const frame = this.framesManager.framesById.get(event.frameId);
 		frame
 			.trackBackendNodeAsNodePointer(event.backendNodeId)

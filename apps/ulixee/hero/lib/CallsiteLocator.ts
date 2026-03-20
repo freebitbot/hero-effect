@@ -20,7 +20,7 @@ export default class CallsiteLocator {
 	constructor(readonly entrypoint: string = Callsite.getEntrypoint()) {}
 
 	public getCurrent(): ISourceCodeLocation[] {
-		const stack = Callsite.getSourceCodeLocation(module.filename);
+		const stack = Callsite.getSourceCodeLocation(import.meta.filename);
 
 		let stackLines: ISourceCodeLocation[] = [];
 		let lastIndexOfEntrypoint = -1;

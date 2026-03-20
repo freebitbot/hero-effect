@@ -23,7 +23,6 @@ export default class FrameOutOfProcess {
 		this.frame = frame;
 		this.networkManager = new NetworkManager(
 			this.devtoolsSession,
-			frame.logger,
 			page.browserContext.proxy,
 			page.browserContext.secretKey,
 		);
@@ -31,7 +30,6 @@ export default class FrameOutOfProcess {
 			page,
 			page.browserContext.domStorage,
 			this.networkManager,
-			page.logger,
 			page.domStorageTracker.isEnabled,
 			this.devtoolsSession,
 		);

@@ -47,8 +47,6 @@ export default class FramesManager extends TypedEventEmitter<IFrameManagerEvents
 	}
 
 	public devtoolsSession: DevtoolsSession;
-	// @ts-expect-error IBoundLog deprecated
-	protected readonly logger;
 
 	private onFrameCreatedResourceEventsByFrameId: {
 		[frameId: string]: {
@@ -76,7 +74,6 @@ export default class FramesManager extends TypedEventEmitter<IFrameManagerEvents
 		this.page = page;
 		this.networkManager = page.networkManager;
 		this.domStorageTracker = page.domStorageTracker;
-		this.logger = page.logger.createChild(module);
 		this.devtoolsSession = devtoolsSession;
 
 		bindFunctions(this);
@@ -321,7 +318,7 @@ export default class FramesManager extends TypedEventEmitter<IFrameManagerEvents
 					childFrame.close();
 				} catch (error) {
 					if (!(error instanceof CanceledPromiseError)) {
-						this.logger.warn("Error closing frame after navigation", {
+						console.warn("Error closing frame after navigation", {
 							error,
 							id,
 							url: childFrame.url,
@@ -579,7 +576,6 @@ export default class FramesManager extends TypedEventEmitter<IFrameManagerEvents
 			this,
 			newFrame,
 			devtoolsSession,
-			this.logger,
 			() => this.attachedFrameIds.has(id),
 			parentFrame,
 		);

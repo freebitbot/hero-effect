@@ -85,9 +85,6 @@ export default class Interactor implements IInteractionsHelper {
 
 	public afterInteractionGroups: () => Promise<void>;
 
-	// @ts-expect-error IBoundLog deprecated
-	public logger;
-
 	public viewportSize: IViewportSize;
 
 	// Publish rect utils
@@ -130,7 +127,6 @@ export default class Interactor implements IInteractionsHelper {
 
 	constructor(frame: Frame) {
 		this.frame = frame;
-		this.logger = frame.logger.createChild(module);
 		if (this.hooks.playInteractions) {
 			this.playAllInteractions = this.hooks.playInteractions.bind(this.hooks);
 		}
@@ -151,7 +147,7 @@ export default class Interactor implements IInteractionsHelper {
 		this.preInteractionPaintStableStatus =
 			this.frame.navigations.getPaintStableStatus();
 
-		this.logger.info("Interactor.play", { interactions });
+		console.info("Interactor.play", { interactions });
 
 		this.injectScrollToPositions(interactions)
 			.then(async (finalInteractions) => {
@@ -276,7 +272,7 @@ export default class Interactor implements IInteractionsHelper {
 		interactionStep: IInteractionStep,
 	): Promise<void> {
 		if (resolvable.isResolved) {
-			this.logger.warn("Canceling interaction due to external event");
+			console.warn("Canceling interaction due to external event");
 			throw new CanceledPromiseError(
 				"Canceling interaction due to external event",
 			);

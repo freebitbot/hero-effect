@@ -105,7 +105,6 @@ export default class TypedEventEmitter<T>
 		includeUnhandledEvents = false,
 	): this {
 		super.on(eventType, listenerFn);
-		// if we're adding an error logger, we can remove the default logger
 		if (
 			eventType === "error" &&
 			listenerFn !== (this.defaultErrorLogger as any)

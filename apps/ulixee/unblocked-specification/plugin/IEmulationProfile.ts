@@ -6,7 +6,6 @@ import type IGeolocation from "./IGeolocation";
 import type IUserAgentOption from "./IUserAgentOption";
 
 export default interface IEmulationProfile<T = any> {
-	// TODO: IBoundLog - logger?: IBoundLog;
 	userAgentOption?: IUserAgentOption;
 	windowNavigatorPlatform?: string;
 	deviceProfile?: IDeviceProfile;

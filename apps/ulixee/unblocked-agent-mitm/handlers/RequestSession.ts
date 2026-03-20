@@ -54,7 +54,6 @@ export default class RequestSession
 	public bypassAllWithEmptyResponse: boolean;
 	public bypassResourceRegistrationForHost: URL;
 	public browserRequestMatcher?: IBrowserRequestMatcher;
-	// TODO: IBoundLog - public logger: IBoundLog;
 
 	public readonly hooks: INetworkHooks[] = [];
 
@@ -64,12 +63,10 @@ export default class RequestSession
 	constructor(
 		readonly sessionId: string,
 		hooks: INetworkHooks,
-		// TODO: IBoundLog - logger: IBoundLog,
 		public upstreamProxyUrl?: string,
 		public upstreamProxyUseSystemDns?: boolean,
 	) {
 		super();
-		// TODO: IBoundLog - this.logger = logger.createChild(module);
 		if (hooks) this.hook(hooks);
 		this.requestAgent = new MitmRequestAgent(this);
 		this.dns = new Dns(this);
@@ -191,7 +188,10 @@ export default class RequestSession
 		} catch (err) {
 			errors.push(err);
 		}
-		console.log("[MitmRequestSession.Closed]", { sessionId: this.sessionId, errors });
+		console.log("[MitmRequestSession.Closed]", {
+			sessionId: this.sessionId,
+			errors,
+		});
 
 		setImmediate(() => {
 			this.emit("close");
