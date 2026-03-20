@@ -1,6 +1,16 @@
-import type { ILogEntry } from "@ulixee/commons/lib/Logger";
 import SqliteTable from "@ulixee/commons/lib/SqliteTable";
 import type { Database as SqliteDatabase } from "better-sqlite3";
+
+interface ILogEntry {
+	id: number;
+	timestamp: Date;
+	action: string;
+	level: string;
+	module: string;
+	sessionId?: string;
+	parentId?: number;
+	data?: any;
+}
 
 export default class SessionLogsTable extends SqliteTable<ISessionLogRecord> {
 	constructor(db: SqliteDatabase) {

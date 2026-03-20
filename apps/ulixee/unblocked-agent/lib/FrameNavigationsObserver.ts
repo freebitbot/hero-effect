@@ -1,4 +1,3 @@
-import type { IBoundLog } from "@ulixee/commons/interfaces/ILog";
 import { CanceledPromiseError } from "@ulixee/commons/interfaces/IPendingWaitEvent";
 import type IResolvablePromise from "@ulixee/commons/interfaces/IResolvablePromise";
 import Resolvable from "@ulixee/commons/lib/Resolvable";
@@ -32,7 +31,8 @@ export default class FrameNavigationsObserver {
 	private readonly navigations: FrameNavigations;
 
 	private resourceIdResolvable: IResolvablePromise<number>;
-	private logger: IBoundLog;
+	// @ts-expect-error IBoundLog deprecated
+	private logger;
 	private readonly statusTriggers: IStatusTrigger[] = [];
 
 	constructor(navigations: FrameNavigations) {

@@ -1,4 +1,3 @@
-import type { IBoundLog } from "@ulixee/commons/interfaces/ILog";
 import { TypedEventEmitter } from "@ulixee/commons/lib/eventUtils";
 import { createPromise } from "@ulixee/commons/lib/utils";
 import type {
@@ -41,7 +40,8 @@ export default class FrameNavigations
 		reason: NavigationReason;
 	};
 
-	public logger: IBoundLog;
+	// @ts-expect-error IBoundLog deprecated
+	public logger;
 
 	private readonly historyByLoaderId: { [loaderId: string]: INavigation } = {};
 	private readonly historyById: Record<number, INavigation> = {};
@@ -49,7 +49,8 @@ export default class FrameNavigations
 
 	constructor(
 		readonly frame: Frame,
-		logger: IBoundLog,
+		// @ts-expect-error IBoundLog deprecated
+		logger,
 	) {
 		super();
 		this.logger = logger.createChild(module);

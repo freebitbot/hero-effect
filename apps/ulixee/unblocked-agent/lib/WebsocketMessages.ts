@@ -1,4 +1,3 @@
-import type { IBoundLog } from "@ulixee/commons/interfaces/ILog";
 import { TypedEventEmitter } from "@ulixee/commons/lib/eventUtils";
 
 export interface IWebsocketMessage {
@@ -18,11 +17,9 @@ export default class WebsocketMessages extends TypedEventEmitter<{
 	} = {};
 
 	private messageIdCounter = 0;
-	private logger: IBoundLog;
 
-	constructor(logger: IBoundLog) {
+	constructor() {
 		super();
-		this.logger = logger.createChild(module);
 	}
 
 	public cleanup(): void {

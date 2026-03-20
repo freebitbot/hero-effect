@@ -1,10 +1,8 @@
-import type { IBoundLog } from "@ulixee/commons/interfaces/ILog";
 import { CanceledPromiseError } from "@ulixee/commons/interfaces/IPendingWaitEvent";
 import type IRegisteredEventListener from "@ulixee/commons/interfaces/IRegisteredEventListener";
 import type IResolvablePromise from "@ulixee/commons/interfaces/IResolvablePromise";
 import EventSubscriber from "@ulixee/commons/lib/EventSubscriber";
 import { TypedEventEmitter } from "@ulixee/commons/lib/eventUtils";
-import Log from "@ulixee/commons/lib/Logger";
 import Queue from "@ulixee/commons/lib/Queue";
 import Resolvable from "@ulixee/commons/lib/Resolvable";
 import { MitmProxy } from "@ulixee/unblocked-agent-mitm";
@@ -23,8 +21,6 @@ import env from "../env";
 import Agent, { type IAgentCreateOptions } from "./Agent";
 import Browser from "./Browser";
 
-const { log } = Log(module);
-
 interface ICreatePoolOptions {
 	maxConcurrentAgents?: number;
 	maxConcurrentAgentsPerBrowser?: number;
@@ -33,7 +29,7 @@ interface ICreatePoolOptions {
 	plugins?: IUnblockedPluginClass[];
 	pluginConfigs?: PluginConfigs;
 	dataDir?: string;
-	logger?: IBoundLog;
+	logger?: any;
 }
 
 export default class Pool extends TypedEventEmitter<{
@@ -64,7 +60,7 @@ export default class Pool extends TypedEventEmitter<{
 		promise: IResolvablePromise<void>;
 	}[] = [];
 
-	protected logger: IBoundLog;
+	protected logger: any;
 	private readonly agentsByBrowserId: { [browserId: string]: number } = {};
 	private readonly browserIdByAgentId: { [agentId: string]: string } = {};
 
@@ -81,14 +77,13 @@ export default class Pool extends TypedEventEmitter<{
 		this.maxConcurrentAgentsPerBrowser =
 			options.maxConcurrentAgentsPerBrowser ?? 10;
 		this.plugins = options.plugins ?? [];
-		this.logger =
-			options.logger?.createChild(module) ?? log.createChild(module, {});
+		this.logger = options.logger;
 	}
 
 	public async start(): Promise<void> {
 		if (this.isClosing) await this.isClosing;
 		this.isClosing = null;
-		this.logger.info("Pool.start");
+		console.log("[Pool]", { action: "start" });
 		await this.startSharedMitm();
 	}
 
@@ -109,11 +104,7 @@ export default class Pool extends TypedEventEmitter<{
 	}
 
 	public async waitForAvailability(agent: Agent): Promise<void> {
-		this.logger.info("Pool.waitForAvailability", {
-			maxConcurrentAgents: this.maxConcurrentAgents,
-			activeAgentsCount: this.activeAgentsCount,
-			waitingForAvailability: this.#waitingForAvailability.length,
-		});
+		console.log("[Pool]", { action: "waitForAvailability", maxConcurrentAgents: this.maxConcurrentAgents, activeAgentsCount: this.activeAgentsCount, waitingForAvailability: this.#waitingForAvailability.length });
 
 		if (this.hasAvailability) {
 			this.registerActiveAgent(agent);
@@ -195,10 +186,7 @@ export default class Pool extends TypedEventEmitter<{
 		if (this.isClosing) return this.isClosing.promise;
 		this.isClosing = new Resolvable<void>();
 		try {
-			const logId = log.stats("Pool.Closing", {
-				sessionId: null,
-				browsers: this.browsersById.size,
-			});
+			console.log("[Pool]", { action: "Closing", browsers: this.browsersById.size });
 			for (const { promise } of this.#waitingForAvailability) {
 				promise.reject(
 					new CanceledPromiseError("Agent pool shutting down"),
@@ -238,17 +226,9 @@ export default class Pool extends TypedEventEmitter<{
 			try {
 				const errors = await Promise.all(closePromises);
 				this.events.close();
-				log.stats("Pool.Closed", {
-					parentLogId: logId,
-					sessionId: null,
-					errors: errors.filter(Boolean),
-				});
+				console.log("[Pool]", { action: "Closed", errors: errors.filter(Boolean) });
 			} catch (error) {
-				log.error("Error in Pool.Close", {
-					parentLogId: logId,
-					sessionId: null,
-					error,
-				});
+				console.log("[Pool]", { action: "CloseError", error });
 			}
 		} finally {
 			this.isClosing.resolve();
@@ -282,11 +262,7 @@ export default class Pool extends TypedEventEmitter<{
 			delete this.browserIdByAgentId[closedAgentId];
 		}
 
-		this.logger.info("Pool.ReleasingAgent", {
-			maxConcurrentAgents: this.maxConcurrentAgents,
-			activeAgentsCount: this.activeAgentsCount,
-			waitingForAvailability: this.#waitingForAvailability.length,
-		});
+		console.log("[Pool]", { action: "ReleasingAgent", maxConcurrentAgents: this.maxConcurrentAgents, activeAgentsCount: this.activeAgentsCount, waitingForAvailability: this.#waitingForAvailability.length });
 		if (!this.#waitingForAvailability.length || !this.hasAvailability) {
 			return;
 		}
@@ -323,10 +299,7 @@ export default class Pool extends TypedEventEmitter<{
 		}
 
 		if (contextEvent) this.events.off(contextEvent);
-		this.logger.info("Browser.closed", {
-			engine: this.browsersById.get(browserId)?.engine,
-			browserId,
-		});
+		console.log("[Pool]", { action: "Browser.closed", engine: this.browsersById.get(browserId)?.engine, browserId });
 		this.browsersById.delete(browserId);
 		if (this.browsersById.size === 0) {
 			this.emit("all-browsers-closed");
@@ -357,10 +330,7 @@ export default class Pool extends TypedEventEmitter<{
 			}
 		}
 
-		this.logger.info("Browser.allPagesClosed", {
-			browserId,
-			engineHasOtherOpenPages: hasWindows,
-		});
+		console.log("[Pool]", { action: "Browser.allPagesClosed", browserId, engineHasOtherOpenPages: hasWindows });
 		if (hasWindows) return;
 
 		const browser = this.browsersById.get(browserId);

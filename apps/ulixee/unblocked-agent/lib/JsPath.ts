@@ -1,4 +1,3 @@
-import type { IBoundLog } from "@ulixee/commons/interfaces/ILog";
 import TypeSerializer from "@ulixee/commons/lib/TypeSerializer";
 import type {
 	IElementRect,
@@ -41,13 +40,18 @@ interface IJSONObject {
 
 export class JsPath implements IJsPathFunctions {
 	private readonly frame: Frame;
-	private readonly logger: IBoundLog;
+	// @ts-expect-error IBoundLog deprecated
+	private readonly logger;
 	private readonly clientRectByNodePointerId = new Map<number, IElementRect>();
 	private readonly nodeIdRedirectToNewNodeId: { [nodeId: number]: number } = {};
 
 	private nodeIdToJsPathSource = new Map<number, IJsPathSource>();
 
-	constructor(frame: Frame, logger: IBoundLog) {
+	constructor(
+		frame: Frame,
+		// @ts-expect-error IBoundLog deprecated
+		logger,
+	) {
 		this.frame = frame;
 		this.logger = logger.createChild(module);
 	}

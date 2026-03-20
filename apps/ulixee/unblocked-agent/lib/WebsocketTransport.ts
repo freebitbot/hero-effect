@@ -1,10 +1,7 @@
 import EventSubscriber from "@ulixee/commons/lib/EventSubscriber";
-import Log from "@ulixee/commons/lib/Logger";
 import Resolvable from "@ulixee/commons/lib/Resolvable";
 import * as WebSocket from "ws";
 import type IConnectionTransport from "../interfaces/IConnectionTransport";
-
-const { log } = Log(module);
 
 export class WebsocketTransport implements IConnectionTransport {
 	public get url(): string {
@@ -45,7 +42,7 @@ export class WebsocketTransport implements IConnectionTransport {
 	}
 
 	private onClosed(): void {
-		log.stats("WebSocketTransport.Closed");
+		console.log("[WebsocketTransport]", { action: "Closed" });
 		for (const close of this.onCloseFns) close();
 	}
 
@@ -70,7 +67,7 @@ export class WebsocketTransport implements IConnectionTransport {
 				this.connectedPromise.reject(error, true);
 			if (this.isClosed) return;
 			if (error.code !== "EPIPE") {
-				log.error("WebsocketTransport.error", { error, sessionId: null });
+				console.log("[WebsocketTransport]", { action: "error", error });
 			}
 		});
 	}

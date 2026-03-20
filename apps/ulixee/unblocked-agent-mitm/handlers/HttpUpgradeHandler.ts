@@ -1,12 +1,9 @@
 import type * as http from "node:http";
 import type * as net from "node:net";
-import Log, { hasBeenLoggedSymbol } from "@ulixee/commons/lib/Logger";
 import type IMitmRequestContext from "../interfaces/IMitmRequestContext";
 import ResourceState from "../interfaces/ResourceState";
 import MitmRequestContext from "../lib/MitmRequestContext";
 import BaseHttpHandler from "./BaseHttpHandler";
-
-const { log } = Log(module);
 
 export default class HttpUpgradeHandler extends BaseHttpHandler {
 	constructor(
@@ -58,13 +55,11 @@ export default class HttpUpgradeHandler extends BaseHttpHandler {
 			error,
 		});
 
-		if (!error[hasBeenLoggedSymbol]) {
-			log.info(`MitmWebSocketUpgrade.${errorType}`, {
-				sessionId,
-				error,
-				url,
-			});
-		}
+		console.error(`[MitmWebSocketUpgrade.${errorType}]`, {
+			sessionId,
+			error,
+			url,
+		});
 		socket.destroy(error);
 		this.cleanup();
 	}

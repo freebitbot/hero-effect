@@ -1,7 +1,6 @@
 import { CanceledPromiseError } from "@ulixee/commons/interfaces/IPendingWaitEvent";
 import TimeoutError from "@ulixee/commons/interfaces/TimeoutError";
 import { TypedEventEmitter } from "@ulixee/commons/lib/eventUtils";
-import Log from "@ulixee/commons/lib/Logger";
 import Resolvable from "@ulixee/commons/lib/Resolvable";
 import { isSemverSatisfied } from "@ulixee/commons/lib/VersionUtils";
 import type ICoreCommandRequestPayload from "@ulixee/hero-interfaces/ICoreCommandRequestPayload";
@@ -23,8 +22,6 @@ import Session from "../lib/Session";
 import Tab from "../lib/Tab";
 
 const { version } = require("../package.json");
-
-const { log } = Log(module);
 
 export default class ConnectionToHeroClient
 	extends TypedEventEmitter<IConnectionToClientEvents>
@@ -95,7 +92,7 @@ export default class ConnectionToHeroClient
 				(isDirect === false && shouldSkipLogging === false) ||
 				isLaunchError
 			) {
-				log.error("ConnectionToClient.HandleRequestError", {
+				console.error("[ConnectionToClient.HandleRequestError]", {
 					error,
 					sessionId: meta?.sessionId,
 				});
@@ -147,14 +144,12 @@ export default class ConnectionToHeroClient
 
 	public logUnhandledError(error: Error, fatalError = false): void {
 		if (fatalError) {
-			log.error("ConnectionToClient.UnhandledError(fatal)", {
+			console.error("[ConnectionToClient.UnhandledError(fatal)]", {
 				clientError: error,
-				sessionId: null,
 			});
 		} else {
-			log.error("ConnectionToClient.UnhandledErrorOrRejection", {
+			console.error("[ConnectionToClient.UnhandledErrorOrRejection]", {
 				clientError: error,
-				sessionId: null,
 			});
 		}
 	}
@@ -164,10 +159,7 @@ export default class ConnectionToHeroClient
 		const resolvable = new Resolvable<void>();
 		this.disconnectPromise = resolvable.promise;
 		try {
-			const logId = log.stats("ConnectionToClient.Disconnecting", {
-				sessionId: null,
-				fatalError,
-			});
+			console.log("[ConnectionToClient.Disconnecting]", { fatalError });
 			clearTimeout(this.autoShutdownTimer);
 			const closeAll: Promise<any>[] = [];
 			for (const id of this.sessionIdToRemoteEvents.keys()) {
@@ -177,10 +169,7 @@ export default class ConnectionToHeroClient
 
 			await Promise.all([...closeAll, this.transport.disconnect?.(fatalError)]);
 			this.emit("disconnected", fatalError);
-			log.stats("ConnectionToClient.Disconnected", {
-				sessionId: null,
-				parentLogId: logId,
-			});
+			console.log("[ConnectionToClient.Disconnected]");
 		} finally {
 			resolvable.resolve();
 			this.core = null;
@@ -207,7 +196,7 @@ export default class ConnectionToHeroClient
 		void this.transport
 			.send(message)
 			.catch((error) =>
-				log.error("ERROR sending message", { error, message, sessionId: null }),
+				console.error("[ConnectionToClient] ERROR sending message", { error, message }),
 			);
 	}
 
@@ -249,7 +238,7 @@ export default class ConnectionToHeroClient
 				startTime,
 				sendTime,
 			}).catch((error) => {
-				log.warn("RecordingCommandsFailed", {
+				console.warn("[ConnectionToClient.RecordingCommandsFailed]", {
 					sessionId: meta.sessionId,
 					error,
 					command,

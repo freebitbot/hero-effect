@@ -1,10 +1,7 @@
-import Log from "@ulixee/commons/lib/Logger";
 import type Core from "@ulixee/hero-core";
 import { Session } from "@ulixee/hero-core";
 import CorePlugins from "@ulixee/hero-core/lib/CorePlugins";
 import type BrowserContext from "@ulixee/unblocked-agent/lib/BrowserContext";
-
-const { log } = Log(module);
 
 export default class MirrorContext {
 	public static async createFromSessionDb(
@@ -22,11 +19,8 @@ export default class MirrorContext {
 		options.showChromeInteractions = headed;
 		options.showChrome = headed;
 
-		const logger = log.createChild(module, { sessionId });
-
 		const agent = core.pool.createAgent({
 			options,
-			logger,
 			deviceProfile: options?.userProfile?.deviceProfile,
 			id: sessionId,
 		});

@@ -1,6 +1,5 @@
 import * as Path from "node:path";
 import { CanceledPromiseError } from "@ulixee/commons/interfaces/IPendingWaitEvent";
-import Log from "@ulixee/commons/lib/Logger";
 import Resolvable from "@ulixee/commons/lib/Resolvable";
 import type Core from "@ulixee/hero-core";
 import type SessionDb from "@ulixee/hero-core/dbs/SessionDb";
@@ -26,8 +25,6 @@ import DomStateAssertions, {
 	type IFrameAssertions,
 } from "./DomStateAssertions";
 import MirrorContext from "./MirrorContext";
-
-const { log } = Log(module);
 
 export default class DomStateGenerator {
 	public browserContext: Promise<BrowserContext>;
@@ -290,7 +287,7 @@ export default class DomStateGenerator {
 			const paintEvents = session.domRecording?.paintEvents;
 			if (!paintEvents.length) {
 				// no paint events for page!
-				log.warn("No paint events for session!!", {
+				console.log("[DomStateGenerator]", {
 					sessionId: session.sessionId,
 				});
 				continue;
@@ -606,15 +603,12 @@ export default class DomStateGenerator {
 		}
 
 		if (!lastNavigation) {
-			log.error(
-				"No navigation found for session during page state generation",
-				{
-					sessionId,
-					mainFrameIds: [...session.mainFrameIds],
-					loadingRange,
-					tabId,
-				},
-			);
+			console.log("[DomStateGenerator]", {
+				sessionId,
+				mainFrameIds: [...session.mainFrameIds],
+				loadingRange,
+				tabId,
+			});
 		}
 		return lastNavigation;
 	}

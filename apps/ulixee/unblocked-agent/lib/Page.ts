@@ -16,7 +16,6 @@
  */
 
 import * as Url from "node:url";
-import type { IBoundLog } from "@ulixee/commons/interfaces/ILog";
 import { CanceledPromiseError } from "@ulixee/commons/interfaces/IPendingWaitEvent";
 import EventSubscriber from "@ulixee/commons/lib/EventSubscriber";
 import { TypedEventEmitter } from "@ulixee/commons/lib/eventUtils";
@@ -101,9 +100,9 @@ export default class Page
 	public readonly tabId: number;
 	public activeDialog: IDialog;
 
-	public get id(): string {
-		return this.targetId;
-	}
+	// @ts-expect-error IBoundLog deprecated
+	public readonly logger;
+	private isClosing = false;
 
 	public get mainFrame(): Frame {
 		return this.framesManager?.main;
@@ -121,8 +120,6 @@ export default class Page
 		return this.browserContext.commandMarker.lastId;
 	}
 
-	public readonly logger: IBoundLog;
-	private isClosing = false;
 	private closePromise = createPromise();
 	private readonly events = new EventSubscriber();
 
@@ -135,7 +132,8 @@ export default class Page
 		devtoolsSession: DevtoolsSession,
 		targetId: string,
 		browserContext: BrowserContext,
-		logger: IBoundLog,
+		// @ts-expect-error IBoundLog deprecated
+		logger,
 		opener: Page | null,
 		pageOptions?: IPageCreateOptions,
 	) {

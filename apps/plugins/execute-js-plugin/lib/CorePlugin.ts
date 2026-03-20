@@ -19,7 +19,7 @@ export default class ExecuteJsCorePlugin extends CorePlugin {
 		});
 
 		if ((result as any)?.error) {
-			this.logger.error<any>(fnName, { error: result.error });
+			console.error("[ExecuteJsCorePlugin]", fnName, { error: result.error });
 			throw new Error((result as any).error as string);
 		} else {
 			return result as any;

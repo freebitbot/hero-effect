@@ -1,8 +1,6 @@
 import * as Fs from "node:fs";
 import * as Path from "node:path";
-import type { IBoundLog } from "@ulixee/commons/interfaces/ILog";
 import { TypedEventEmitter } from "@ulixee/commons/lib/eventUtils";
-import Log, { hasBeenLoggedSymbol } from "@ulixee/commons/lib/Logger";
 import Resolvable from "@ulixee/commons/lib/Resolvable";
 import ShutdownHandler from "@ulixee/commons/lib/ShutdownHandler";
 import { bindFunctions } from "@ulixee/commons/lib/utils";
@@ -27,8 +25,6 @@ import Env from "./env";
 import type ISessionRegistry from "./interfaces/ISessionRegistry";
 import Session from "./lib/Session";
 import Tab from "./lib/Tab";
-
-const { log } = Log(module);
 
 export { LocationTrigger, Session, Tab };
 
@@ -110,7 +106,6 @@ export default class HeroCore extends TypedEventEmitter<
 		this.pool = new Pool({
 			certificateStore: this.networkDb.certificates,
 			dataDir: this.dataDir,
-			logger: log.createChild(module),
 			maxConcurrentAgents: options.maxConcurrentClientCount,
 			maxConcurrentAgentsPerBrowser: options.maxConcurrentClientsPerBrowser,
 			plugins:
@@ -151,7 +146,7 @@ export default class HeroCore extends TypedEventEmitter<
 				},
 			)
 			.then((browser) =>
-				browser.newContext({ logger: log as IBoundLog, isIncognito: true }),
+				browser.newContext({ isIncognito: true }),
 			);
 
 		return this.utilityBrowserContext;
@@ -161,19 +156,12 @@ export default class HeroCore extends TypedEventEmitter<
 		if (this.isStarting) return this.isStarting;
 
 		HeroCore.registerSignals(this.options.shouldShutdownOnSignals);
-		const startLogId = log.info("Core.start", {
-			options: this.options,
-			sessionId: null,
-		});
+		console.log("[HeroCore.start]", { options: this.options });
 		this.isClosing = null;
 		this.isStarting = this.pool.start();
 		await this.isStarting;
 
-		log.info("Core started", {
-			sessionId: null,
-			parentLogId: startLogId,
-			dataDir: this.dataDir,
-		});
+		console.log("[HeroCore.started]", { dataDir: this.dataDir });
 	}
 
 	public async close(): Promise<void> {
@@ -185,7 +173,7 @@ export default class HeroCore extends TypedEventEmitter<
 		this.isStarting = null;
 		const idx = HeroCore.instances.indexOf(this);
 		if (idx >= 0) HeroCore.instances.splice(idx, 1);
-		const logid = log.info("Core.shutdown");
+		console.log("[HeroCore.shutdown]");
 		let shutDownErrors: (Error | null)[] = [];
 		try {
 			shutDownErrors = await Promise.all([
@@ -206,9 +194,7 @@ export default class HeroCore extends TypedEventEmitter<
 			isClosing.reject(error);
 		} finally {
 			this.emit("close");
-			log.info("Core.shutdownComplete", {
-				parentLogId: logid,
-				sessionId: null,
+			console.log("[HeroCore.shutdownComplete]", {
 				errors: shutDownErrors.length ? shutDownErrors : undefined,
 			});
 		}
@@ -289,12 +275,10 @@ export default class HeroCore extends TypedEventEmitter<
 
 		if (process.env.NODE_ENV !== "test") {
 			process.on("uncaughtExceptionMonitor", (error: Error, origin) => {
-				if (!error || error[hasBeenLoggedSymbol]) return;
-				log.error("UnhandledError(fatal)", { error, origin, sessionId: null });
+				console.error("[HeroCore.uncaughtException]", { error, origin });
 			});
 			process.on("unhandledRejection", (error: Error) => {
-				if (!error || error[hasBeenLoggedSymbol]) return;
-				log.error("UnhandledRejection", { error, sessionId: null });
+				console.error("[HeroCore.unhandledRejection]", { error });
 			});
 		}
 	}

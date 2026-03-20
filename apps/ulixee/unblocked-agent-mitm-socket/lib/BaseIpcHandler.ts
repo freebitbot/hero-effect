@@ -3,10 +3,8 @@ import * as Fs from "node:fs";
 import { unlink } from "node:fs";
 import * as net from "node:net";
 import * as Path from "node:path";
-import type { IBoundLog } from "@ulixee/commons/interfaces/ILog";
 import { CanceledPromiseError } from "@ulixee/commons/interfaces/IPendingWaitEvent";
 import { createIpcSocketPath } from "@ulixee/commons/lib/IpcUtils";
-import Log from "@ulixee/commons/lib/Logger";
 import Resolvable from "@ulixee/commons/lib/Resolvable";
 import { bindFunctions } from "@ulixee/commons/lib/utils";
 import { nanoid } from "nanoid";
@@ -21,8 +19,6 @@ const libPath = Path.join(
 
 const distExists = Fs.existsSync(libPath);
 
-const { log } = Log(module);
-
 let hasInitializedStore = false;
 export default abstract class BaseIpcHandler {
 	public isClosing: boolean;
@@ -35,7 +31,6 @@ export default abstract class BaseIpcHandler {
 		return this.child?.pid;
 	}
 
-	protected abstract logger: IBoundLog;
 	protected options: IGoIpcOpts;
 
 	private hasWaitListeners = false;
@@ -80,7 +75,7 @@ export default abstract class BaseIpcHandler {
 
 	public close(): void {
 		if (this.isClosing) return;
-		const parentLogId = this.logger.info(`${this.handlerName}.Closing`);
+		console.log("[BaseIpcHandler]", `${this.handlerName}.Closing`);
 		this.isClosing = true;
 
 		if (this.child) {
@@ -115,9 +110,7 @@ export default abstract class BaseIpcHandler {
 				true,
 			);
 		}
-		this.logger.stats(`${this.handlerName}.Closed`, {
-			parentLogId,
-		});
+		console.log("[BaseIpcHandler]", `${this.handlerName}.Closed`);
 	}
 
 	protected abstract onMessage(message: string): void;
@@ -140,7 +133,7 @@ export default abstract class BaseIpcHandler {
 			// wait a sec to see if we're shutting down
 			setImmediate((error) => {
 				if (!this.isClosing && !this.isExited)
-					this.logger.error(`${this.handlerName}.error`, { error });
+					console.log("[BaseIpcHandler]", `${this.handlerName}.error`, { error });
 			}, err);
 		});
 
@@ -162,7 +155,7 @@ export default abstract class BaseIpcHandler {
 
 	private onError(error: Error): void {
 		if (this.isClosing) return;
-		this.logger.error(`${this.handlerName}.onError`, {
+		console.log("[BaseIpcHandler]", `${this.handlerName}.onError`, {
 			error,
 		});
 	}
@@ -189,12 +182,12 @@ export default abstract class BaseIpcHandler {
 
 	private onChildProcessMessage(message: string): void {
 		if (this.isClosing) return;
-		this.logger.info(`${this.handlerName}.stdout: ${message}`);
+		console.log("[BaseIpcHandler]", `${this.handlerName}.stdout: ${message}`);
 	}
 
 	private onChildProcessStderr(message: string): void {
 		if (this.isClosing) return;
-		this.logger.error(`${this.handlerName}.stderr: ${message}`);
+		console.log("[BaseIpcHandler]", `${this.handlerName}.stderr: ${message}`);
 	}
 
 	private spawnChild(): void {
@@ -215,7 +208,7 @@ export default abstract class BaseIpcHandler {
 	}
 
 	private getDefaultOptions(options: Partial<IGoIpcOpts>): IGoIpcOpts {
-		options.debug ??= log.level === "stats";
+		options.debug ??= false;
 		const mode = options.mode || "proxy";
 		options.mode = mode;
 

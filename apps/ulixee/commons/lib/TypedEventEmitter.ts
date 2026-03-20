@@ -1,5 +1,4 @@
 import { EventEmitter } from "node:events";
-import type { IBoundLog } from "../interfaces/ILog";
 import type IPendingWaitEvent from "../interfaces/IPendingWaitEvent";
 import { CanceledPromiseError } from "../interfaces/IPendingWaitEvent";
 import type IRegisteredEventListener from "../interfaces/IRegisteredEventListener";
@@ -16,8 +15,6 @@ export default class TypedEventEmitter<T>
 	public onEventListenerAdded?: <K extends keyof T & (string | symbol)>(
 		event: K,
 	) => void;
-
-	#logger?: IBoundLog;
 
 	private pendingIdCounter = 0;
 	private pendingWaitEventsById = new Map<number, IPendingWaitEvent>();
@@ -54,14 +51,6 @@ export default class TypedEventEmitter<T>
 		}
 	}
 
-	public setEventsToLog<K extends keyof T & (string | symbol)>(
-		logger: IBoundLog,
-		events: K[],
-	): void {
-		this.#logger = logger;
-		this.eventsToLog = new Set<string | symbol>(events);
-	}
-
 	public waitOn<K extends keyof T & (string | symbol)>(
 		eventType: K,
 		listenerFn?: (this: this, event?: T[K]) => boolean,
@@ -81,15 +70,9 @@ export default class TypedEventEmitter<T>
 			resolvable: promise,
 			error: new CanceledPromiseError(`Event (${String(eventType)}) canceled`),
 		});
-		const messageId = this.#logger?.stats?.(`waitOn:${String(eventType)}`, {
-			timeoutMillis,
-		});
 		const callbackFn = (result: T[K]): void => {
 			// give the listeners a second to register
 			if (!listenerFn || listenerFn.call(this, result)) {
-				this.#logger?.stats?.(`waitOn.resolve:${String(eventType)}`, {
-					parentLogId: messageId,
-				});
 				promise.resolve(result);
 			}
 		};
@@ -209,8 +192,7 @@ export default class TypedEventEmitter<T>
 	}
 
 	protected defaultErrorLogger(this: this, error: Error): void {
-		if (this.#logger) this.#logger.error("EventListenerError", error);
-		else console.warn("EventListenerError", error);
+		console.warn("[TypedEventEmitter] EventListenerError", error);
 	}
 
 	private replayOrClearMissedEvents<K extends keyof T & (string | symbol)>(
@@ -234,23 +216,7 @@ export default class TypedEventEmitter<T>
 		event?: T[K],
 	): void {
 		if (this.eventsToLog.has(eventType)) {
-			let data: any = event;
-			if (eventType) {
-				if (typeof event === "object") {
-					if ((event as any).toJSON) {
-						data = (event as any).toJSON();
-					} else {
-						data = { ...event };
-						for (const [key, val] of Object.entries(data)) {
-							if (!val) continue;
-							if ((val as any).toJSON) {
-								data[key] = (val as any).toJSON();
-							}
-						}
-					}
-				}
-			}
-			this.#logger?.stats?.(`emit:${String(eventType)}`, data);
+			console.log("[TypedEventEmitter]", String(eventType), event);
 		}
 	}
 }

@@ -5,7 +5,6 @@ import {
 	Http2ServerResponse,
 } from "node:http2";
 import { CanceledPromiseError } from "@ulixee/commons/interfaces/IPendingWaitEvent";
-import Log, { hasBeenLoggedSymbol } from "@ulixee/commons/lib/Logger";
 import type IMitmRequestContext from "../interfaces/IMitmRequestContext";
 import ResourceState from "../interfaces/ResourceState";
 import HttpResponseCache from "../lib/HttpResponseCache";
@@ -13,8 +12,6 @@ import MitmRequestContext from "../lib/MitmRequestContext";
 import { parseRawHeaders } from "../lib/Utils";
 import BaseHttpHandler from "./BaseHttpHandler";
 import HeadersHandler from "./HeadersHandler";
-
-const { log } = Log(module);
 
 export default class HttpRequestHandler extends BaseHttpHandler {
 	protected static responseCache = new HttpResponseCache();
@@ -126,7 +123,7 @@ export default class HttpRequestHandler extends BaseHttpHandler {
 		/////// WRITE CLIENT RESPONSE //////////////////
 
 		if (!context.proxyToClientResponse) {
-			log.warn("Error.NoProxyToClientResponse", {
+			console.error("[Error.NoProxyToClientResponse]", {
 				sessionId: context.requestSession.sessionId,
 			});
 			context.setState(ResourceState.PrematurelyClosed);
@@ -173,12 +170,8 @@ export default class HttpRequestHandler extends BaseHttpHandler {
 		if (isCanceled) {
 			status = 444;
 		}
-		if (
-			!isCanceled &&
-			!requestSession.isClosing &&
-			!error[hasBeenLoggedSymbol]
-		) {
-			log.info(`MitmHttpRequest.${kind}`, {
+		if (!isCanceled && !requestSession.isClosing) {
+			console.error(`[MitmHttpRequest.${kind}]`, {
 				sessionId,
 				request: `${method}: ${url}`,
 				error,
@@ -264,7 +257,7 @@ export default class HttpRequestHandler extends BaseHttpHandler {
 		// NOTE: nodejs won't allow an invalid status, but chrome will.
 		// TODO: we should find a way to keep this status
 		if (context.status > 599) {
-			log.info(`MitmHttpRequest.modifyStatusResponseCode`, {
+			console.warn(`[MitmHttpRequest.modifyStatusResponseCode]`, {
 				sessionId: requestSession.sessionId,
 				request: `${context.method}: ${context.url.href}`,
 				actualStatus: context.status,
@@ -280,7 +273,7 @@ export default class HttpRequestHandler extends BaseHttpHandler {
 			try {
 				proxyToClientResponse.setHeader(key, value);
 			} catch (error) {
-				log.info(`MitmHttpRequest.writeResponseHeadError`, {
+				console.warn(`[MitmHttpRequest.writeResponseHeadError]`, {
 					sessionId: requestSession.sessionId,
 					request: `${context.method}: ${context.url.href}`,
 					error,

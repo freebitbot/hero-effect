@@ -1,4 +1,3 @@
-import type { IBoundLog } from "@ulixee/commons/interfaces/ILog";
 import { CanceledPromiseError } from "@ulixee/commons/interfaces/IPendingWaitEvent";
 import type IResolvablePromise from "@ulixee/commons/interfaces/IResolvablePromise";
 import { assert } from "@ulixee/commons/lib/utils";
@@ -86,7 +85,8 @@ export default class Interactor implements IInteractionsHelper {
 
 	public afterInteractionGroups: () => Promise<void>;
 
-	public logger: IBoundLog;
+	// @ts-expect-error IBoundLog deprecated
+	public logger;
 
 	public viewportSize: IViewportSize;
 

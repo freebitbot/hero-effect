@@ -2,11 +2,9 @@ import * as Fs from "node:fs";
 import * as Os from "node:os";
 import { URL } from "node:url";
 import type { IRequestInit } from "@ulixee/awaited-dom/base/interfaces/official";
-import type { IBoundLog } from "@ulixee/commons/interfaces/ILog";
 import { CanceledPromiseError } from "@ulixee/commons/interfaces/IPendingWaitEvent";
 import EventSubscriber from "@ulixee/commons/lib/EventSubscriber";
 import { TypedEventEmitter } from "@ulixee/commons/lib/eventUtils";
-import Log from "@ulixee/commons/lib/Logger";
 import Resolvable from "@ulixee/commons/lib/Resolvable";
 import type IDetachedElement from "@ulixee/hero-interfaces/IDetachedElement";
 import { DomActionType } from "@ulixee/hero-interfaces/IDomChangeEvent";
@@ -44,8 +42,6 @@ import InjectedScripts from "./InjectedScripts";
 import type Session from "./Session";
 import type Tab from "./Tab";
 import type { ITabEventParams } from "./Tab";
-
-const { log } = Log(module);
 
 export default class FrameEnvironment
 	extends TypedEventEmitter<{ paint: void }>
@@ -103,8 +99,6 @@ export default class FrameEnvironment
 	public isReady: Promise<Error | void>;
 	public domNodeId: number;
 
-	protected readonly logger: IBoundLog;
-
 	private events = new EventSubscriber();
 
 	private isClosing = false;
@@ -130,11 +124,6 @@ export default class FrameEnvironment
 		this.frame = frame;
 		this.tab = tab;
 		this.createdTime = new Date();
-		this.logger = log.createChild(module, {
-			tabId: tab.id,
-			sessionId: tab.session.id,
-			frameId: this.id,
-		});
 		this.createdAtCommandId = this.session.commands.lastId;
 		if (this.session.options.showChromeInteractions) {
 			frame.interactor.beforeEachInteractionStep =
@@ -188,11 +177,9 @@ export default class FrameEnvironment
 	public close(): void {
 		if (this.isClosing) return;
 		this.isClosing = true;
-		const parentLogId = this.logger.stats("FrameEnvironment.Closing");
 
 		try {
 			this.frame.close();
-			this.logger.stats("FrameEnvironment.Closed", { parentLogId });
 			for (const path of this.filePathsToClean) {
 				Fs.promises.unlink(path).catch(() => null);
 			}
@@ -203,10 +190,7 @@ export default class FrameEnvironment
 				!error.message.includes("Target closed") &&
 				!(error instanceof CanceledPromiseError)
 			) {
-				this.logger.error("FrameEnvironment.ClosingError", {
-					error,
-					parentLogId,
-				});
+				console.error("[FrameEnvironment.ClosingError]", { error });
 			}
 		}
 	}
@@ -572,7 +556,7 @@ b) Use the UserProfile feature to set cookies for 1 or more domains before they'
 		const tabId = this.tab.id;
 		const frameId = this.id;
 
-		this.logger.stats("FrameEnvironment.onPageEvents", {
+		console.log("[FrameEnvironment.onPageEvents]", {
 			tabId,
 			frameId,
 			dom: domChanges.length,
@@ -766,7 +750,7 @@ b) Use the UserProfile feature to set cookies for 1 or more domains before they'
 		});
 
 		if ((result as any)?.error) {
-			this.logger.error(fnName, { result });
+			console.error("[FrameEnvironment.runFn]", { fnName, result });
 			throw new Error((result as any).error as string);
 		} else {
 			return result as T;
@@ -781,7 +765,7 @@ b) Use the UserProfile feature to set cookies for 1 or more domains before they'
 			}
 		} catch (error) {
 			// This can happen if the node goes away. Still want to record frame
-			this.logger.warn("FrameCreated.getDomNodeIdError", {
+			console.warn("[FrameEnvironment.getDomNodeIdError]", {
 				error,
 				frameId: this.id,
 			});

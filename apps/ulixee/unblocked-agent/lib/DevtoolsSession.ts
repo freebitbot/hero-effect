@@ -19,7 +19,6 @@ import { CanceledPromiseError } from "@ulixee/commons/interfaces/IPendingWaitEve
 import type IResolvablePromise from "@ulixee/commons/interfaces/IResolvablePromise";
 import TimeoutError from "@ulixee/commons/interfaces/TimeoutError";
 import { TypedEventEmitter } from "@ulixee/commons/lib/eventUtils";
-import Log from "@ulixee/commons/lib/Logger";
 import { createPromise } from "@ulixee/commons/lib/utils";
 import type IDevtoolsSession from "@ulixee/unblocked-specification/agent/browser/IDevtoolsSession";
 import type {
@@ -32,7 +31,6 @@ import type { ProtocolMapping } from "devtools-protocol/types/protocol-mapping";
 import ProtocolError from "../errors/ProtocolError";
 import type { Connection } from "./Connection";
 
-const { log } = Log(module);
 /**
  * The `DevtoolsSession` instances are used to talk raw Chrome Devtools Protocol.
  *
@@ -89,10 +87,7 @@ export default class DevtoolsSession
 		);
 		resolvable.promise.catch((err) => {
 			if (err instanceof TimeoutError)
-				log.info(`DevtoolsSessionError`, {
-					error: err,
-					sessionId: this.sessionId,
-				});
+				console.log("[DevtoolsSession]", { action: "Error", sessionId: this.sessionId, error: err });
 		});
 		this.pendingMessages.set(id, { resolvable, method });
 

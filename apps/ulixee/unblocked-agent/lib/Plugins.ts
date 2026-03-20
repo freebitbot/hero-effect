@@ -113,7 +113,7 @@ export default class Plugins implements IUnblockedPlugins {
 			try {
 				this.profile.browserEngine = ChromeEngine.default();
 			} catch (e) {
-				this.profile.logger?.warn("Default Chrome Browser could not be found", {
+				console.warn("[Plugins] Default Chrome Browser could not be found", {
 					packageId: ChromeEngine.defaultPackageName,
 				});
 			}

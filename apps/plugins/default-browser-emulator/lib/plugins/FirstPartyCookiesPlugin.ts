@@ -1,5 +1,4 @@
 import { URL } from "node:url";
-import type { IBoundLog } from "@ulixee/commons/interfaces/ILog";
 import type IResolvablePromise from "@ulixee/commons/interfaces/IResolvablePromise";
 import type SameSiteContext from "@ulixee/commons/interfaces/SameSiteContext";
 import { createPromise } from "@ulixee/commons/lib/utils";
@@ -43,10 +42,10 @@ export default class FirstPartyCookiesPlugin implements IHooksProvider {
 		[site: string]: IResolvablePromise;
 	} = {};
 
-	private readonly logger: IBoundLog;
+	// TODO: IBoundLog - private readonly logger: IBoundLog;
 
 	constructor(readonly emulationProfile: IEmulationProfile) {
-		this.logger = emulationProfile.logger?.createChild(module);
+		// TODO: IBoundLog - this.logger = emulationProfile.logger?.createChild(module);
 	}
 
 	public onLoadUserProfileCookies(cookies, storage): void {
@@ -87,7 +86,7 @@ export default class FirstPartyCookiesPlugin implements IHooksProvider {
 			try {
 				await this.setCookie(setCookie, resource);
 			} catch (error) {
-				this.logger.warn("Could not set cookie", { error });
+				console.warn("[FirstPartyCookiesPlugin] Could not set cookie", { error });
 			}
 		}
 	}
@@ -106,7 +105,7 @@ export default class FirstPartyCookiesPlugin implements IHooksProvider {
 					const { cookie, origin } = JSON.parse(payload);
 					await this.cookieJar.setCookie(cookie, origin);
 				} catch (error) {
-					this.logger.warn("Error setting cookie from page", { error });
+					console.warn("[FirstPartyCookiesPlugin] Error setting cookie from page", { error });
 				}
 			},
 		});

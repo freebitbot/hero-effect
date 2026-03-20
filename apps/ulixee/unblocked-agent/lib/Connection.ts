@@ -15,11 +15,8 @@
  * limitations under the License.
  */
 import { TypedEventEmitter } from "@ulixee/commons/lib/eventUtils";
-import Log from "@ulixee/commons/lib/Logger";
 import type IConnectionTransport from "../interfaces/IConnectionTransport";
 import DevtoolsSession from "./DevtoolsSession";
-
-const { log } = Log(module);
 
 export class Connection extends TypedEventEmitter<{
 	disconnected: void;
@@ -90,10 +87,7 @@ export class Connection extends TypedEventEmitter<{
 		if (devtoolsSession) {
 			devtoolsSession.onMessage(object);
 		} else {
-			log.warn("MessageWithUnknownSession", {
-				sessionId: null,
-				message: object,
-			});
+			console.log("[Connection]", { action: "MessageWithUnknownSession", message: object });
 		}
 	}
 

@@ -1,4 +1,3 @@
-import type { IBoundLog } from "@ulixee/commons/interfaces/ILog";
 import { CanceledPromiseError } from "@ulixee/commons/interfaces/IPendingWaitEvent";
 import EventSubscriber from "@ulixee/commons/lib/EventSubscriber";
 import { TypedEventEmitter } from "@ulixee/commons/lib/eventUtils";
@@ -31,7 +30,8 @@ export default class DomStorageTracker extends TypedEventEmitter<IDomStorageEven
 
 	public isEnabled = false;
 
-	protected readonly logger: IBoundLog;
+	// @ts-expect-error IBoundLog deprecated
+	protected readonly logger;
 
 	private readonly events = new EventSubscriber();
 	private readonly devtoolsSession: DevtoolsSession;
@@ -47,7 +47,8 @@ export default class DomStorageTracker extends TypedEventEmitter<IDomStorageEven
 		page: Page,
 		storageByOrigin: IDomStorage,
 		networkManager: NetworkManager,
-		logger: IBoundLog,
+		// @ts-expect-error IBoundLog deprecated
+		logger,
 		isEnabled: boolean,
 		session?: DevtoolsSession,
 	) {

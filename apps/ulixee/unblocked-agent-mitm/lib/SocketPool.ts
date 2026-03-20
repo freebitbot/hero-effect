@@ -1,5 +1,4 @@
 import type { ClientHttp2Session } from "node:http2";
-import type { IBoundLog } from "@ulixee/commons/interfaces/ILog";
 import { CanceledPromiseError } from "@ulixee/commons/interfaces/IPendingWaitEvent";
 import EventSubscriber from "@ulixee/commons/lib/EventSubscriber";
 import Queue from "@ulixee/commons/lib/Queue";
@@ -18,14 +17,12 @@ export default class SocketPool {
 	private pending: Resolvable<void>[] = [];
 	private readonly http2Sessions: IHttp2Session[] = [];
 	private queue: Queue;
-	private logger: IBoundLog;
 
 	constructor(
 		origin: string,
 		readonly maxConnections,
 		readonly session: RequestSession,
 	) {
-		this.logger = session.logger.createChild(module, { origin });
 		this.queue = new Queue("SOCKET TO ORIGIN");
 	}
 
@@ -151,7 +148,7 @@ export default class SocketPool {
 	}
 
 	private onSocketClosed(socket: MitmSocket): void {
-		this.logger.stats("Socket closed");
+		console.log("[SocketPool.socketClosed]", { socketId: socket.id });
 		this.session.emit("socket-close", { socket });
 
 		this.free.delete(socket);

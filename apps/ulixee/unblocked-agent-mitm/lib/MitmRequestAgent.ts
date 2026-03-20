@@ -2,7 +2,6 @@ import * as http from "node:http";
 import type { ClientHttp2Session, Http2ServerRequest } from "node:http2";
 import * as http2 from "node:http2";
 import * as https from "node:https";
-import type { IBoundLog } from "@ulixee/commons/interfaces/ILog";
 import EventSubscriber from "@ulixee/commons/lib/EventSubscriber";
 import Resolvable from "@ulixee/commons/lib/Resolvable";
 import MitmSocket from "@ulixee/unblocked-agent-mitm-socket";
@@ -30,18 +29,16 @@ export default class MitmRequestAgent {
 	private readonly events = new EventSubscriber();
 	private readonly socketPoolByOrigin = new Map<string, SocketPool>();
 	private readonly socketPoolByResolvedHost = new Map<string, SocketPool>();
-	private logger: IBoundLog;
 
 	constructor(session: RequestSession) {
 		this.session = session;
 
-		this.logger = session.logger.createChild(module);
 		const tcpSettings: ITcpSettings = {};
 		const tlsSettings: ITlsSettings = {};
 		for (const hook of session.hooks) hook.onTcpConfiguration?.(tcpSettings);
 		for (const hook of session.hooks) hook.onTlsConfiguration?.(tlsSettings);
 
-		this.socketSession = new MitmSocketSession(session.logger, {
+		this.socketSession = new MitmSocketSession({
 			rejectUnauthorized: env.allowInsecure === false,
 			clientHelloId: tlsSettings?.tlsClientHelloId,
 			tcpTtl: tcpSettings?.tcpTtl,
@@ -163,7 +160,7 @@ export default class MitmRequestAgent {
 		const dnsLookupTime = new Date();
 		const ipIfNeeded = await session.lookupDns(options.host);
 
-		const mitmSocket = new MitmSocket(session.sessionId, session.logger, {
+		const mitmSocket = new MitmSocket(session.sessionId, {
 			host: ipIfNeeded || options.host,
 			port: String(options.port),
 			isSsl: options.isSsl,
@@ -248,7 +245,7 @@ export default class MitmRequestAgent {
 		});
 
 		this.events.on(request, "error", (error) => {
-			this.logger.info(`MitmHttpRequest.Http1SendRequestError`, {
+			console.info("[MitmRequestAgent.Http1SendRequestError]", {
 				request: requestSettings,
 				error,
 			});
@@ -388,10 +385,7 @@ export default class MitmRequestAgent {
 			clientToProxyH2Session,
 			proxyToServerH2Client,
 			this.events,
-			this.session.logger,
-			{
-				origin,
-			},
+			{ origin },
 		);
 		this.events.on(
 			proxyToServerH2Client,
@@ -407,7 +401,7 @@ export default class MitmRequestAgent {
 					);
 					await pushPromise.onRequest();
 				} catch (error) {
-					this.logger.warn("Http2.ClientToProxy.ReadPushPromiseError", {
+					console.warn("[MitmRequestAgent.Http2.ReadPushPromiseError]", {
 						rawHeaders,
 						error,
 					});

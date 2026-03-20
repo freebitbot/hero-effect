@@ -1,6 +1,4 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
-import type { IBoundLog } from "@ulixee/commons/interfaces/ILog";
-import Logger from "@ulixee/commons/lib/Logger";
 import type IApiHandler from "../interfaces/IApiHandler";
 import type { IAsyncFunc } from "../interfaces/IApiHandlers";
 import type ICoreRequestPayload from "../interfaces/ICoreRequestPayload";
@@ -8,12 +6,9 @@ import type ITransport from "../interfaces/ITransport";
 import ConnectionToClient from "./ConnectionToClient";
 import HttpTransportToClient from "./HttpTransportToClient";
 
-const { log } = Logger(module);
-
 export default class ApiRegistry<IHandlerMetadata = any> {
 	public apiHandlerMetadataFn: (
 		apiRequest: ICoreRequestPayload<any, any>,
-		logger: IBoundLog,
 		remoteId: string,
 	) => IHandlerMetadata;
 
@@ -59,28 +54,26 @@ export default class ApiRegistry<IHandlerMetadata = any> {
 		const handler = this.handlersByCommand[command];
 		if (!handler) return false;
 
-		const logger = log.createChild(module, {
-			remote: transport.remoteId,
+		console.log("[ApiRegistry]", {
+			action: `api/${apiRequest.command}`,
+			path: req.url,
+			remoteId: transport.remoteId,
 			messageId,
 			command,
 		});
 
 		let data: any;
 		try {
-			logger.info(`api/${apiRequest.command}`, {
-				path: req.url,
-				apiRequest,
-			});
-
 			let args = apiRequest.args;
 			if (!Array.isArray(args)) args = [apiRequest.args];
 
 			const handlerMetadata = this.apiHandlerMetadataFn
-				? this.apiHandlerMetadataFn(apiRequest, logger, transport.remoteId)
-				: { logger };
+				? this.apiHandlerMetadataFn(apiRequest, transport.remoteId)
+				: {};
 			data = await handler(...args, handlerMetadata);
 		} catch (error) {
-			logger.error(`api/${apiRequest.command}:ERROR`, {
+			console.error("[ApiRegistry]", {
+				action: `api/${apiRequest.command}:ERROR`,
 				error,
 			});
 			data = error;
@@ -91,7 +84,8 @@ export default class ApiRegistry<IHandlerMetadata = any> {
 			data,
 		});
 
-		logger.stats(`api/${apiRequest.command}:END`, {
+		console.log("[ApiRegistry]", {
+			action: `api/${apiRequest.command}:END`,
 			data,
 			millis: Date.now() - startTime,
 		});

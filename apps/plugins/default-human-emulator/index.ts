@@ -1,5 +1,3 @@
-import type { IBoundLog } from "@ulixee/commons/interfaces/ILog";
-import logger from "@ulixee/commons/lib/Logger";
 import type IPoint from "@ulixee/unblocked-specification/agent/browser/IPoint";
 import {
 	type IInteractionGroups,
@@ -18,8 +16,6 @@ import type IUnblockedPlugin from "@ulixee/unblocked-specification/plugin/IUnblo
 import { UnblockedPluginClassDecorator } from "@ulixee/unblocked-specification/plugin/IUnblockedPlugin";
 import generateVector from "./generateVector";
 import { name } from "./package.json";
-
-const { log } = logger(module);
 
 // ATTRIBUTION: heavily borrowed/inspired by https://github.com/Xetera/ghost-cursor
 
@@ -42,11 +38,8 @@ export default class DefaultHumanEmulator implements IUnblockedPlugin {
 	public static wordsPerMinuteRange = [80, 100];
 
 	private millisPerCharacter: number;
-	private readonly logger: IBoundLog;
 
-	constructor(options?: IEmulationProfile) {
-		this.logger = options?.logger ?? log.createChild(module);
-	}
+	constructor(options?: IEmulationProfile) {}
 
 	public getStartingMousePoint(helper: IInteractionsHelper): Promise<IPoint> {
 		const viewport = helper.viewportSize;
@@ -492,7 +485,7 @@ export default class DefaultHumanEmulator implements IUnblockedPlugin {
 
 		const interactionName = `"Interaction.${interactionStep.command}"`;
 		const { hasDimensions, isConnected, nodeExists } = nodeVisibility;
-		helper.logger.warn(`${interactionName} element not visible.`, {
+		console.warn("[HumanEmulator]", `${interactionName} element not visible.`, {
 			interactionStep,
 			target: targetRect,
 			viewport,
@@ -508,7 +501,8 @@ export default class DefaultHumanEmulator implements IUnblockedPlugin {
 				const nodePointer = await helper.reloadJsPath(
 					interactionStep.mousePosition,
 				);
-				helper.logger.warn(
+				console.warn(
+					"[HumanEmulator]",
 					`${interactionName} - checking for new element matching query.`,
 					{
 						interactionStep,
@@ -560,7 +554,7 @@ export default class DefaultHumanEmulator implements IUnblockedPlugin {
 				...interactionStep,
 				mousePosition: [targetRect.x, y],
 			};
-			helper.logger.info("Scrolling to avoid obstruction", {
+			console.log("[HumanEmulator]", "Scrolling to avoid obstruction", {
 				obstructedByElementRect,
 				scrollBeyondObstruction,
 			});

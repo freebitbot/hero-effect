@@ -16,11 +16,8 @@
 
 import type { ChildProcess } from "node:child_process";
 import EventSubscriber from "@ulixee/commons/lib/EventSubscriber";
-import Log from "@ulixee/commons/lib/Logger";
 import Resolvable from "@ulixee/commons/lib/Resolvable";
 import type IConnectionTransport from "../interfaces/IConnectionTransport";
-
-const { log } = Log(module);
 
 export class PipeTransport implements IConnectionTransport {
 	pipeWrite: NodeJS.WritableStream;
@@ -42,7 +39,7 @@ export class PipeTransport implements IConnectionTransport {
 			if (error.code === "EPIPE") {
 				error.stack = `Could not read connection with Browser Process: ${error.message}`;
 			}
-			log.error("PipeTransport.ReadError", { error, sessionId: null });
+			console.log("[PipeTransport]", { action: "ReadError", error });
 		});
 		this.events.on(pipeWrite, "error", (error) => {
 			if (error.code === "EPIPE") {
@@ -52,7 +49,7 @@ export class PipeTransport implements IConnectionTransport {
 				this.connectedPromise.reject(error);
 			if (this.isClosed) return;
 			if (error.code !== "EPIPE") {
-				log.error("PipeTransport.WriteError", { error, sessionId: null });
+				console.log("[PipeTransport]", { action: "WriteError", error });
 			}
 		});
 	}
@@ -83,7 +80,7 @@ export class PipeTransport implements IConnectionTransport {
 	}
 
 	private onReadClosed(): void {
-		log.info("PipeTransport.Closed");
+		console.log("[PipeTransport]", { action: "Closed" });
 		for (const close of this.onCloseFns) close();
 		this.close();
 	}

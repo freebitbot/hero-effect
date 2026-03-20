@@ -2,7 +2,6 @@ import type * as http from "node:http";
 import type * as http2 from "node:http2";
 import type * as net from "node:net";
 import { URL } from "node:url";
-import type { IBoundLog } from "@ulixee/commons/interfaces/ILog";
 import type IResolvablePromise from "@ulixee/commons/interfaces/IResolvablePromise";
 import EventSubscriber from "@ulixee/commons/lib/EventSubscriber";
 import { TypedEventEmitter } from "@ulixee/commons/lib/eventUtils";
@@ -55,7 +54,7 @@ export default class RequestSession
 	public bypassAllWithEmptyResponse: boolean;
 	public bypassResourceRegistrationForHost: URL;
 	public browserRequestMatcher?: IBrowserRequestMatcher;
-	public logger: IBoundLog;
+	// TODO: IBoundLog - public logger: IBoundLog;
 
 	public readonly hooks: INetworkHooks[] = [];
 
@@ -65,12 +64,12 @@ export default class RequestSession
 	constructor(
 		readonly sessionId: string,
 		hooks: INetworkHooks,
-		logger: IBoundLog,
+		// TODO: IBoundLog - logger: IBoundLog,
 		public upstreamProxyUrl?: string,
 		public upstreamProxyUseSystemDns?: boolean,
 	) {
 		super();
-		this.logger = logger.createChild(module);
+		// TODO: IBoundLog - this.logger = logger.createChild(module);
 		if (hooks) this.hook(hooks);
 		this.requestAgent = new MitmRequestAgent(this);
 		this.dns = new Dns(this);
@@ -163,9 +162,7 @@ export default class RequestSession
 			try {
 				return await this.dns.lookupIp(host);
 			} catch (error) {
-				this.logger.info("DnsLookup.Error", {
-					error,
-				});
+				console.info("[DnsLookup.Error]", { error });
 				// if fails, pass through to returning host untouched
 			}
 		}
@@ -178,7 +175,7 @@ export default class RequestSession
 
 	public close(): void {
 		if (this.isClosing) return;
-		const logid = this.logger.stats("MitmRequestSession.Closing");
+		console.log("[MitmRequestSession.Closing]", { sessionId: this.sessionId });
 		this.isClosing = true;
 		const errors: Error[] = [];
 		this.events.close();
@@ -194,10 +191,7 @@ export default class RequestSession
 		} catch (err) {
 			errors.push(err);
 		}
-		this.logger.stats("MitmRequestSession.Closed", {
-			parentLogId: logid,
-			errors,
-		});
+		console.log("[MitmRequestSession.Closed]", { sessionId: this.sessionId, errors });
 
 		setImmediate(() => {
 			this.emit("close");

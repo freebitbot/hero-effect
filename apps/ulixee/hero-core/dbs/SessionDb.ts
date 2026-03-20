@@ -1,4 +1,3 @@
-import Log from "@ulixee/commons/lib/Logger";
 import type SqliteTable from "@ulixee/commons/lib/SqliteTable";
 import type { Database as SqliteDatabase, Transaction } from "better-sqlite3";
 import * as Database from "better-sqlite3";
@@ -29,8 +28,6 @@ import SocketsTable from "../models/SocketsTable";
 import StorageChangesTable from "../models/StorageChangesTable";
 import TabsTable from "../models/TabsTable";
 import WebsocketMessagesTable from "../models/WebsocketMessagesTable";
-
-const { log } = Log(module);
 
 interface IDbOptions {
 	readonly?: boolean;
@@ -108,7 +105,7 @@ export default class SessionDb {
 							clearInterval(this.saveInterval);
 							this.db = null;
 						}
-						log.error("SessionDb.flushError", {
+						console.error("[SessionDb] flushError", {
 							sessionId: this.sessionId,
 							error: String(error),
 							table: table.tableName,

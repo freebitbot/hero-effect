@@ -1,9 +1,6 @@
 import { CanceledPromiseError } from "../interfaces/IPendingWaitEvent";
-import logger from "./Logger";
 
 type ShutdownSignal = NodeJS.Signals | "exit";
-
-const { log } = logger(module);
 
 export default class ShutdownHandler {
 	public static exitOnSignal = false;
@@ -70,10 +67,7 @@ export default class ShutdownHandler {
 		if (ShutdownHandler.hasRunHandlers) return;
 		ShutdownHandler.hasRunHandlers = true;
 
-		const parentLogId = log.stats("ShutdownHandler.onSignal", {
-			signal,
-			sessionId: null,
-		});
+		console.log("[ShutdownHandler]", "onSignal", { signal, sessionId: null });
 
 		const keepList = [];
 		while (ShutdownHandler.onShutdownFns.length) {
@@ -87,7 +81,7 @@ export default class ShutdownHandler {
 				continue;
 			}
 
-			log.stats("ShutdownHandler.execute", {
+			console.log("[ShutdownHandler]", "execute", {
 				signal,
 				fn: entry.fn.toString(),
 				callsite: entry.callsite,
@@ -97,7 +91,7 @@ export default class ShutdownHandler {
 				await entry.fn(signal);
 			} catch (error) {
 				if (error instanceof CanceledPromiseError) continue;
-				log.warn("ShutdownHandler.errorShuttingDown", {
+				console.warn("[ShutdownHandler]", "errorShuttingDown", {
 					error,
 					sessionId: null,
 				});
@@ -105,11 +99,10 @@ export default class ShutdownHandler {
 		}
 		ShutdownHandler.onShutdownFns.push(...keepList);
 
-		log.stats("ShutdownHandler.shutdownComplete", {
+		console.log("[ShutdownHandler]", "shutdownComplete", {
 			signal,
 			exiting: ShutdownHandler.exitOnSignal,
 			sessionId: null,
-			parentLogId,
 		});
 
 		if (ShutdownHandler.exitOnSignal) {

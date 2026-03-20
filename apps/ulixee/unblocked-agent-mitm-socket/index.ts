@@ -2,7 +2,6 @@
 
 import { unlink } from "node:fs";
 import * as net from "node:net";
-import type { IBoundLog } from "@ulixee/commons/interfaces/ILog";
 import TimeoutError from "@ulixee/commons/interfaces/TimeoutError";
 import EventSubscriber from "@ulixee/commons/lib/EventSubscriber";
 import { TypedEventEmitter } from "@ulixee/commons/lib/eventUtils";
@@ -58,8 +57,6 @@ export default class MitmSocket
 	public connectError?: string;
 	public receivedEOF = false;
 
-	protected logger: IBoundLog;
-
 	private server: net.Server;
 	private connectPromise: Resolvable<void>;
 	private socketReadyPromise = new Resolvable<void>();
@@ -68,13 +65,11 @@ export default class MitmSocket
 
 	constructor(
 		readonly sessionId: string,
-		logger: IBoundLog,
 		readonly connectOpts: IHttpSocketConnectOptions,
 	) {
 		super();
 		this.callStack = new Error().stack.replace("Error:", "").trim();
 		this.serverName = connectOpts.servername;
-		this.logger = logger.createChild(module);
 		this.connectOpts.isSsl ??= true;
 
 		this.socketPath = createIpcSocketPath(`agent-${sessionId}-${this.id}`);
@@ -84,7 +79,7 @@ export default class MitmSocket
 		this.events.on(this.server, "connection", this.onConnected.bind(this));
 		this.events.on(this.server, "error", (error) => {
 			if (this.isClosing) return;
-			this.logger.warn("IpcSocketServerError", { error });
+			console.log("[MitmSocket]", "IpcSocketServerError", { error });
 		});
 
 		unlink(this.socketPath, () => {
@@ -111,7 +106,7 @@ export default class MitmSocket
 	public close(): void {
 		if (this.isClosing) return;
 
-		const parentLogId = this.logger.info(`MitmSocket.Closing`);
+		console.log("[MitmSocket]", "MitmSocket.Closing");
 		this.isClosing = true;
 		this.closeTime = new Date();
 		if (!this.connectPromise?.isResolved) {
@@ -127,16 +122,14 @@ export default class MitmSocket
 		this.closedPromise.resolve(this.closeTime);
 		this.events.close("error");
 		this.removeAllListeners();
-		this.logger.stats(`MitmSocket.Closed`, {
-			parentLogId,
-		});
+		console.log("[MitmSocket]", "MitmSocket.Closed");
 	}
 
 	public onConnected(socket: net.Socket): void {
 		this.ipcConnectionTime = new Date();
 		this.socket = socket;
 		this.events.on(socket, "error", (error) => {
-			this.logger.warn("MitmSocket.SocketError", {
+			console.log("[MitmSocket]", "MitmSocket.SocketError", {
 				sessionId: this.sessionId,
 				error,
 				socketPath: this.socketPath,
@@ -270,7 +263,7 @@ export default class MitmSocket
 
 	private onError(message: string): void {
 		this.errorTime = new Date();
-		this.logger.info("MitmSocket.error", {
+		console.log("[MitmSocket]", "MitmSocket.error", {
 			message,
 			host: this.connectOpts.host,
 		});

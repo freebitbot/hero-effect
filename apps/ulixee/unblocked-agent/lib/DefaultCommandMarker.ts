@@ -1,4 +1,3 @@
-import type { IBoundLog } from "@ulixee/commons/interfaces/ILog";
 import type ICommandMarker from "../interfaces/ICommandMarker";
 import type BrowserContext from "./BrowserContext";
 
@@ -20,7 +19,8 @@ export class DefaultCommandMarker implements ICommandMarker {
 
 	private commandMarkerId = 0;
 	private waitForLocationStartingMark = 0;
-	private logger: IBoundLog;
+	// @ts-expect-error IBoundLog deprecated
+	private logger;
 
 	constructor(readonly browserContext: BrowserContext) {
 		this.logger = browserContext.logger.createChild(module);

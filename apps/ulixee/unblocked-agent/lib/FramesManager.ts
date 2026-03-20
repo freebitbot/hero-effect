@@ -1,4 +1,3 @@
-import type { IBoundLog } from "@ulixee/commons/interfaces/ILog";
 import { CanceledPromiseError } from "@ulixee/commons/interfaces/IPendingWaitEvent";
 import EventSubscriber from "@ulixee/commons/lib/EventSubscriber";
 import { TypedEventEmitter } from "@ulixee/commons/lib/eventUtils";
@@ -48,7 +47,8 @@ export default class FramesManager extends TypedEventEmitter<IFrameManagerEvents
 	}
 
 	public devtoolsSession: DevtoolsSession;
-	protected readonly logger: IBoundLog;
+	// @ts-expect-error IBoundLog deprecated
+	protected readonly logger;
 
 	private onFrameCreatedResourceEventsByFrameId: {
 		[frameId: string]: {
