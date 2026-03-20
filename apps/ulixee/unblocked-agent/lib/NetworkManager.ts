@@ -9,24 +9,9 @@ import type {
 	IBrowserResourceRequest,
 } from "@ulixee/unblocked-specification/agent/browser/IBrowserNetworkEvents";
 import { getResourceTypeForChromeValue } from "@ulixee/unblocked-specification/agent/net/IResourceType";
-import { Protocol } from "devtools-protocol";
-import type DevtoolsSession from "./DevtoolsSession";
-
-import AuthChallengeResponse = Protocol.Fetch.AuthChallengeResponseResponse;
-import Fetch = Protocol.Fetch;
-import RequestWillBeSentEvent = Protocol.Network.RequestWillBeSentEvent;
-import WebSocketCreatedEvent = Protocol.Network.WebSocketCreatedEvent;
-import WebSocketFrameSentEvent = Protocol.Network.WebSocketFrameSentEvent;
-import WebSocketFrameReceivedEvent = Protocol.Network.WebSocketFrameReceivedEvent;
-import WebSocketWillSendHandshakeRequestEvent = Protocol.Network.WebSocketWillSendHandshakeRequestEvent;
-import ResponseReceivedEvent = Protocol.Network.ResponseReceivedEvent;
-import RequestPausedEvent = Protocol.Fetch.RequestPausedEvent;
-import LoadingFinishedEvent = Protocol.Network.LoadingFinishedEvent;
-import LoadingFailedEvent = Protocol.Network.LoadingFailedEvent;
-import RequestServedFromCacheEvent = Protocol.Network.RequestServedFromCacheEvent;
-import RequestWillBeSentExtraInfoEvent = Protocol.Network.RequestWillBeSentExtraInfoEvent;
-
+import type Protocol from "devtools-protocol";
 import type IProxyConnectionOptions from "../interfaces/IProxyConnectionOptions";
+import type DevtoolsSession from "./DevtoolsSession";
 
 interface IResourcePublishing {
 	hasRequestWillBeSentEvent: boolean;
@@ -35,7 +20,7 @@ interface IResourcePublishing {
 	isDetailsEmitted?: boolean;
 }
 
-const mbBytes = 1028 * 1028;
+const MEGABYTE = 1024 * 1024;
 
 export default class NetworkManager extends TypedEventEmitter<IBrowserNetworkEvents> {
 	protected readonly logger: IBoundLog;
@@ -145,11 +130,11 @@ export default class NetworkManager extends TypedEventEmitter<IBrowserNetworkEve
 		}
 
 		const maxResourceBufferSize = this.proxyConnectionOptions?.address
-			? mbBytes
-			: 5 * mbBytes; // 5mb max
+			? MEGABYTE
+			: 5 * MEGABYTE; // 5mb max
 		if (maxResourceBufferSize > 0) this.isChromeRetainingResources = true;
 
-		const patternsToIntercepts: Fetch.RequestPattern[] = [
+		const patternsToIntercepts: Protocol.Fetch.RequestPattern[] = [
 			{ urlPattern: "http://hero.localhost/*" },
 			{ urlPattern: "data://hero.localhost/*" },
 		];
@@ -228,18 +213,20 @@ export default class NetworkManager extends TypedEventEmitter<IBrowserNetworkEve
 
 	private onAuthRequired(event: Protocol.Fetch.AuthRequiredEvent): void {
 		const authChallengeResponse = {
-			response: AuthChallengeResponse.Default,
-		} as Fetch.AuthChallengeResponse;
+			response: Protocol.Fetch.AuthChallengeResponseResponse.Default,
+		} as Protocol.Fetch.AuthChallengeResponse;
 
 		if (this.attemptedAuthentications.has(event.requestId)) {
-			authChallengeResponse.response = AuthChallengeResponse.CancelAuth;
+			authChallengeResponse.response =
+				Protocol.Fetch.AuthChallengeResponseResponse.CancelAuth;
 		} else if (
 			event.authChallenge.source === "Proxy" &&
 			this.proxyConnectionOptions?.password
 		) {
 			this.attemptedAuthentications.add(event.requestId);
 
-			authChallengeResponse.response = AuthChallengeResponse.ProvideCredentials;
+			authChallengeResponse.response =
+				Protocol.Fetch.AuthChallengeResponseResponse.ProvideCredentials;
 			authChallengeResponse.username =
 				this.proxyConnectionOptions.username ?? "browser-chrome";
 			authChallengeResponse.password = this.proxyConnectionOptions.password;
@@ -260,10 +247,10 @@ export default class NetworkManager extends TypedEventEmitter<IBrowserNetworkEve
 	}
 
 	private async onRequestPaused(
-		networkRequest: RequestPausedEvent,
+		networkRequest: Protocol.Fetch.RequestPausedEvent,
 	): Promise<void> {
 		try {
-			let continueDetails: Fetch.ContinueRequestRequest = {
+			let continueDetails: Protocol.Fetch.ContinueRequestRequest = {
 				requestId: networkRequest.requestId,
 			};
 			// Internal hero requests
@@ -280,14 +267,14 @@ export default class NetworkManager extends TypedEventEmitter<IBrowserNetworkEve
 			if (this.mockNetworkRequests) {
 				const response = await this.mockNetworkRequests(networkRequest);
 				if (response) {
-					if ((response as Fetch.FulfillRequestRequest).body) {
+					if ((response as Protocol.Fetch.FulfillRequestRequest).body) {
 						return await this.devtools.send(
 							"Fetch.fulfillRequest",
 							response as any,
 						);
 					}
 
-					if ((response as Fetch.ContinueRequestRequest).url) {
+					if ((response as Protocol.Fetch.ContinueRequestRequest).url) {
 						continueDetails = response;
 						if (continueDetails.url)
 							networkRequest.request.url = continueDetails.url;
@@ -372,7 +359,7 @@ export default class NetworkManager extends TypedEventEmitter<IBrowserNetworkEve
 	}
 
 	private onNetworkRequestWillBeSent(
-		networkRequest: RequestWillBeSentEvent,
+		networkRequest: Protocol.Network.RequestWillBeSentEvent,
 	): void {
 		if (this.requestIdsToIgnore.has(networkRequest.requestId)) return;
 
@@ -468,7 +455,7 @@ export default class NetworkManager extends TypedEventEmitter<IBrowserNetworkEve
 	}
 
 	private onNetworkRequestWillBeSentExtraInfo(
-		networkRequest: RequestWillBeSentExtraInfoEvent,
+		networkRequest: Protocol.Network.RequestWillBeSentExtraInfoEvent,
 	): void {
 		const requestId = networkRequest.requestId;
 		if (this.requestIdsToIgnore.has(requestId)) return;
@@ -491,7 +478,7 @@ export default class NetworkManager extends TypedEventEmitter<IBrowserNetworkEve
 
 	private mergeRequestHeaders(
 		resource: IBrowserResourceRequest,
-		requestHeaders: RequestWillBeSentEvent["request"]["headers"],
+		requestHeaders: Protocol.Network.RequestWillBeSentEvent["request"]["headers"],
 	): void {
 		resource.requestHeaders ??= {};
 		for (const [key, value] of Object.entries(requestHeaders)) {
@@ -557,7 +544,9 @@ export default class NetworkManager extends TypedEventEmitter<IBrowserNetworkEve
 		}
 	}
 
-	private onNetworkResponseReceived(event: ResponseReceivedEvent): void {
+	private onNetworkResponseReceived(
+		event: Protocol.Network.ResponseReceivedEvent,
+	): void {
 		if (this.requestIdsToIgnore.has(event.requestId)) return;
 
 		const { response, requestId, loaderId, frameId, type } = event;
@@ -609,7 +598,7 @@ export default class NetworkManager extends TypedEventEmitter<IBrowserNetworkEve
 	}
 
 	private onNetworkRequestServedFromCache(
-		event: RequestServedFromCacheEvent,
+		event: Protocol.Network.RequestServedFromCacheEvent,
 	): void {
 		if (this.requestIdsToIgnore.has(event.requestId)) return;
 
@@ -624,7 +613,7 @@ export default class NetworkManager extends TypedEventEmitter<IBrowserNetworkEve
 		}
 	}
 
-	private onLoadingFailed(event: LoadingFailedEvent): void {
+	private onLoadingFailed(event: Protocol.Network.LoadingFailedEvent): void {
 		if (this.requestIdsToIgnore.has(event.requestId)) return;
 
 		const { requestId, canceled, blockedReason, errorText, timestamp } = event;
@@ -653,7 +642,9 @@ export default class NetworkManager extends TypedEventEmitter<IBrowserNetworkEve
 		}
 	}
 
-	private onLoadingFinished(event: LoadingFinishedEvent): void {
+	private onLoadingFinished(
+		event: Protocol.Network.LoadingFinishedEvent,
+	): void {
 		if (this.requestIdsToIgnore.has(event.requestId)) return;
 
 		const { requestId, timestamp } = event;
@@ -732,10 +723,12 @@ export default class NetworkManager extends TypedEventEmitter<IBrowserNetworkEve
 	}
 	/////// WEBSOCKET EVENT HANDLERS /////////////////////////////////////////////////////////////////
 
-	private onWebSocketCreated(_event: WebSocketCreatedEvent): void {}
+	private onWebSocketCreated(
+		_event: Protocol.Network.WebSocketCreatedEvent,
+	): void {}
 
 	private onWebsocketHandshake(
-		handshake: WebSocketWillSendHandshakeRequestEvent,
+		handshake: Protocol.Network.WebSocketWillSendHandshakeRequestEvent,
 	): void {
 		if (this.requestIdsToIgnore.has(handshake.requestId)) return;
 
@@ -747,7 +740,9 @@ export default class NetworkManager extends TypedEventEmitter<IBrowserNetworkEve
 
 	private onWebsocketFrame(
 		isFromServer: boolean,
-		event: WebSocketFrameSentEvent | WebSocketFrameReceivedEvent,
+		event:
+			| Protocol.Network.WebSocketFrameSentEvent
+			| Protocol.Network.WebSocketFrameReceivedEvent,
 	): void {
 		if (this.requestIdsToIgnore.has(event.requestId)) return;
 

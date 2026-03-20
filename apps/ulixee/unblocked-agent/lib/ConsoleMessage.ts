@@ -14,13 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Protocol } from "devtools-protocol";
+import type Protocol from "devtools-protocol";
 import type DevtoolsSession from "./DevtoolsSession";
-
-import ExceptionDetails = Protocol.Runtime.ExceptionDetails;
-import StackTrace = Protocol.Runtime.StackTrace;
-import ObjectPreview = Protocol.Runtime.ObjectPreview;
-import ConsoleAPICalledEvent = Protocol.Runtime.ConsoleAPICalledEvent;
 
 export default class ConsoleMessage {
 	constructor(
@@ -31,7 +26,7 @@ export default class ConsoleMessage {
 
 	static create(
 		devtoolsSession: DevtoolsSession,
-		event: ConsoleAPICalledEvent,
+		event: Protocol.Runtime.ConsoleAPICalledEvent,
 	): ConsoleMessage {
 		const { args, stackTrace, type, context } = event;
 
@@ -47,7 +42,9 @@ export default class ConsoleMessage {
 		return new ConsoleMessage(message, location, type);
 	}
 
-	static exceptionToError(exceptionDetails: ExceptionDetails): Error {
+	static exceptionToError(
+		exceptionDetails: Protocol.Runtime.ExceptionDetails,
+	): Error {
 		const error = new Error(exceptionDetails.text);
 		if (exceptionDetails.exception) {
 			error.stack = stringifyRemoteObject(exceptionDetails.exception) as string;
@@ -57,7 +54,9 @@ export default class ConsoleMessage {
 		return error;
 	}
 
-	private static printStackTrace(stackTrace: StackTrace): string {
+	private static printStackTrace(
+		stackTrace: Protocol.Runtime.StackTrace,
+	): string {
 		let message = "";
 		if (!stackTrace) return message;
 		for (const callframe of stackTrace.callFrames) {
@@ -98,7 +97,7 @@ function stringifyRemoteObject(
 	return remoteObject.value ?? remoteObject.description;
 }
 
-function previewToObject(preview: ObjectPreview): string {
+function previewToObject(preview: Protocol.Runtime.ObjectPreview): string {
 	const subProps = preview.properties.map(
 		(prop) =>
 			`${prop.name}: ${prop.valuePreview ? previewToObject(prop.valuePreview) : prop.value}`,

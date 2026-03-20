@@ -14,7 +14,7 @@ import type {
 	IInteractHooks,
 } from "@ulixee/unblocked-specification/agent/hooks/IHooks";
 import type { ICookie } from "@ulixee/unblocked-specification/agent/net/ICookie";
-import Protocol from "devtools-protocol";
+import type Protocol from "devtools-protocol";
 import type ProtocolMapping from "devtools-protocol/types/protocol-mapping";
 import type ICommandMarker from "../interfaces/ICommandMarker";
 import type IProxyConnectionOptions from "../interfaces/IProxyConnectionOptions";
@@ -27,10 +27,6 @@ import Page, { type IPageCreateOptions } from "./Page";
 import Resources from "./Resources";
 import WebsocketMessages from "./WebsocketMessages";
 import type { Worker } from "./Worker";
-
-import CookieParam = Protocol.Network.CookieParam;
-import TargetInfo = Protocol.Target.TargetInfo;
-import CreateBrowserContextRequest = Protocol.Target.CreateBrowserContextRequest;
 
 const { log } = Log(module);
 
@@ -55,7 +51,7 @@ export default class BrowserContext
 	public workersById = new Map<string, Worker>();
 	public pagesById = new Map<string, Page>();
 	public pagesByTabId = new Map<number, Page>();
-	public targetsById = new Map<string, TargetInfo>();
+	public targetsById = new Map<string, Protocol.Target.TargetInfo>();
 	public devtoolsSessionsById = new Map<string, DevtoolsSession>();
 	public devtoolsSessionLogger: DevtoolsSessionLogger;
 	public proxy: IProxyConnectionOptions;
@@ -118,7 +114,7 @@ export default class BrowserContext
 	public async open(): Promise<void> {
 		if (!this.isIncognito) return;
 
-		const createContextOptions: CreateBrowserContextRequest = {
+		const createContextOptions: Protocol.Target.CreateBrowserContextRequest = {
 			disposeOnDetach: true,
 		};
 		if (this.proxy?.address) {
@@ -204,7 +200,7 @@ export default class BrowserContext
 
 	onIframeAttached(
 		devtoolsSession: DevtoolsSession,
-		targetInfo: TargetInfo,
+		targetInfo: Protocol.Target.TargetInfo,
 		pageId: string,
 	): void {
 		const page = this.pagesById.get(pageId);
@@ -219,7 +215,7 @@ export default class BrowserContext
 
 	async onPageAttached(
 		devtoolsSession: DevtoolsSession,
-		targetInfo: TargetInfo,
+		targetInfo: Protocol.Target.TargetInfo,
 	): Promise<Page> {
 		this.attachedTargetIds.add(targetInfo.targetId);
 		this.targetsById.set(targetInfo.targetId, targetInfo);
@@ -281,7 +277,7 @@ export default class BrowserContext
 
 	onDevtoolsPanelAttached(
 		devtoolsSession: DevtoolsSession,
-		targetInfo: TargetInfo,
+		targetInfo: Protocol.Target.TargetInfo,
 	): void {
 		this.targetsById.set(targetInfo.targetId, targetInfo);
 		this.devtoolsSessionsById.set(targetInfo.targetId, devtoolsSession);
@@ -296,7 +292,7 @@ export default class BrowserContext
 
 	async onSharedWorkerAttached(
 		devtoolsSession: DevtoolsSession,
-		targetInfo: TargetInfo,
+		targetInfo: Protocol.Target.TargetInfo,
 	): Promise<void> {
 		const page: Page =
 			[...this.pagesById.values()].find((x) => !x.isClosed) ??
@@ -434,7 +430,7 @@ export default class BrowserContext
 		origins?: string[],
 	): Promise<void> {
 		const originUrls = (origins ?? []).map((x) => new URL(x));
-		const parsedCookies: CookieParam[] = [];
+		const parsedCookies: Protocol.Network.CookieParam[] = [];
 		for (const cookie of cookies) {
 			assert(cookie.name, "Cookie should have a name");
 			assert(
@@ -457,7 +453,7 @@ export default class BrowserContext
 				expires = expires.getTime() / 1e3;
 			}
 
-			const cookieToSend: CookieParam = {
+			const cookieToSend: Protocol.Network.CookieParam = {
 				...cookie,
 				expires: expires as number,
 			};

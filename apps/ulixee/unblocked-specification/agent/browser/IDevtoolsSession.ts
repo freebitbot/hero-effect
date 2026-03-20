@@ -1,8 +1,6 @@
 import type ITypedEventEmitter from "@ulixee/commons/interfaces/ITypedEventEmitter";
-import Protocol from "devtools-protocol";
+import type Protocol from "devtools-protocol";
 import type { ProtocolMapping } from "devtools-protocol/types/protocol-mapping";
-
-import RemoteObject = Protocol.Runtime.RemoteObject;
 
 export declare type DevtoolsEvents = {
 	[Key in keyof ProtocolMapping.Events]: ProtocolMapping.Events[Key][0];
@@ -31,7 +29,7 @@ type RequiredParamsCommands = keyof FilterOutFlags<
 export default interface IDevtoolsSession
 	extends Omit<ITypedEventEmitter<DevtoolsEvents>, "waitOn"> {
 	id: string;
-	disposeRemoteObject(object: RemoteObject): void;
+	disposeRemoteObject(object: Protocol.Runtime.RemoteObject): void;
 
 	send<T extends RequiredParamsCommands>(
 		method: T,
@@ -47,7 +45,7 @@ export default interface IDevtoolsSession
 	onMessage(object: IDevtoolsResponseMessage & IDevtoolsEventMessage): void;
 }
 
-export { Protocol };
+export type { Protocol };
 
 export interface IDevtoolsResponseMessage {
 	sessionId: string;

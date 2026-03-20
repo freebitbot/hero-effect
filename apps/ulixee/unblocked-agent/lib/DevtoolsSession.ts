@@ -27,12 +27,10 @@ import type {
 	IDevtoolsEventMessage,
 	IDevtoolsResponseMessage,
 } from "@ulixee/unblocked-specification/agent/browser/IDevtoolsSession";
-import { Protocol } from "devtools-protocol";
+import type Protocol from "devtools-protocol";
 import type { ProtocolMapping } from "devtools-protocol/types/protocol-mapping";
 import ProtocolError from "../errors/ProtocolError";
 import type { Connection } from "./Connection";
-
-import RemoteObject = Protocol.Runtime.RemoteObject;
 
 const { log } = Log(module);
 /**
@@ -139,7 +137,7 @@ export default class DevtoolsSession
 		}
 	}
 
-	disposeRemoteObject(object: RemoteObject): void {
+	disposeRemoteObject(object: Protocol.Runtime.RemoteObject): void {
 		if (!object.objectId) return;
 		this.send("Runtime.releaseObject", { objectId: object.objectId }).catch(
 			() => {

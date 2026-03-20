@@ -1,14 +1,11 @@
-import Protocol from "devtools-protocol";
+import type Protocol from "devtools-protocol";
 import type IBrowser from "../browser/IBrowser";
 import type IBrowserContext from "../browser/IBrowserContext";
 import type IBrowserUserConfig from "../browser/IBrowserUserConfig";
 import type IDevtoolsSession from "../browser/IDevtoolsSession";
+import type { IFrame } from "../browser/IFrame";
 import type { IPage } from "../browser/IPage";
 import type { IWorker } from "../browser/IWorker";
-
-import TargetInfo = Protocol.Target.TargetInfo;
-
-import type { IFrame } from "../browser/IFrame";
 
 export interface IBrowserContextHooks {
 	onNewPage?(page: IPage): Promise<any>;
@@ -17,7 +14,7 @@ export interface IBrowserContextHooks {
 
 	onDevtoolsPanelAttached?(
 		devtoolsSession: IDevtoolsSession,
-		targetInfo?: TargetInfo,
+		targetInfo?: Protocol.Target.TargetInfo,
 	): Promise<any>;
 	onDevtoolsPanelDetached?(devtoolsSession: IDevtoolsSession): Promise<any>;
 }

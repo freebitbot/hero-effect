@@ -1,12 +1,10 @@
 import type { IBoundLog } from "@ulixee/commons/interfaces/ILog";
 import EventSubscriber from "@ulixee/commons/lib/EventSubscriber";
 import { TypedEventEmitter } from "@ulixee/commons/lib/eventUtils";
-import { Protocol } from "@ulixee/unblocked-specification/agent/browser/IDevtoolsSession";
+import type Protocol from "devtools-protocol";
 import BrowserContext from "./BrowserContext";
 import type DevtoolsSession from "./DevtoolsSession";
 import Frame from "./Frame";
-
-import TargetInfo = Protocol.Target.TargetInfo;
 
 interface IMessageDetails {
 	sessionType: IDevtoolsLogEvents["devtools-message"]["sessionType"];
@@ -150,7 +148,9 @@ export default class DevtoolsSessionLogger extends TypedEventEmitter<IDevtoolsLo
 		});
 	}
 
-	private isOtherBrowserContextTarget(target: TargetInfo): boolean {
+	private isOtherBrowserContextTarget(
+		target: Protocol.Target.TargetInfo,
+	): boolean {
 		if (!target?.browserContextId) return false;
 		return target.browserContextId !== this.browserContext.id;
 	}
