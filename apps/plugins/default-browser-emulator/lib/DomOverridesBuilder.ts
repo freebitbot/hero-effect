@@ -1,4 +1,6 @@
 import * as fs from "node:fs";
+import { resolve } from "node:path";
+import tsTransform from "@ulixee/commons/lib/BunTranspiler";
 import TypeSerializer, {
 	stringifiedTypeSerializerClass,
 } from "@ulixee/commons/lib/TypeSerializer";
@@ -10,9 +12,11 @@ import type INewDocumentInjectedScript from "../interfaces/INewDocumentInjectedS
 const injectedSourceUrl = `<anonymous-${Math.random()}>`;
 const cache: { [name: string]: string } = {};
 const shouldCache = process.env.NODE_ENV === "production";
-const utilsScript = [
-	fs.readFileSync(`${__dirname}/../injected-scripts/_utils.js`, "utf8"),
-].join("\n");
+
+const utilsScript = ["../injected-scripts/_utils.ts"]
+	.map((file) => resolve(__dirname, file))
+	.map((file) => tsTransform(file))
+	.join("\n");
 
 export { injectedSourceUrl };
 
