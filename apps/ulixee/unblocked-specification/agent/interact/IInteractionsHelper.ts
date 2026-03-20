@@ -8,7 +8,6 @@ export default interface IInteractionsHelper {
 	mousePosition: IPoint;
 	scrollOffset: Promise<IPoint>;
 	viewportSize: IViewportSize;
-	// TODO: IBoundLog - logger: IBoundLog;
 	doesBrowserAnimateScrolling: boolean;
 
 	createMousedownTrigger(nodeId: number): Promise<{

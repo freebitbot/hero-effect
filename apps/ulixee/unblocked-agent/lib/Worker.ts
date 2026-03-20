@@ -26,9 +26,6 @@ export class Worker
 	public hasLoadedResponse = false;
 	public readonly devtoolsSession: DevtoolsSession;
 
-	// @ts-expect-error IBoundLog deprecated
-	protected readonly logger;
-
 	private readonly initializationSent = createPromise<void>();
 	private readonly networkManager: NetworkManager;
 	private readonly targetInfo: Protocol.Target.TargetInfo;
@@ -51,21 +48,16 @@ export class Worker
 		browserContext: BrowserContext,
 		parentNetworkManager: NetworkManager,
 		devtoolsSession: DevtoolsSession,
-		// @ts-expect-error IBoundLog deprecated
-		logger,
+
 		targetInfo: Protocol.Target.TargetInfo,
 	) {
 		super();
 		this.targetInfo = targetInfo;
 		this.devtoolsSession = devtoolsSession;
 		this.browserContext = browserContext;
-		this.logger = logger.createChild(module, {
-			workerTargetId: this.id,
-			workerType: this.type,
-		});
+
 		this.networkManager = new NetworkManager(
 			devtoolsSession,
-			this.logger,
 			browserContext.proxy,
 			browserContext.secretKey,
 		);
@@ -180,7 +172,7 @@ export class Worker
 		} catch (error) {
 			if (error instanceof CanceledPromiseError) return;
 			await this.resumeAfterEmulation().catch(() => null);
-			this.logger.warn("Emulator.onNewWorkerError", {
+			console.warn("Emulator.onNewWorkerError", {
 				error,
 			});
 			throw error;

@@ -40,21 +40,12 @@ export default class FrameNavigations
 		reason: NavigationReason;
 	};
 
-	// @ts-expect-error IBoundLog deprecated
-	public logger;
-
 	private readonly historyByLoaderId: { [loaderId: string]: INavigation } = {};
 	private readonly historyById: Record<number, INavigation> = {};
 	private nextNavigationReason: { url: string; reason: NavigationReason };
 
-	constructor(
-		readonly frame: Frame,
-		// @ts-expect-error IBoundLog deprecated
-		logger,
-	) {
+	constructor(readonly frame: Frame) {
 		super();
-		this.logger = logger.createChild(module);
-		this.setEventsToLog(this.logger, ["navigation-requested", "status-change"]);
 	}
 
 	public reset(): void {
@@ -337,14 +328,11 @@ export default class FrameNavigations
 				(x) => x.finalUrl === url,
 			);
 			if (contentPaintHistory?.statusChanges?.has(LoadStatus.JavascriptReady)) {
-				this.logger.warn(
-					"JavascriptReady received for navigation already ready",
-					{
-						timestamp,
-						url,
-						contentPaintHistory,
-					},
-				);
+				console.warn("JavascriptReady received for navigation already ready", {
+					timestamp,
+					url,
+					contentPaintHistory,
+				});
 			} else if (contentPaintHistory) {
 				this.setPageReady(contentPaintHistory, timestamp);
 			} else if (!didRetry) {
@@ -425,7 +413,7 @@ export default class FrameNavigations
 		statusCode: number,
 		error?: Error,
 	): void {
-		this.logger.info("NavigationResource resolved", {
+		console.info("NavigationResource resolved", {
 			resourceId,
 			statusCode,
 			error,

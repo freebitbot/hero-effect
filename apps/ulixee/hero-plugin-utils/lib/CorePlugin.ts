@@ -19,18 +19,15 @@ export default class CorePlugin implements ICorePlugin {
 
 	protected readonly browserEngine: IBrowserEngine;
 	protected readonly plugins: ICorePlugins;
-	// TODO: IBoundLog - protected readonly logger: IBoundLog;
 
 	constructor({
 		emulationProfile,
 		corePlugins,
-		// TODO: IBoundLog - logger,
 		sessionSummary,
 	}: ICorePluginCreateOptions) {
 		this.id = (this.constructor as ICorePluginClass).id;
 		this.browserEngine = emulationProfile.browserEngine;
 		this.plugins = corePlugins;
-		// TODO: IBoundLog - this.logger = logger;
 		this.sessionSummary = sessionSummary ?? { id: undefined, options: {} };
 	}
 }

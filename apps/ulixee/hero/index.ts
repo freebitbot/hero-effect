@@ -1,7 +1,7 @@
 // setup must go first
 import "./lib/SetupAwaitedHandler";
 import "./lib/DomExtender";
-import {
+import type {
 	IElement,
 	IHTMLCollection,
 	IHTMLElement,
@@ -20,7 +20,7 @@ import type {
 } from "@ulixee/awaited-dom/base/interfaces/super";
 import { Node, XPathResult } from "@ulixee/hero-interfaces/AwaitedDom";
 import { BlockedResourceType } from "@ulixee/hero-interfaces/ITabOptions";
-import IUserProfile from "@ulixee/hero-interfaces/IUserProfile";
+import type IUserProfile from "@ulixee/hero-interfaces/IUserProfile";
 import {
 	LoadStatus,
 	LocationStatus,
@@ -35,9 +35,9 @@ import IResourceType, {
 	ResourceType,
 } from "@ulixee/unblocked-specification/agent/net/IResourceType";
 import ConnectionToHeroCore from "./connections/ConnectionToHeroCore";
-import IConnectionToCoreOptions from "./interfaces/IConnectionToCoreOptions";
-import IHeroCreateOptions from "./interfaces/IHeroCreateOptions";
-import IHeroReplayCreateOptions from "./interfaces/IHeroReplayCreateOptions";
+import type IConnectionToCoreOptions from "./interfaces/IConnectionToCoreOptions";
+import type IHeroCreateOptions from "./interfaces/IHeroCreateOptions";
+import type IHeroReplayCreateOptions from "./interfaces/IHeroReplayCreateOptions";
 import { Command } from "./interfaces/IInteractions";
 import DetachedElement from "./lib/DetachedElement";
 import {
@@ -59,14 +59,14 @@ export {
 	DetachedElement,
 	FrameEnvironment,
 	HeroReplay,
-	IConnectionToCoreOptions,
-	IElement,
-	IHeroCreateOptions,
-	IHeroReplayCreateOptions,
-	IHTMLCollection,
-	IHTMLElement,
-	INode,
-	INodeList,
+	type IConnectionToCoreOptions,
+	type IElement,
+	type IHeroCreateOptions,
+	type IHeroReplayCreateOptions,
+	type IHTMLCollection,
+	type IHTMLElement,
+	type INode,
+	type INodeList,
 	InteractionCommand,
 	IResourceType,
 	type ISuperDocument,
@@ -77,7 +77,7 @@ export {
 	type ISuperNodeList,
 	type ISuperStyleSheet,
 	type ISuperText,
-	IUserProfile,
+	type IUserProfile,
 	KeyboardKey,
 	LoadStatus,
 	LocationStatus,

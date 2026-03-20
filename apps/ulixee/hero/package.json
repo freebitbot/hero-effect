@@ -1,23 +1,7 @@
 {
 	"name": "@ulixee/hero",
 	"description": "The client interface for Hero",
-	"exports": {
-		".": {
-			"types": "./index.d.ts",
-			"import": "./index.mjs",
-			"require": "./index.cjs"
-		},
-		"./lib/*": {
-			"types": "./lib/*.d.ts",
-			"default": "./lib/*.js",
-			"require": "./lib/*.js"
-		},
-		"./connections/*": {
-			"types": "./connections/*.d.ts",
-			"default": "./connections/*.js",
-			"require": "./connections/*.js"
-		}
-	},
+	"version": "",
 	"dependencies": {
 		"@ulixee/awaited-dom": "1.4.2",
 		"@ulixee/commons": "workspace:*",

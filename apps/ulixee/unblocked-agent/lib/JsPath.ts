@@ -40,20 +40,14 @@ interface IJSONObject {
 
 export class JsPath implements IJsPathFunctions {
 	private readonly frame: Frame;
-	// @ts-expect-error IBoundLog deprecated
-	private readonly logger;
+
 	private readonly clientRectByNodePointerId = new Map<number, IElementRect>();
 	private readonly nodeIdRedirectToNewNodeId: { [nodeId: number]: number } = {};
 
 	private nodeIdToJsPathSource = new Map<number, IJsPathSource>();
 
-	constructor(
-		frame: Frame,
-		// @ts-expect-error IBoundLog deprecated
-		logger,
-	) {
+	constructor(frame: Frame) {
 		this.frame = frame;
-		this.logger = logger.createChild(module);
 	}
 
 	public getLastClientRect(nodeId: number): IElementRect {
@@ -99,7 +93,7 @@ export class JsPath implements IJsPathFunctions {
 				const result = await this.getNodePointer(path.jsPath, containerOffset);
 				const nodeId = result.nodePointer?.id;
 				if (nodeId && nodeId !== path.nodeId) {
-					this.logger.info("JsPath.nodeRedirectFound", {
+					console.info("JsPath.nodeRedirectFound", {
 						sourceNodeId: path.nodeId,
 						newNodeId: nodeId,
 						jsPath: path.jsPath,
@@ -214,7 +208,7 @@ export class JsPath implements IJsPathFunctions {
 		});
 
 		if ((result as any)?.error) {
-			this.logger.error(fnName, { result });
+			console.error(fnName, { result });
 			throw new InjectedScriptError((result as any).error as string);
 		} else {
 			return result as T;

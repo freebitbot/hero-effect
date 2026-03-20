@@ -14,18 +14,8 @@ export class NavigationLoader {
 	public url: string;
 
 	private afterStoppedLoadingTimeout: NodeJS.Timeout;
-	// @ts-expect-error IBoundLog deprecated
-	private logger;
 
-	constructor(
-		readonly id: string,
-		// @ts-expect-error IBoundLog deprecated
-		logger,
-	) {
-		this.logger = logger.createChild(module, {
-			loaderId: this.id,
-		});
-	}
+	constructor(readonly id: string) {}
 
 	public setNavigationResult(result?: Error | string): void {
 		this.navigationResolver.resolve(result ?? null);
@@ -52,7 +42,7 @@ export class NavigationLoader {
 			(name === "commit" || name === "DOMContentLoaded" || name === "load") &&
 			!this.isNavigationComplete
 		) {
-			this.logger.info("Resolving loader on lifecycle", {
+			console.info("Resolving loader on lifecycle", {
 				lifecycleEvent: name,
 			});
 			this.clearStoppedLoading();

@@ -1,18 +1,26 @@
-const { execSync } = require("child_process");
-const fs = require("fs");
-const os = require("os");
-const { httpGet } = require("@ulixee/commons/lib/downloadFile");
-const { createHash } = require("crypto");
-const { gunzipSync } = require("zlib");
-const packageJson = require("./package.json");
+import { execSync } from "node:child_process";
+import { createHash } from "node:crypto";
+import {
+	chmodSync,
+	copyFileSync,
+	existsSync,
+	mkdirSync,
+	readFileSync,
+	renameSync,
+	writeFileSync,
+} from "node:fs";
+import { arch as _arch, platform as _platform } from "node:os";
+import { gunzipSync } from "node:zlib";
+import { httpGet } from "@ulixee/commons/lib/downloadFile";
+import packageJson from "./package.json";
 
-const arch = process.env.npm_config_cpu || os.arch();
-const platform = process.env.npm_config_os || os.platform();
+const arch = process.env.npm_config_cpu || _arch();
+const platform = process.env.npm_config_os || _platform();
 
 const outDir = `${__dirname}/dist/${platform}-${arch}`;
 
-if (!fs.existsSync(outDir)) {
-	fs.mkdirSync(outDir, { recursive: true });
+if (!existsSync(outDir)) {
+	mkdirSync(outDir, { recursive: true });
 }
 const { version } = packageJson;
 const releasesAssetsUrl = `https://github.com/ulixee/hero/releases/download/v${version}`;
@@ -29,9 +37,9 @@ const forceBuild = Boolean(
 	}
 
 	try {
-		if (fs.existsSync(`${__dirname}/dist/artifacts.json`)) {
+		if (existsSync(`${__dirname}/dist/artifacts.json`)) {
 			const artifacts = JSON.parse(
-				fs.readFileSync(`${__dirname}/dist/artifacts.json`, "utf8"),
+				readFileSync(`${__dirname}/dist/artifacts.json`, "utf8"),
 			);
 			let artPlatform = platform;
 			if (platform === "win32") {
@@ -45,7 +53,7 @@ const forceBuild = Boolean(
 				(x) => x.goos === artPlatform && x.goarch === artArch,
 			);
 			if (artifact) {
-				fs.copyFileSync(artifact.path, `${outDir}/${artifact.name}`);
+				copyFileSync(artifact.path, `${outDir}/${artifact.name}`);
 				saveVersion();
 				console.log("Successfully copied Agent connect library");
 			}
@@ -107,8 +115,8 @@ You can install golang ${goVersionNeeded} (https://golang.org/) and run "go buil
 
 	const file = gunzipSync(zippedFile);
 
-	fs.writeFileSync(`${outDir}/${programName}`, file);
-	fs.chmodSync(`${outDir}/${programName}`, 0o755);
+	writeFileSync(`${outDir}/${programName}`, file);
+	chmodSync(`${outDir}/${programName}`, 0o755);
 	saveVersion();
 	console.log("Successfully downloaded");
 	process.exit(0);
@@ -124,10 +132,7 @@ function tryBuild(programName) {
 
 	if (isGoInstalled) {
 		if (compile()) {
-			fs.renameSync(
-				`${__dirname}/go/${programName}`,
-				`${outDir}/${programName}`,
-			);
+			renameSync(`${__dirname}/go/${programName}`, `${outDir}/${programName}`);
 			return true;
 		}
 	}
@@ -135,18 +140,18 @@ function tryBuild(programName) {
 }
 
 function getInstalledVersion() {
-	if (fs.existsSync(`${outDir}/version`)) {
-		return fs.readFileSync(`${outDir}/version`, "utf8");
+	if (existsSync(`${outDir}/version`)) {
+		return readFileSync(`${outDir}/version`, "utf8");
 	}
 	return null;
 }
 
 function isBinaryInstalled(programName) {
-	return fs.existsSync(`${outDir}/${programName}`);
+	return existsSync(`${outDir}/${programName}`);
 }
 
 function saveVersion() {
-	fs.writeFileSync(`${outDir}/version`, version);
+	writeFileSync(`${outDir}/version`, version);
 }
 
 function buildFilename() {
@@ -230,7 +235,7 @@ function compile() {
 }
 
 function getGoVersionNeeded() {
-	const goMod = fs.readFileSync(`${__dirname}/go/go.mod`, "utf8");
+	const goMod = readFileSync(`${__dirname}/go/go.mod`, "utf8");
 	const goMatch = goMod.match(/go ([\d.]+)/);
 	return goMatch[1];
 }

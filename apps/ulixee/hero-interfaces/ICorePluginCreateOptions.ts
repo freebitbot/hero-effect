@@ -7,6 +7,5 @@ export default interface ICorePluginCreateOptions<C extends object = any> {
 	emulationProfile: IEmulationProfile;
 	corePlugins: ICorePlugins;
 	sessionSummary: ISessionSummary;
-	// TODO: IBoundLog - logger: IBoundLog;
 	customConfig?: PluginCustomConfig<C>;
 }

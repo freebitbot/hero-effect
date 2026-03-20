@@ -31,15 +31,12 @@ export default class FrameNavigationsObserver {
 	private readonly navigations: FrameNavigations;
 
 	private resourceIdResolvable: IResolvablePromise<number>;
-	// @ts-expect-error IBoundLog deprecated
-	private logger;
+
 	private readonly statusTriggers: IStatusTrigger[] = [];
 
 	constructor(navigations: FrameNavigations) {
 		this.navigations = navigations;
-		this.logger = navigations.logger.createChild(module, {
-			frameId: navigations.frame.frameId,
-		});
+
 		navigations.on("status-change", this.onLoadStatusChange.bind(this));
 	}
 
@@ -58,7 +55,7 @@ export default class FrameNavigationsObserver {
 			: commandMarker.getStartingCommandIdFor("waitForLocation");
 
 		const trigger = this.hasLocationTrigger(status, sinceCommandId);
-		this.logger.info(`Frame.waitForLocation(${status})`, {
+		console.info(`Frame.waitForLocation(${status})`, {
 			sinceCommandId,
 			preResolved: trigger?.requestedUrl ?? false,
 		});
@@ -87,12 +84,12 @@ export default class FrameNavigationsObserver {
 			this.navigations.frame.page.browserContext.commandMarker.incrementMark?.(
 				"waitForLoad",
 			);
-			this.logger.info(`Frame.waitForLoad(${status})`, options);
+			console.info(`Frame.waitForLoad(${status})`, options);
 		}
 
 		const top = this.navigations.top;
 		if (top && top.statusChanges.has(status)) {
-			this.logger.info(`Frame.waitForLoad:resolved(${status})`, {
+			console.info(`Frame.waitForLoad:resolved(${status})`, {
 				url: top.requestedUrl,
 				loader: top.loaderId,
 				status: Object.fromEntries(top.statusChanges),
@@ -115,7 +112,7 @@ export default class FrameNavigationsObserver {
 	): Promise<number> {
 		const nav = navigation ?? this.navigations.top;
 
-		this.logger.info(`Frame.waitForNavigationResourceId`, {
+		console.info(`Frame.waitForNavigationResourceId`, {
 			url: nav?.finalUrl ?? nav?.requestedUrl,
 		});
 		this.resourceIdResolvable = nav?.resourceIdResolvable;
@@ -225,7 +222,7 @@ export default class FrameNavigationsObserver {
 		navigation: INavigation,
 	): void {
 		if (!trigger.resolvable.isResolved) {
-			this.logger.info(`Resolving pending "${trigger.status}" with trigger`, {
+			console.info(`Resolving pending "${trigger.status}" with trigger`, {
 				resolvedWithStatus,
 				waitingForStatus: trigger.status,
 				url: navigation.finalUrl ?? navigation.requestedUrl,
@@ -285,7 +282,7 @@ export default class FrameNavigationsObserver {
 				}
 
 				if (isTriggered) {
-					this.logger.info(
+					console.info(
 						`Resolving waitForLocation(${trigger}) with navigation history`,
 						{
 							historyEntry: history,

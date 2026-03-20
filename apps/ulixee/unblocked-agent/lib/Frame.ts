@@ -110,8 +110,7 @@ export default class Frame
 	public jsPath: JsPath;
 	public activeLoaderId: string;
 	public navigationLoadersById: { [loaderId: string]: NavigationLoader } = {};
-	// @ts-expect-error IBoundLog deprecated
-	public readonly logger;
+
 	public get hooks(): IInteractHooks {
 		return this.page.browserContext.hooks;
 	}
@@ -173,8 +172,7 @@ export default class Frame
 		framesManager: FramesManager,
 		internalFrame: Protocol.Page.Frame,
 		devtoolsSession: DevtoolsSession,
-		// @ts-expect-error IBoundLog deprecated
-		logger,
+
 		checkIfAttached: () => boolean,
 		parentFrame: Frame | null,
 	) {
@@ -184,14 +182,12 @@ export default class Frame
 		this.frameId = idTracker.frameId;
 		this.#framesManager = framesManager;
 		this.devtoolsSession = devtoolsSession;
-		this.logger = logger.createChild(module, { frameId: this.frameId });
-		this.navigations = new FrameNavigations(this, this.logger);
+		this.navigations = new FrameNavigations(this);
 		this.navigationsObserver = new FrameNavigationsObserver(this.navigations);
-		this.jsPath = new JsPath(this, this.logger);
+		this.jsPath = new JsPath(this);
 		this.parentFrame = parentFrame;
 		this.interactor = new Interactor(this);
 		this.checkIfAttached = checkIfAttached;
-		this.setEventsToLog(this.logger, ["frame-navigated"]);
 		this.storeEventsWithoutListeners = true;
 		this.onAttached(internalFrame);
 	}
@@ -265,7 +261,7 @@ export default class Frame
 						.catch((err) => {
 							if (this.closedWithError || err instanceof CanceledPromiseError)
 								return;
-							this.logger.warn("NewDocumentScriptError", { err });
+							console.warn("NewDocumentScriptError", { err });
 						});
 				}),
 			);
@@ -593,7 +589,7 @@ export default class Frame
 			return await this.frameElementDevtoolsNodeId;
 		} catch (error) {
 			// ignore errors looking this up
-			this.logger.info("Failed to lookup isolated node", {
+			console.info("Failed to lookup isolated node", {
 				frameId: this.id,
 				error,
 			});
@@ -895,14 +891,11 @@ export default class Frame
 		if (this.navigationLoadersById[loaderId]) return;
 
 		this.activeLoaderId = loaderId;
-		this.logger.info("Queuing new navigation loader", {
+		console.info("Queuing new navigation loader", {
 			loaderId,
 			frameId: this.id,
 		});
-		this.navigationLoadersById[loaderId] = new NavigationLoader(
-			loaderId,
-			this.logger,
-		);
+		this.navigationLoadersById[loaderId] = new NavigationLoader(loaderId);
 		if (url) this.navigationLoadersById[loaderId].url = url;
 
 		this.emit("frame-loader-created", {
@@ -944,7 +937,7 @@ export default class Frame
 					if (!this.isAttached) return;
 				}
 			}
-			this.logger.warn("Failed to create isolated world.", {
+			console.warn("Failed to create isolated world.", {
 				frameId: this.id,
 				error,
 			});

@@ -1,7 +1,7 @@
 import EventSubscriber from "@ulixee/commons/lib/EventSubscriber";
 import { TypedEventEmitter } from "@ulixee/commons/lib/eventUtils";
 import type Protocol from "devtools-protocol";
-import BrowserContext from "./BrowserContext";
+import type BrowserContext from "./BrowserContext";
 import type DevtoolsSession from "./DevtoolsSession";
 import Frame from "./Frame";
 
@@ -265,7 +265,7 @@ export default class DevtoolsSessionLogger extends TypedEventEmitter<IDevtoolsLo
 	}
 }
 
-interface IDevtoolsLogEvents {
+export interface IDevtoolsLogEvents {
 	"devtools-message": {
 		direction: "send" | "receive";
 		timestamp: Date;

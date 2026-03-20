@@ -27,7 +27,6 @@ import WebsocketMessages from "./WebsocketMessages";
 import type { Worker } from "./Worker";
 
 export interface IBrowserContextCreateOptions {
-	logger?: any;
 	proxy?: IProxyConnectionOptions;
 	hooks?: IBrowserContextHooks & IInteractHooks;
 	isIncognito?: boolean;
@@ -39,7 +38,6 @@ export default class BrowserContext
 	extends TypedEventEmitter<IBrowserContextEvents>
 	implements IBrowserContext
 {
-	public logger: any;
 	public lastOpenedPage: Page;
 
 	public resources: Resources;
@@ -90,7 +88,6 @@ export default class BrowserContext
 		this.browser = browser;
 		this.proxy = options?.proxy;
 		this.isIncognito = isIncognito;
-		this.logger = options?.logger;
 		this.hooks = options?.hooks ?? {};
 		this.secretKey = options?.secretKey;
 		this.commandMarker =
@@ -237,7 +234,6 @@ export default class BrowserContext
 			devtoolsSession,
 			targetInfo.targetId,
 			this,
-			this.logger,
 			opener,
 			pageOptions,
 		);
