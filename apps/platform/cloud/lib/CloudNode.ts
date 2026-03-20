@@ -123,7 +123,10 @@ export default class CloudNode {
 			await this.publicServer.close();
 			resolvable.resolve();
 		} catch (error: any) {
-			console.error("[CloudNode]", { action: "Error closing socket connections", error });
+			console.error("[CloudNode]", {
+				action: "Error closing socket connections",
+				error,
+			});
 			resolvable.reject(error);
 		} finally {
 			console.log("[CloudNode]", { action: "Closed" });

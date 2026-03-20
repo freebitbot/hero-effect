@@ -1,38 +1,25 @@
-import * as fs from "node:fs";
+import { resolve } from "node:path";
+import tsTransform from "@ulixee/commons/lib/BunTranspiler";
 import { stringifiedTypeSerializerClass } from "@ulixee/commons/lib/TypeSerializer";
 import type IDevtoolsSession from "@ulixee/unblocked-specification/agent/browser/IDevtoolsSession";
 import type { IPage } from "@ulixee/unblocked-specification/agent/browser/IPage";
 
 const pageScripts = {
-	domStorage: fs.readFileSync(
-		`${__dirname}/../injected-scripts/domStorage.js`,
-		"utf8",
+	domStorage: tsTransform(
+		resolve(__dirname, `../injected-scripts/domStorage.ts`),
 	),
-	indexedDbRestore: fs
-		.readFileSync(
-			`${__dirname}/../injected-scripts/indexedDbRestore.js`,
-			"utf8",
-		)
-		.replace(/# sourceMappingURL=.*\.js\.map/g, ""),
-	interactReplayer: fs.readFileSync(
-		`${__dirname}/../injected-scripts/interactReplayer.js`,
-		"utf8",
+	indexedDbRestore: tsTransform(
+		resolve(__dirname, `../injected-scripts/indexedDbRestore.ts`),
 	),
-	DomAssertions: fs.readFileSync(
-		`${__dirname}/../injected-scripts/DomAssertions.js`,
-		"utf8",
+	DomAssertions: tsTransform(
+		resolve(__dirname, `../injected-scripts/DomAssertions.ts`),
 	),
-	Fetcher: fs.readFileSync(
-		`${__dirname}/../injected-scripts/Fetcher.js`,
-		"utf8",
+	Fetcher: tsTransform(resolve(__dirname, `../injected-scripts/Fetcher.ts`)),
+	pageEventsRecorder: tsTransform(
+		resolve(__dirname, `../injected-scripts/pageEventsRecorder.ts`),
 	),
-	pageEventsRecorder: fs.readFileSync(
-		`${__dirname}/../injected-scripts/pageEventsRecorder.js`,
-		"utf8",
-	),
-	shadowDomPiercer: fs.readFileSync(
-		`${__dirname}/../injected-scripts/domOverride_openShadowRoots.js`,
-		"utf8",
+	shadowDomPiercer: tsTransform(
+		resolve(__dirname, `../injected-scripts/domOverride_openShadowRoots.ts`),
 	),
 };
 const pageEventsCallbackName = "paintEvents";

@@ -1,4 +1,5 @@
-import * as fs from "node:fs";
+import { resolve } from "node:path";
+import tsTransform from "@ulixee/commons/lib/BunTranspiler";
 import EventSubscriber from "@ulixee/commons/lib/EventSubscriber";
 import { TypedEventEmitter } from "@ulixee/commons/lib/eventUtils";
 import Queue from "@ulixee/commons/lib/Queue";
@@ -17,8 +18,9 @@ import DomChangesTable, {
 import type { IMouseEventRecord } from "../models/MouseEventsTable";
 import type { IScrollRecord } from "../models/ScrollEventsTable";
 import InjectedScripts, { CorePageInjectedScript } from "./InjectedScripts";
-import type { Tab } from "./index";
+
 import type MirrorNetwork from "./MirrorNetwork";
+import type Tab from "./Tab";
 import type { ITabEventParams } from "./Tab";
 
 const installedScriptsSymbol = Symbol.for("MirrorPageScripts");
@@ -618,17 +620,14 @@ export default class MirrorPage extends TypedEventEmitter<{
 }
 
 const pageScripts = {
-	DomActions: fs.readFileSync(
-		`${__dirname}/../injected-scripts/DomActions.js`,
-		"utf8",
+	DomActions: tsTransform(
+		resolve(__dirname, `../injected-scripts/DomActions.ts`),
 	),
-	domReplayer: fs.readFileSync(
-		`${__dirname}/../injected-scripts/domReplayer.js`,
-		"utf8",
+	domReplayer: tsTransform(
+		resolve(__dirname, `../injected-scripts/domReplayer.ts`),
 	),
-	domReplayerUI: fs.readFileSync(
-		`${__dirname}/../injected-scripts/domReplayerUI.js`,
-		"utf8",
+	domReplayerUI: tsTransform(
+		resolve(__dirname, `../injected-scripts/domReplayerUI.ts`),
 	),
 };
 
