@@ -4,7 +4,6 @@ import * as http2 from "node:http2";
 import * as https from "node:https";
 import type { Socket } from "node:net";
 import * as net from "node:net";
-import * as tls from "node:tls";
 import { CanceledPromiseError } from "@ulixee/commons/interfaces/IPendingWaitEvent";
 import EventSubscriber from "@ulixee/commons/lib/EventSubscriber";
 import { createPromise } from "@ulixee/commons/lib/utils";
@@ -96,7 +95,11 @@ export default class MitmProxy {
 		} else {
 			// Node.js: use the traditional approach
 			this.httpsServer = https.createServer({ insecureHTTPParser: true });
-			this.events.on(this.httpsServer, "connect", this.onHttpConnect.bind(this));
+			this.events.on(
+				this.httpsServer,
+				"connect",
+				this.onHttpConnect.bind(this),
+			);
 			this.events.on(
 				this.httpsServer,
 				"request",
@@ -109,7 +112,11 @@ export default class MitmProxy {
 			);
 
 			this.http2Server = http2.createSecureServer({ allowHTTP1: true });
-			this.events.on(this.http2Server, "session", this.onHttp2Session.bind(this));
+			this.events.on(
+				this.http2Server,
+				"session",
+				this.onHttp2Session.bind(this),
+			);
 			this.events.on(
 				this.http2Server,
 				"sessionError",
@@ -299,9 +306,11 @@ export default class MitmProxy {
 	 */
 	private async handleBunHttpsRequest(
 		req: Request,
-		server: typeof Bun.serve extends (
-			options: infer O,
-		) => infer R ? (O extends { fetch: infer F } ? R : never) : never,
+		server: typeof Bun.serve extends (options: infer O) => infer R
+			? O extends { fetch: infer F }
+				? R
+				: never
+			: never,
 	): Promise<Response> {
 		// Convert Bun Request to Node.js-like request for compatibility
 		const sessionId = this.readSessionIdFromBunRequest(req);
@@ -1008,7 +1017,8 @@ export default class MitmProxy {
 		this.secureContexts[hostname] ??= (async () => {
 			if (this.isBunRuntime) {
 				// Bun: Generate certificate and reload server
-				const tlsConfig = await this.tlsCertificateManager.getCertificate(hostname);
+				const tlsConfig =
+					await this.tlsCertificateManager.getCertificate(hostname);
 				this.reloadBunTlsServers();
 			} else {
 				// Node.js: Use addContext
