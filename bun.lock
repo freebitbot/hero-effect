@@ -759,9 +759,6 @@
     "apps/ulixee/w3c-xmlserializer": {
       "name": "@ulixee/w3c-xmlserializer",
       "version": "2.0.0",
-      "dependencies": {
-        "xml-name-validator": "^3.0.0",
-      },
     },
     "resolutions/better-sqlite3": {
       "name": "better-sqlite3",
