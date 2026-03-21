@@ -1,2 +1,0 @@
-[OverrideBuiltins]
-interface HTMLDocument : Document {};

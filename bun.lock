@@ -604,10 +604,6 @@
         "@types/ws": "^7.4.7",
       },
     },
-    "apps/ulixee/noderdom": {
-      "name": "@ulixee/noderdom",
-      "version": "1.4.2",
-    },
     "apps/ulixee/real-user-agents": {
       "name": "@ulixee/real-user-agents",
       "dependencies": {
@@ -946,8 +942,6 @@
     "@ulixee/js-path": ["@ulixee/js-path@workspace:apps/ulixee/js-path"],
 
     "@ulixee/net": ["@ulixee/net@workspace:apps/ulixee/net"],
-
-    "@ulixee/noderdom": ["@ulixee/noderdom@workspace:apps/ulixee/noderdom"],
 
     "@ulixee/real-user-agents": ["@ulixee/real-user-agents@workspace:apps/ulixee/real-user-agents"],
 
