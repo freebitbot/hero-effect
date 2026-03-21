@@ -430,7 +430,11 @@ export default class MitmProxy {
 						yield Buffer.from(value);
 					}
 				} finally {
-					reader.releaseLock();
+					try {
+						reader.releaseLock?.();
+					} catch {
+						// releaseLock can throw if the reader doesn't support it or is already locked
+					}
 				}
 			},
 
