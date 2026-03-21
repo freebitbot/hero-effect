@@ -419,6 +419,21 @@ export default class MitmProxy {
 			},
 			body: req.body,
 
+			// Async iterator for reading request body chunks (for "for await...of")
+			async *[Symbol.asyncIterator]() {
+				if (!req.body) return;
+				const reader = req.body.getReader();
+				try {
+					while (true) {
+						const { done, value } = await reader.read();
+						if (done) break;
+						yield Buffer.from(value);
+					}
+				} finally {
+					reader.releaseLock();
+				}
+			},
+
 			// Readable stream methods
 			pause() {
 				return this;
