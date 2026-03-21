@@ -1,4 +1,4 @@
-import type { ICertificateGenerator } from "../interfaces/ICertificateGenerator";
+import type ICertificateGenerator from "../interfaces/ICertificateGenerator";
 
 export interface TlsConfig {
 	key: Buffer;
