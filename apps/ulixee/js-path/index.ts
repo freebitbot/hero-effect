@@ -1,15 +1,16 @@
-import IElementRect from "./interfaces/IElementRect";
-import IJsPath, {
+import type { INodePointer } from "../hero-interfaces/AwaitedDom";
+import type IElementRect from "./interfaces/IElementRect";
+import type IJsPath from "./interfaces/IJsPath";
+import type {
 	IMethod,
 	INodeId,
 	IPathStep,
 	IPropertyName,
 } from "./interfaces/IJsPath";
-import IJsPathError from "./interfaces/IJsPathError";
-import INodePointer from "./interfaces/INodePointer";
-import INodeVisibility from "./interfaces/INodeVisibility";
+import type IJsPathError from "./interfaces/IJsPathError";
+import type INodeVisibility from "./interfaces/INodeVisibility";
 
-export {
+export type {
 	IElementRect,
 	IJsPath,
 	IJsPathError,

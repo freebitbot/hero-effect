@@ -8,9 +8,6 @@
     "Caleb Clark",
     "Blake Byrnes"
   ],
-  "publishConfig": {
-    "access": "public"
-  },
   "license": "MIT",
   "keywords": [
     "w3c",
@@ -23,10 +20,6 @@
     "AwaitedDOM"
   ],
   "dependencies": {
-    "@ulixee/js-path": "^2.0.0-alpha.18"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/ulixee/noderdom"
+    "@ulixee/js-path": "workspace:*"
   }
 }
