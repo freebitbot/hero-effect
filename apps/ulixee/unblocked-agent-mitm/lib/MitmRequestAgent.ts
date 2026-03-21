@@ -86,6 +86,17 @@ export default class MitmRequestAgent {
 			// Convert HTTP/2 pseudo-headers to HTTP/1.1 format
 			HeadersHandler.convertH2toH1Headers(ctx);
 
+			// Close the HTTP/2 socket and get a new HTTP/1.1 socket
+			// The existing socket was negotiated for HTTP/2 (ALPN=h2) during TLS handshake
+			// We need a fresh socket that will negotiate HTTP/1.1
+			const socket = ctx.proxyToServerMitmSocket;
+			if (socket.isHttp2()) {
+				// Clear HTTP/2 sessions from the pool to prevent reuse
+				const pool = this.getSocketPoolByOrigin(ctx.url.origin);
+				pool.clearHttp2Sessions();
+				await this.assignSocket(ctx, requestSettings as any);
+			}
+
 			if (!ctx.requestHeaders.host && !ctx.requestHeaders.Host) {
 				ctx.requestHeaders.Host = ctx.url.host;
 			}

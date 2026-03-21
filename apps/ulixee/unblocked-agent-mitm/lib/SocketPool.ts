@@ -8,7 +8,7 @@ import type RequestSession from "../handlers/RequestSession";
 import type Http2SessionBinding from "./Http2SessionBinding";
 
 export default class SocketPool {
-	public alpn: string;
+	public alpn?: string;
 	public isClosing = false;
 	private readonly events = new EventSubscriber();
 	private all = new Set<MitmSocket>();
@@ -160,6 +160,20 @@ export default class SocketPool {
 			return;
 
 		if (this.pooled < this.maxConnections) this.pending.shift()?.resolve();
+	}
+
+	public clearHttp2Sessions(): void {
+		for (const session of this.http2Sessions) {
+			try {
+				session.client.close();
+				session.mitmSocket.close();
+			} catch {
+				// ignore errors closing sessions
+			}
+		}
+		this.http2Sessions.length = 0;
+		// Reset ALPN so a new socket will be created with the correct protocol
+		this.alpn = undefined;
 	}
 
 	private closeHttp2Session(session: IHttp2Session): void {
