@@ -584,17 +584,6 @@
         "@ulixee/unblocked-specification": "workspace:*",
       },
     },
-    "apps/ulixee/hero-timetravel": {
-      "name": "@ulixee/hero-timetravel",
-      "dependencies": {
-        "@ulixee/commons": "workspace:*",
-        "@ulixee/hero-core": "workspace:*",
-        "@ulixee/hero-interfaces": "workspace:*",
-        "@ulixee/unblocked-agent": "workspace:*",
-        "@ulixee/unblocked-specification": "workspace:*",
-        "nanoid": "^3.3.11",
-      },
-    },
     "apps/ulixee/js-path": {
       "name": "@ulixee/js-path",
     },
@@ -1115,8 +1104,6 @@
     "@ulixee/hero-playground": ["@ulixee/hero-playground@workspace:apps/ulixee/hero-playground"],
 
     "@ulixee/hero-plugin-utils": ["@ulixee/hero-plugin-utils@workspace:apps/ulixee/hero-plugin-utils"],
-
-    "@ulixee/hero-timetravel": ["@ulixee/hero-timetravel@workspace:apps/ulixee/hero-timetravel"],
 
     "@ulixee/js-path": ["@ulixee/js-path@workspace:apps/ulixee/js-path"],
 
