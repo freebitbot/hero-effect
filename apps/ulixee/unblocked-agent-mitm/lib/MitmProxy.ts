@@ -359,8 +359,10 @@ export default class MitmProxy {
 	private createMockNodeRequest(req: Request): IncomingMessage {
 		const url = new URL(req.url);
 		const headers: Record<string, string | string[]> = {};
+		const rawHeaders: string[] = [];
 
 		req.headers.forEach((value, key) => {
+			rawHeaders.push(key, value);
 			const existing = headers[key];
 			if (existing) {
 				if (Array.isArray(existing)) {
@@ -373,11 +375,16 @@ export default class MitmProxy {
 			}
 		});
 
+		// Create event handlers storage for EventEmitter-like behavior
+		const eventHandlers = new Map<string, Set<(...args: any[]) => void>>();
+
 		// Create a minimal mock that satisfies HttpRequestHandler's needs
+		// It needs to be EventEmitter-like with on, once, emit, pause, resume methods
 		const mock = {
 			method: req.method,
 			url: url.pathname + url.search,
 			headers,
+			rawHeaders,
 			httpVersion: "1.1",
 			httpVersionMajor: 1,
 			httpVersionMinor: 1,
@@ -386,6 +393,62 @@ export default class MitmProxy {
 				destroy: () => {},
 			},
 			body: req.body,
+
+			// Readable stream methods
+			pause() {
+				return this;
+			},
+			resume() {
+				return this;
+			},
+			destroy(error?: Error) {
+				return this;
+			},
+
+			// EventEmitter-like methods
+			on(event: string, handler: (...args: any[]) => void) {
+				const handlers = eventHandlers.get(event) || new Set();
+				handlers.add(handler);
+				eventHandlers.set(event, handlers);
+				return this;
+			},
+			once(event: string, handler: (...args: any[]) => void) {
+				const wrappedHandler = (...args: any[]) => {
+					this.removeListener(event, wrappedHandler);
+					handler(...args);
+				};
+				return this.on(event, wrappedHandler);
+			},
+			off(event: string, handler: (...args: any[]) => void) {
+				return this.removeListener(event, handler);
+			},
+			emit(event: string, ...args: any[]) {
+				const handlers = eventHandlers.get(event);
+				if (handlers) {
+					for (const handler of handlers) {
+						handler(...args);
+					}
+				}
+				return (handlers?.size ?? 0) > 0;
+			},
+			removeListener(event: string, handler: (...args: any[]) => void) {
+				const handlers = eventHandlers.get(event);
+				if (handlers) {
+					handlers.delete(handler);
+				}
+				return this;
+			},
+			removeAllListeners(event?: string) {
+				if (event) {
+					eventHandlers.delete(event);
+				} else {
+					eventHandlers.clear();
+				}
+				return this;
+			},
+			addListener(event: string, handler: (...args: any[]) => void) {
+				return this.on(event, handler);
+			},
 		} as unknown as IncomingMessage;
 
 		return mock;
@@ -403,6 +466,9 @@ export default class MitmProxy {
 		let statusCode = 200;
 		let headersSent = false;
 		let finished = false;
+
+		// Create event handlers storage for EventEmitter-like behavior
+		const eventHandlers = new Map<string, Set<(...args: any[]) => void>>();
 
 		const resolvePromise: {
 			resolve: (response: Response) => void;
@@ -493,16 +559,49 @@ export default class MitmProxy {
 				}
 			},
 
-			on(event: string, callback: (...args: any[]) => void) {
+			// EventEmitter-like methods (same as request mock)
+			on(event: string, handler: (...args: any[]) => void) {
+				const handlers = eventHandlers.get(event) || new Set();
+				handlers.add(handler);
+				eventHandlers.set(event, handlers);
 				return this;
 			},
-
-			once(event: string, callback: (...args: any[]) => void) {
-				return this;
+			once(event: string, handler: (...args: any[]) => void) {
+				const wrappedHandler = (...args: any[]) => {
+					this.removeListener(event, wrappedHandler);
+					handler(...args);
+				};
+				return this.on(event, wrappedHandler);
 			},
-
+			off(event: string, handler: (...args: any[]) => void) {
+				return this.removeListener(event, handler);
+			},
 			emit(event: string, ...args: any[]) {
-				return false;
+				const handlers = eventHandlers.get(event);
+				if (handlers) {
+					for (const handler of handlers) {
+						handler(...args);
+					}
+				}
+				return (handlers?.size ?? 0) > 0;
+			},
+			removeListener(event: string, handler: (...args: any[]) => void) {
+				const handlers = eventHandlers.get(event);
+				if (handlers) {
+					handlers.delete(handler);
+				}
+				return this;
+			},
+			removeAllListeners(event?: string) {
+				if (event) {
+					eventHandlers.delete(event);
+				} else {
+					eventHandlers.clear();
+				}
+				return this;
+			},
+			addListener(event: string, handler: (...args: any[]) => void) {
+				return this.on(event, handler);
 			},
 
 			socket: {
