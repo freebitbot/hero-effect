@@ -569,7 +569,13 @@ export default class MitmProxy {
 				return true;
 			},
 
-			end(data?: string | Buffer | Uint8Array, callback?: () => void) {
+			end(data?: string | Buffer | Uint8Array | (() => void), callback?: () => void) {
+				// Handle case where callback is passed as first argument
+				if (typeof data === "function") {
+					callback = data;
+					data = undefined;
+				}
+
 				if (data) {
 					if (typeof data === "string") {
 						chunks.push(new TextEncoder().encode(data));

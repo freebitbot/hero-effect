@@ -78,8 +78,20 @@ export default class MitmRequestAgent {
 			for (const hook of ctx.requestSession.hooks) {
 				await hook.beforeHttpRequest?.(ctx);
 			}
-			HeadersHandler.prepareRequestHeadersForHttp2(ctx);
-			return this.http2Request(ctx);
+
+			// Force HTTP/1.1 for upstream connections
+			// Node's http2 module has compatibility issues with Bun
+			ctx.isServerHttp2 = false;
+
+			// Convert HTTP/2 pseudo-headers to HTTP/1.1 format
+			HeadersHandler.convertH2toH1Headers(ctx);
+
+			if (!ctx.requestHeaders.host && !ctx.requestHeaders.Host) {
+				ctx.requestHeaders.Host = ctx.url.host;
+			}
+			HeadersHandler.cleanProxyHeaders(ctx);
+			requestSettings.headers = ctx.requestHeaders;
+			return this.http1Request(ctx, requestSettings);
 		}
 
 		if (!ctx.requestHeaders.host && !ctx.requestHeaders.Host) {
