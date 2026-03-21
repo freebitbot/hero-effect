@@ -76,11 +76,15 @@ export default class TlsCertificateManager {
 	async initialize(): Promise<void> {
 		if (this.defaultConfig) return;
 
-		const { key, cert } = await this.certificateGenerator.getCertificate(
+		const result = await this.certificateGenerator.getCertificate(
 			this.defaultHostname,
 		);
-		if (key && cert) {
-			this.defaultConfig = { key, cert, servername: this.defaultHostname };
+		if (result.key && result.cert) {
+			this.defaultConfig = {
+				key: result.key,
+				cert: result.cert,
+				servername: this.defaultHostname,
+			};
 			this.certificateCache.set(this.defaultHostname, this.defaultConfig);
 		}
 	}
