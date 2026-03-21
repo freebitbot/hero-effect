@@ -265,6 +265,26 @@ export default class HeadersHandler {
 			}
 		}
 	}
+
+	public static convertH2toH1Headers(ctx: IMitmRequestContext): void {
+		const headers = ctx.requestHeaders;
+
+		// Convert :authority to Host
+		if (headers[":authority"]) {
+			headers.Host = headers[":authority"] as string;
+			delete headers[":authority"];
+		}
+
+		// Remove HTTP/2 pseudo-headers (not valid in HTTP/1.1)
+		delete headers[":method"];
+		delete headers[":path"];
+		delete headers[":scheme"];
+
+		// Add Connection header for keep-alive
+		if (!headers.connection && !headers.Connection) {
+			headers.Connection = "keep-alive";
+		}
+	}
 }
 
 const headerCharRegex = /[^\t\x20-\x7e\x80-\xff]/;

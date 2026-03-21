@@ -315,7 +315,7 @@ export default class HttpRequestHandler extends BaseHttpHandler {
 				serverToProxyResponse.rawTrailers,
 			);
 		}
-		if (context.responseTrailers) {
+		if (context.responseTrailers && typeof proxyToClientResponse.addTrailers === "function") {
 			proxyToClientResponse.addTrailers(context.responseTrailers);
 		}
 		await new Promise<void>((resolve) => proxyToClientResponse.end(resolve));
