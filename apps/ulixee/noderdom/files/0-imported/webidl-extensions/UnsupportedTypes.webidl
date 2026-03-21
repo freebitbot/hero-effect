@@ -1,4 +1,0 @@
-typedef Void UnsupportedFeature;
-typedef UnsupportedFeature CanvasRenderingContext2D;
-typedef UnsupportedFeature WebGLRenderingContext;
-typedef UnsupportedFeature WindowProxy;
