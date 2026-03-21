@@ -22,6 +22,7 @@ import type {
 	IMitmRequestPendingBrowserRequest,
 	IResourceEvents,
 } from "../interfaces/IResourceEvents";
+import type BrowserContext from "./BrowserContext";
 
 export default class Resources
 	extends TypedEventEmitter<IResourceEvents>
@@ -51,6 +52,10 @@ export default class Resources
 	private readonly mitmRequestsPendingBrowserRequest: IMitmRequestPendingBrowserRequest[] =
 		[];
 	private events = new EventSubscriber();
+
+	constructor(private browserContext: BrowserContext) {
+		super();
+	}
 
 	public getForTab(tabId: number): IResourceMeta[] {
 		const resources: IResourceMeta[] = [];

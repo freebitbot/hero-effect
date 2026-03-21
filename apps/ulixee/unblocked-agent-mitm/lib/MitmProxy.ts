@@ -336,6 +336,22 @@ export default class MitmProxy {
 			return new Response(emptyResponse);
 		}
 
+		// Wait for browserRequestMatcher to be set (handles race condition during Agent initialization)
+		const maxWaitMs = 5000; // 5 second timeout
+		const startTime = Date.now();
+		while (!requestSession.browserRequestMatcher) {
+			if (Date.now() - startTime > maxWaitMs) {
+				console.warn("[MitmProxy.TimeoutWaitingForBrowserRequestMatcher]", {
+					sessionId,
+					url: req.url,
+				});
+				return new Response("Session not connected to resource tracker", {
+					status: 500,
+				});
+			}
+			await new Promise((resolve) => setTimeout(resolve, 10));
+		}
+
 		// For now, create a mock request object that HttpRequestHandler can work with
 		// This is a compatibility layer between Bun and Node.js APIs
 		const mockRequest = this.createMockNodeRequest(req);
