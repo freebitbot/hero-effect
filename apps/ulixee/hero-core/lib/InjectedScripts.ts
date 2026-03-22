@@ -8,6 +8,9 @@ const pageScripts = {
 	domStorage: tsTransform(
 		resolve(__dirname, `../injected-scripts/domStorage.ts`),
 	),
+	interactReplayer: tsTransform(
+		resolve(__dirname, `../injected-scripts/interactReplayer.ts`),
+	),
 	indexedDbRestore: tsTransform(
 		resolve(__dirname, `../injected-scripts/indexedDbRestore.ts`),
 	),
