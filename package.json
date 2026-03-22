@@ -11,9 +11,6 @@
 	"peerDependencies": {
 		"typescript": "^5"
 	},
-	"resolutions": {
-		"better-sqlite3": "npm:better-sqlite3@workspace:*"
-	},
 	"dependencies": {
 		"fingerprint-generator": "2.1.81",
 		"ts-morph": "^27.0.2"
@@ -24,7 +21,6 @@
 		"apps/double-agent-collect-plugins/*",
 		"apps/platform/*",
 		"apps/plugins/*",
-		"apps/ulixee/*",
-		"resolutions/*"
+		"apps/ulixee/*"
 	]
 }
