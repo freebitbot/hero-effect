@@ -5,7 +5,7 @@ import type {
 	SerializeOptions,
 	Statement,
 	Transaction,
-} from "better-sqlite3";
+} from "./better-sqlite3";
 
 export type { BunDatabase, ColumnDefinition, SerializeOptions, Transaction };
 
