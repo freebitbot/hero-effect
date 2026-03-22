@@ -3,8 +3,6 @@
 	"main": "index.js",
 	"type": "module",
 	"dependencies": {
-		"@ulixee/chrome-139-0": "^7258.155.11",
-		"@ulixee/chrome-app": "^1.0.3",
 		"@ulixee/commons": "workspace:*",
 		"@ulixee/js-path": "workspace:*",
 		"@ulixee/unblocked-agent-mitm": "workspace:*",

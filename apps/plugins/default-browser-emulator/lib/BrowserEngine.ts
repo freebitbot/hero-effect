@@ -1,8 +1,6 @@
 import { existsSync } from "node:fs";
-import ChromeApp from "@ulixee/chrome-app";
 import type IBrowserEngine from "@ulixee/unblocked-specification/agent/browser/IBrowserEngine";
 import type IBrowserEngineOption from "@ulixee/unblocked-specification/agent/browser/IBrowserEngineOption";
-import BrowserEngineOptions from "./BrowserEngineOptions";
 
 export default class BrowserEngine implements IBrowserEngine {
 	public name: string;
@@ -18,70 +16,24 @@ export default class BrowserEngine implements IBrowserEngine {
 	public doesBrowserAnimateScrolling = false;
 
 	private engineOption: IBrowserEngineOption;
-	private readonly engineFetcher: ChromeApp;
 
 	constructor(browserEngineOption: IBrowserEngineOption) {
-		// figure out which one is closest to installed?
-		this.engineFetcher = this.loadEngineFetcher(browserEngineOption);
-		if (this.engineFetcher.launchArgs?.length) {
-			this.launchArguments.push(...this.engineFetcher.launchArgs);
-		}
 		this.engineOption = browserEngineOption;
 		this.name = browserEngineOption.name;
-		this.fullVersion = this.engineFetcher.fullVersion;
+		this.fullVersion = `${browserEngineOption.majorVersion}.0.${browserEngineOption.buildVersion}.0`;
 
 		// changes at version 90
 		this.doesBrowserAnimateScrolling = browserEngineOption.majorVersion > 90;
 
-		this.executablePath =
-			"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
-		// this.executablePath = this.engineFetcher.executablePath;
-
-		this.executablePathEnvVar = this.engineFetcher.executablePathEnvVar;
-		this.isInstalled = this.engineFetcher.isInstalled;
+		// Hardcoded Chrome path (macOS)
+		this.executablePath = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
+		this.executablePathEnvVar = `CHROME_${browserEngineOption.majorVersion}_BIN`;
+		this.isInstalled = existsSync(this.executablePath);
 	}
 
 	public async verifyLaunchable(): Promise<void> {
 		if (!existsSync(this.executablePath)) {
-			let remedyMessage = `No executable exists at "${this.executablePath}"`;
-
-			const isCustomInstall =
-				this.executablePathEnvVar && process.env[this.executablePathEnvVar];
-			if (!isCustomInstall) {
-				remedyMessage = `Please re-install the browser engine:
--------------------------------------------------
--------------- NPM INSTALL ----------------------
--------------------------------------------------
-
- npm install @ulixee/${this.engineOption.id}
-
--------------------------------------------------
-`;
-			}
-			throw new Error(`Failed to launch ${this.name} ${this.fullVersion}:
-
-${remedyMessage}`);
+			throw new Error(`Chrome executable not found at "${this.executablePath}"`);
 		}
-		// exists, validate that host requirements exist
-		await this.engineFetcher.validateHostRequirements();
-	}
-
-	private loadEngineFetcher(option: IBrowserEngineOption): ChromeApp {
-		if (option.name !== "chrome") {
-			throw new Error(`Invalid browser engine requested ${option.name}`);
-		}
-		try {
-			// eslint-disable-next-line global-require,import/no-dynamic-require
-			let ChromeAtMajorVersion = require(`@ulixee/${option.id}`);
-			if (ChromeAtMajorVersion.default) {
-				ChromeAtMajorVersion = ChromeAtMajorVersion.default;
-			}
-
-			return new ChromeAtMajorVersion();
-		} catch (err) {
-			/* no op */
-		}
-		const fullVersion = BrowserEngineOptions.latestFullVersion(option);
-		return new ChromeApp(fullVersion);
 	}
 }

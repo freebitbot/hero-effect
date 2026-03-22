@@ -1,4 +1,3 @@
-import ChromeApp from "@ulixee/chrome-app";
 import type IBrowserEngineOption from "@ulixee/unblocked-specification/agent/browser/IBrowserEngineOption";
 import type { IVersion } from "@ulixee/unblocked-specification/plugin/IUserAgentOption";
 import type DataLoader from "./DataLoader";
@@ -23,7 +22,7 @@ export default class BrowserEngineOptions {
 			const id = defaultBrowserId.replace("@ulixee/", "");
 			this.default = this.installedOptions.find((x) => x.id === id);
 			if (!this.default) {
-				if (this.browserIdsNeedingDataFiles.has(id) || this.getInstalled(id)) {
+				if (this.browserIdsNeedingDataFiles.has(id)) {
 					throw new Error(
 						`The Default Browser Engine specified in your environment does not have Emulation Data Files installed.:\n\n
 
@@ -45,37 +44,21 @@ export default class BrowserEngineOptions {
 		}
 	}
 
-	private getInstalled(browserId: string): ChromeApp {
-		try {
-			// eslint-disable-next-line import/no-dynamic-require
-			const ChromeVersion = require(`@ulixee/${browserId}`);
-			return new ChromeVersion();
-		} catch (e) {
-			return null;
-		}
-	}
-
 	private checkForInstalled(): void {
 		for (const engine of this.dataLoader.browserEngineOptions) {
-			const ChromeVersion = this.getInstalled(engine.id);
-			if (!ChromeVersion) continue;
-
 			if (!this.dataLoader.isInstalledBrowser(`as-${engine.id}`)) {
 				this.browserIdsNeedingDataFiles.add(engine.id);
-				console.warn(`[@ulixee/hero] You have a Chrome Browser Engine installed without accompanying data files needed to emulate Operating Systems & Headed operation.
-
-You must install data files for "${engine.id}" to support emulating the browser.`);
 				continue;
 			}
 
-			const [major, minor, patch, build] = ChromeVersion.fullVersion.split(".");
+			// Use the engine's major version as the version
 			this.installedOptions.push({
 				...engine,
 				version: {
-					minor,
-					major,
-					patch,
-					build,
+					major: String(engine.majorVersion),
+					minor: "0",
+					patch: "0",
+					build: "0",
 				},
 			});
 		}
@@ -83,13 +66,5 @@ You must install data files for "${engine.id}" to support emulating the browser.
 		this.installedOptions.sort((a, b) => {
 			return Number(b.version.major) - Number(a.version.major);
 		});
-	}
-
-	public static latestFullVersion(option: IBrowserEngineOption): string {
-		let platform: string = ChromeApp.getOsPlatformName();
-		if (platform.startsWith("mac")) platform = "mac";
-		if (platform.startsWith("win")) platform = "win";
-		const latest = option.stablePatchesByOs[platform];
-		return `${option.majorVersion}.0.${option.buildVersion}.${latest[0]}`;
 	}
 }

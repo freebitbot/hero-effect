@@ -1,7 +1,6 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
 import type { Http2ServerRequest, Http2ServerResponse } from "node:http2";
 import type { URL } from "node:url";
-import ChromeApp from "@ulixee/chrome-app";
 import type IBrowser from "@ulixee/unblocked-specification/agent/browser/IBrowser";
 import type IBrowserContext from "@ulixee/unblocked-specification/agent/browser/IBrowserContext";
 import type IBrowserUserConfig from "@ulixee/unblocked-specification/agent/browser/IBrowserUserConfig";
@@ -86,8 +85,16 @@ export default class Plugins implements IUnblockedPlugins {
 		pluginClasses ??= [];
 		pluginConfigs ??= {};
 
-		if (this.profile.browserEngine instanceof ChromeApp) {
-			this.profile.browserEngine = new ChromeEngine(this.profile.browserEngine);
+		// Check if browserEngine looks like a ChromeApp (duck-typing)
+		const browserEngine = this.profile.browserEngine as any;
+		if (
+			browserEngine &&
+			typeof browserEngine.isInstalled === "boolean" &&
+			browserEngine.fullVersion &&
+			browserEngine.executablePath &&
+			typeof browserEngine.validateHostRequirements === "function"
+		) {
+			this.profile.browserEngine = new ChromeEngine(browserEngine);
 		}
 
 		for (const Plugin of pluginClasses) {
@@ -110,13 +117,7 @@ export default class Plugins implements IUnblockedPlugins {
 		}
 
 		if (!this.profile.browserEngine && !pluginClasses?.length) {
-			try {
-				this.profile.browserEngine = ChromeEngine.default();
-			} catch (e) {
-				console.warn("[Plugins] Default Chrome Browser could not be found", {
-					packageId: ChromeEngine.defaultPackageName,
-				});
-			}
+			console.warn("[Plugins] No browser engine configured and no plugins loaded");
 		}
 
 		void this.configure(this.profile).catch(() => null);
