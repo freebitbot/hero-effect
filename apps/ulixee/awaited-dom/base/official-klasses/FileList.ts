@@ -1,85 +1,118 @@
-import AwaitedHandler from '../AwaitedHandler';
-import inspectInstanceProperties from '../inspectInstanceProperties';
-import StateMachine from '../StateMachine';
-import AwaitedPath from '../AwaitedPath';
-import Constructable from '../Constructable';
-import AwaitedIterator from '../AwaitedIterator';
-import NodeFactory from '../NodeFactory';
-import { IFileList, IFile } from '../interfaces/official';
+import AwaitedHandler from "../AwaitedHandler";
+import AwaitedIterator from "../AwaitedIterator";
+import type AwaitedPath from "../AwaitedPath";
+import Constructable from "../Constructable";
+import inspectInstanceProperties from "../inspectInstanceProperties";
+import type { IFile, IFileList } from "../interfaces/official";
+import NodeFactory from "../NodeFactory";
+import StateMachine from "../StateMachine";
 
 // tslint:disable:variable-name
-export const { getState, setState } = StateMachine<IFileList, IFileListProperties>();
-export const awaitedHandler = new AwaitedHandler<IFileList>('FileList', getState, setState);
-export const nodeFactory = new NodeFactory<IFileList>(getState, setState, awaitedHandler);
-export const awaitedIterator = new AwaitedIterator<IFileList, IFile>(getState, setState, awaitedHandler);
+export const { getState, setState } = StateMachine<
+	IFileList,
+	IFileListProperties
+>();
+export const awaitedHandler = new AwaitedHandler<IFileList>(
+	"FileList",
+	getState,
+	setState,
+);
+export const nodeFactory = new NodeFactory<IFileList>(
+	getState,
+	setState,
+	awaitedHandler,
+);
+export const awaitedIterator = new AwaitedIterator<IFileList, IFile>(
+	getState,
+	setState,
+	awaitedHandler,
+);
 
 export function FileListGenerator() {
-  return class FileList implements IFileList, PromiseLike<IFileList> {
-    constructor() {
-      setState(this, {
-        createInstanceName: 'createFileList',
-        createIterableName: 'createFile',
-      });
-      // proxy supports indexed property access
-      const proxy = new Proxy(this, {
-        get(target, prop) {
-          if (prop in target) {
-            // @ts-ignore
-            const value: any = target[prop];
-            if (typeof value === 'function') return value.bind(target);
-            return value;
-          }
+	return class FileList implements IFileList, PromiseLike<IFileList> {
+		constructor() {
+			setState(this, {
+				createInstanceName: "createFileList",
+				createIterableName: "createFile",
+			});
+			// proxy supports indexed property access
+			const proxy = new Proxy(this, {
+				get(target, prop) {
+					if (prop in target) {
+						// @ts-expect-error
+						const value: any = target[prop];
+						if (typeof value === "function") return value.bind(target);
+						return value;
+					}
 
-          // delegate to indexer property
-          if ((typeof prop === 'string' || typeof prop === 'number') && !isNaN(prop as unknown as number)) {
-            const param = parseInt(prop as string, 10);
-            return target.item(param);
-          }
-        },
-      });
+					// delegate to indexer property
+					if (
+						(typeof prop === "string" || typeof prop === "number") &&
+						!isNaN(prop as unknown as number)
+					) {
+						const param = parseInt(prop as string, 10);
+						return target.item(param);
+					}
+				},
+			});
 
-      return proxy;
-    }
+			return proxy;
+		}
 
-    // properties
+		// properties
 
-    public get length(): Promise<number> {
-      return awaitedHandler.getProperty<number>(this, 'length', false);
-    }
+		public get length(): Promise<number> {
+			return awaitedHandler.getProperty<number>(this, "length", false);
+		}
 
-    // methods
+		// methods
 
-    public item(index: number): IFile {
-      throw new Error('FileList.item not implemented');
-    }
+		public item(index: number): IFile {
+			throw new Error("FileList.item not implemented");
+		}
 
-    public then<TResult1 = IFileList, TResult2 = never>(onfulfilled?: ((value: IFileList) => (PromiseLike<TResult1> | TResult1)) | undefined | null, onrejected?: ((reason: any) => (PromiseLike<TResult2> | TResult2)) | undefined | null): Promise<TResult1 | TResult2> {
-      return nodeFactory.createInstanceWithNodePointer(this).then(onfulfilled, onrejected);
-    }
+		public then<TResult1 = IFileList, TResult2 = never>(
+			onfulfilled?:
+				| ((value: IFileList) => PromiseLike<TResult1> | TResult1)
+				| undefined
+				| null,
+			onrejected?:
+				| ((reason: any) => PromiseLike<TResult2> | TResult2)
+				| undefined
+				| null,
+		): Promise<TResult1 | TResult2> {
+			return nodeFactory
+				.createInstanceWithNodePointer(this)
+				.then(onfulfilled, onrejected);
+		}
 
-    public [Symbol.iterator](): Iterator<IFile> {
-      return awaitedIterator.iterateNodePointers(this);
-    }
+		public [Symbol.iterator](): Iterator<IFile> {
+			return awaitedIterator.iterateNodePointers(this);
+		}
 
-    [index: number]: IFile;
+		[index: number]: IFile;
 
-    public [Symbol.for('nodejs.util.inspect.custom')]() {
-      return inspectInstanceProperties(this, FileListPropertyKeys, FileListConstantKeys);
-    }
-  };
+		public [Symbol.for("nodejs.util.inspect.custom")]() {
+			return inspectInstanceProperties(
+				this,
+				FileListPropertyKeys,
+				FileListConstantKeys,
+			);
+		}
+	};
 }
 
 // INTERFACES RELATED TO STATE MACHINE PROPERTIES ////////////////////////////
 
 export interface IFileListProperties {
-  awaitedPath: AwaitedPath;
-  awaitedOptions: any;
-  createInstanceName: string;
-  createIterableName: string;
+	awaitedPath: AwaitedPath;
+	awaitedOptions: any;
+	createInstanceName: string;
+	createIterableName: string;
 
-  readonly length?: Promise<number>;
+	readonly length?: Promise<number>;
 }
 
-export const FileListPropertyKeys = ['length'];
+export const FileListPropertyKeys = ["length"];
 
 export const FileListConstantKeys = [];

@@ -1,8 +1,15 @@
-import StateMachine from '../../base/StateMachine';
-import { ICharacterDataIsolate } from '../../base/interfaces/isolate';
-import CharacterDataIsolateBase, { ICharacterDataIsolateProperties } from '../../base/isolate-mixins/CharacterDataIsolate';
+import type { ICharacterDataIsolate } from "../../base/interfaces/isolate";
+import CharacterDataIsolateBase, {
+	type ICharacterDataIsolateProperties,
+} from "../../base/isolate-mixins/CharacterDataIsolate";
+import StateMachine from "../../base/StateMachine";
 
 // tslint:disable:variable-name
-export const { getState, setState } = StateMachine<ICharacterDataIsolate, ICharacterDataIsolateProperties>();
+export const { getState, setState } = StateMachine<
+	ICharacterDataIsolate,
+	ICharacterDataIsolateProperties
+>();
 
-export default class CharacterDataIsolate extends CharacterDataIsolateBase implements ICharacterDataIsolate {}
+export default class CharacterDataIsolate
+	extends CharacterDataIsolateBase
+	implements ICharacterDataIsolate {}

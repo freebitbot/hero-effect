@@ -1,97 +1,148 @@
-import AwaitedHandler from '../AwaitedHandler';
-import inspectInstanceProperties from '../inspectInstanceProperties';
-import StateMachine from '../StateMachine';
-import AwaitedPath from '../AwaitedPath';
-import Constructable from '../Constructable';
-import NodeFactory from '../NodeFactory';
-import { IHTMLScriptElement, IHTMLElement } from '../interfaces/official';
-import { IHTMLElementProperties, HTMLElementPropertyKeys, HTMLElementConstantKeys } from './HTMLElement';
+import AwaitedHandler from "../AwaitedHandler";
+import type AwaitedPath from "../AwaitedPath";
+import type Constructable from "../Constructable";
+import inspectInstanceProperties from "../inspectInstanceProperties";
+import type { IHTMLElement, IHTMLScriptElement } from "../interfaces/official";
+import NodeFactory from "../NodeFactory";
+import StateMachine from "../StateMachine";
+import {
+	HTMLElementConstantKeys,
+	HTMLElementPropertyKeys,
+	type IHTMLElementProperties,
+} from "./HTMLElement";
 
 // tslint:disable:variable-name
-export const { getState, setState } = StateMachine<IHTMLScriptElement, IHTMLScriptElementProperties>();
-export const awaitedHandler = new AwaitedHandler<IHTMLScriptElement>('HTMLScriptElement', getState, setState);
-export const nodeFactory = new NodeFactory<IHTMLScriptElement>(getState, setState, awaitedHandler);
+export const { getState, setState } = StateMachine<
+	IHTMLScriptElement,
+	IHTMLScriptElementProperties
+>();
+export const awaitedHandler = new AwaitedHandler<IHTMLScriptElement>(
+	"HTMLScriptElement",
+	getState,
+	setState,
+);
+export const nodeFactory = new NodeFactory<IHTMLScriptElement>(
+	getState,
+	setState,
+	awaitedHandler,
+);
 
-export function HTMLScriptElementGenerator(HTMLElement: Constructable<IHTMLElement>) {
-  return class HTMLScriptElement extends HTMLElement implements IHTMLScriptElement, PromiseLike<IHTMLScriptElement> {
-    constructor() {
-      super();
-      setState(this, {
-        createInstanceName: 'createHTMLScriptElement',
-      });
-    }
+export function HTMLScriptElementGenerator(
+	HTMLElement: Constructable<IHTMLElement>,
+) {
+	return class HTMLScriptElement
+		extends HTMLElement
+		implements IHTMLScriptElement, PromiseLike<IHTMLScriptElement>
+	{
+		constructor() {
+			super();
+			setState(this, {
+				createInstanceName: "createHTMLScriptElement",
+			});
+		}
 
-    // properties
+		// properties
 
-    public get async(): Promise<boolean> {
-      return awaitedHandler.getProperty<boolean>(this, 'async', false);
-    }
+		public get async(): Promise<boolean> {
+			return awaitedHandler.getProperty<boolean>(this, "async", false);
+		}
 
-    public get charset(): Promise<string> {
-      return awaitedHandler.getProperty<string>(this, 'charset', false);
-    }
+		public get charset(): Promise<string> {
+			return awaitedHandler.getProperty<string>(this, "charset", false);
+		}
 
-    public get crossOrigin(): Promise<string | null> {
-      return awaitedHandler.getProperty<string | null>(this, 'crossOrigin', true);
-    }
+		public get crossOrigin(): Promise<string | null> {
+			return awaitedHandler.getProperty<string | null>(
+				this,
+				"crossOrigin",
+				true,
+			);
+		}
 
-    public get defer(): Promise<boolean> {
-      return awaitedHandler.getProperty<boolean>(this, 'defer', false);
-    }
+		public get defer(): Promise<boolean> {
+			return awaitedHandler.getProperty<boolean>(this, "defer", false);
+		}
 
-    public get event(): Promise<string> {
-      return awaitedHandler.getProperty<string>(this, 'event', false);
-    }
+		public get event(): Promise<string> {
+			return awaitedHandler.getProperty<string>(this, "event", false);
+		}
 
-    public get noModule(): Promise<boolean> {
-      return awaitedHandler.getProperty<boolean>(this, 'noModule', false);
-    }
+		public get noModule(): Promise<boolean> {
+			return awaitedHandler.getProperty<boolean>(this, "noModule", false);
+		}
 
-    public get referrerPolicy(): Promise<string> {
-      return awaitedHandler.getProperty<string>(this, 'referrerPolicy', false);
-    }
+		public get referrerPolicy(): Promise<string> {
+			return awaitedHandler.getProperty<string>(this, "referrerPolicy", false);
+		}
 
-    public get src(): Promise<string> {
-      return awaitedHandler.getProperty<string>(this, 'src', false);
-    }
+		public get src(): Promise<string> {
+			return awaitedHandler.getProperty<string>(this, "src", false);
+		}
 
-    public get text(): Promise<string> {
-      return awaitedHandler.getProperty<string>(this, 'text', false);
-    }
+		public get text(): Promise<string> {
+			return awaitedHandler.getProperty<string>(this, "text", false);
+		}
 
-    public get type(): Promise<string> {
-      return awaitedHandler.getProperty<string>(this, 'type', false);
-    }
+		public get type(): Promise<string> {
+			return awaitedHandler.getProperty<string>(this, "type", false);
+		}
 
-    public then<TResult1 = IHTMLScriptElement, TResult2 = never>(onfulfilled?: ((value: IHTMLScriptElement) => (PromiseLike<TResult1> | TResult1)) | undefined | null, onrejected?: ((reason: any) => (PromiseLike<TResult2> | TResult2)) | undefined | null): Promise<TResult1 | TResult2> {
-      return nodeFactory.createInstanceWithNodePointer(this).then(onfulfilled, onrejected);
-    }
+		public then<TResult1 = IHTMLScriptElement, TResult2 = never>(
+			onfulfilled?:
+				| ((value: IHTMLScriptElement) => PromiseLike<TResult1> | TResult1)
+				| undefined
+				| null,
+			onrejected?:
+				| ((reason: any) => PromiseLike<TResult2> | TResult2)
+				| undefined
+				| null,
+		): Promise<TResult1 | TResult2> {
+			return nodeFactory
+				.createInstanceWithNodePointer(this)
+				.then(onfulfilled, onrejected);
+		}
 
-    public [Symbol.for('nodejs.util.inspect.custom')]() {
-      return inspectInstanceProperties(this, HTMLScriptElementPropertyKeys, HTMLScriptElementConstantKeys);
-    }
-  };
+		public [Symbol.for("nodejs.util.inspect.custom")]() {
+			return inspectInstanceProperties(
+				this,
+				HTMLScriptElementPropertyKeys,
+				HTMLScriptElementConstantKeys,
+			);
+		}
+	};
 }
 
 // INTERFACES RELATED TO STATE MACHINE PROPERTIES ////////////////////////////
 
 export interface IHTMLScriptElementProperties extends IHTMLElementProperties {
-  awaitedPath: AwaitedPath;
-  awaitedOptions: any;
-  createInstanceName: string;
+	awaitedPath: AwaitedPath;
+	awaitedOptions: any;
+	createInstanceName: string;
 
-  readonly async?: Promise<boolean>;
-  readonly charset?: Promise<string>;
-  readonly crossOrigin?: Promise<string | null>;
-  readonly defer?: Promise<boolean>;
-  readonly event?: Promise<string>;
-  readonly noModule?: Promise<boolean>;
-  readonly referrerPolicy?: Promise<string>;
-  readonly src?: Promise<string>;
-  readonly text?: Promise<string>;
-  readonly type?: Promise<string>;
+	readonly async?: Promise<boolean>;
+	readonly charset?: Promise<string>;
+	readonly crossOrigin?: Promise<string | null>;
+	readonly defer?: Promise<boolean>;
+	readonly event?: Promise<string>;
+	readonly noModule?: Promise<boolean>;
+	readonly referrerPolicy?: Promise<string>;
+	readonly src?: Promise<string>;
+	readonly text?: Promise<string>;
+	readonly type?: Promise<string>;
 }
 
-export const HTMLScriptElementPropertyKeys = [...HTMLElementPropertyKeys, 'async', 'charset', 'crossOrigin', 'defer', 'event', 'noModule', 'referrerPolicy', 'src', 'text', 'type'];
+export const HTMLScriptElementPropertyKeys = [
+	...HTMLElementPropertyKeys,
+	"async",
+	"charset",
+	"crossOrigin",
+	"defer",
+	"event",
+	"noModule",
+	"referrerPolicy",
+	"src",
+	"text",
+	"type",
+];
 
 export const HTMLScriptElementConstantKeys = [...HTMLElementConstantKeys];

@@ -1,14 +1,23 @@
-import StateMachine from '../../base/StateMachine';
-import { IHTMLBaseElement } from '../../base/interfaces/official';
-import { HTMLBaseElementGenerator, IHTMLBaseElementProperties } from '../../base/official-klasses/HTMLBaseElement';
-import HTMLElement from './HTMLElement';
+import type { IHTMLBaseElement } from "../../base/interfaces/official";
+import {
+	HTMLBaseElementGenerator,
+	type IHTMLBaseElementProperties,
+} from "../../base/official-klasses/HTMLBaseElement";
+import StateMachine from "../../base/StateMachine";
+import HTMLElement from "./HTMLElement";
 
 // tslint:disable:variable-name
-export const { getState, setState } = StateMachine<IHTMLBaseElement, IHTMLBaseElementProperties>();
+export const { getState, setState } = StateMachine<
+	IHTMLBaseElement,
+	IHTMLBaseElementProperties
+>();
 const HTMLBaseElementBaseClass = HTMLBaseElementGenerator(HTMLElement);
 
-export default class HTMLBaseElement extends HTMLBaseElementBaseClass implements IHTMLBaseElement {
-  constructor() {
-    super();
-  }
+export default class HTMLBaseElement
+	extends HTMLBaseElementBaseClass
+	implements IHTMLBaseElement
+{
+	constructor() {
+		super();
+	}
 }

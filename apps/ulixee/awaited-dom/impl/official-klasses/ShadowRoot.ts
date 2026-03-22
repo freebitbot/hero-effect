@@ -1,24 +1,39 @@
-import StateMachine from '../../base/StateMachine';
-import { IShadowRoot } from '../../base/interfaces/official';
-import { ISuperElement } from '../../base/interfaces/super';
-import { ShadowRootGenerator, IShadowRootProperties } from '../../base/official-klasses/ShadowRoot';
-import { createSuperElement } from '../create';
-import DocumentFragment from './DocumentFragment';
-import DocumentOrShadowRoot from '../official-mixins/DocumentOrShadowRoot';
+import type { IShadowRoot } from "../../base/interfaces/official";
+import type { ISuperElement } from "../../base/interfaces/super";
+import {
+	type IShadowRootProperties,
+	ShadowRootGenerator,
+} from "../../base/official-klasses/ShadowRoot";
+import StateMachine from "../../base/StateMachine";
+import { createSuperElement } from "../create";
+import DocumentOrShadowRoot from "../official-mixins/DocumentOrShadowRoot";
+import DocumentFragment from "./DocumentFragment";
 
 // tslint:disable:variable-name
-export const { getState, setState } = StateMachine<IShadowRoot, IShadowRootProperties>();
-const ShadowRootBaseClass = ShadowRootGenerator(DocumentFragment, DocumentOrShadowRoot);
+export const { getState, setState } = StateMachine<
+	IShadowRoot,
+	IShadowRootProperties
+>();
+const ShadowRootBaseClass = ShadowRootGenerator(
+	DocumentFragment,
+	DocumentOrShadowRoot,
+);
 
-export default class ShadowRoot extends ShadowRootBaseClass implements IShadowRoot {
-  constructor() {
-    super();
-  }
+export default class ShadowRoot
+	extends ShadowRootBaseClass
+	implements IShadowRoot
+{
+	constructor() {
+		super();
+	}
 
-  // properties
+	// properties
 
-  public get host(): ISuperElement {
-    const { awaitedPath, awaitedOptions } = getState(this);
-    return createSuperElement(awaitedPath.addProperty(this, 'host'), awaitedOptions);
-  }
+	public get host(): ISuperElement {
+		const { awaitedPath, awaitedOptions } = getState(this);
+		return createSuperElement(
+			awaitedPath.addProperty(this, "host"),
+			awaitedOptions,
+		);
+	}
 }

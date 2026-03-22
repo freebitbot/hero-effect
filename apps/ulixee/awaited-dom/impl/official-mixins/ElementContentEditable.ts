@@ -1,8 +1,15 @@
-import StateMachine from '../../base/StateMachine';
-import { IElementContentEditable } from '../../base/interfaces/official';
-import ElementContentEditableBase, { IElementContentEditableProperties } from '../../base/official-mixins/ElementContentEditable';
+import type { IElementContentEditable } from "../../base/interfaces/official";
+import ElementContentEditableBase, {
+	type IElementContentEditableProperties,
+} from "../../base/official-mixins/ElementContentEditable";
+import StateMachine from "../../base/StateMachine";
 
 // tslint:disable:variable-name
-export const { getState, setState } = StateMachine<IElementContentEditable, IElementContentEditableProperties>();
+export const { getState, setState } = StateMachine<
+	IElementContentEditable,
+	IElementContentEditableProperties
+>();
 
-export default class ElementContentEditable extends ElementContentEditableBase implements IElementContentEditable {}
+export default class ElementContentEditable
+	extends ElementContentEditableBase
+	implements IElementContentEditable {}

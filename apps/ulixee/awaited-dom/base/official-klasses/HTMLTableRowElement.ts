@@ -1,98 +1,147 @@
-import AwaitedHandler from '../AwaitedHandler';
-import inspectInstanceProperties from '../inspectInstanceProperties';
-import StateMachine from '../StateMachine';
-import AwaitedPath from '../AwaitedPath';
-import Constructable from '../Constructable';
-import NodeFactory from '../NodeFactory';
-import { IHTMLTableRowElement, IHTMLElement, IHTMLTableCellElement } from '../interfaces/official';
-import { ISuperHTMLCollection } from '../interfaces/super';
-import { IHTMLElementProperties, HTMLElementPropertyKeys, HTMLElementConstantKeys } from './HTMLElement';
+import AwaitedHandler from "../AwaitedHandler";
+import type AwaitedPath from "../AwaitedPath";
+import type Constructable from "../Constructable";
+import inspectInstanceProperties from "../inspectInstanceProperties";
+import type {
+	IHTMLElement,
+	IHTMLTableCellElement,
+	IHTMLTableRowElement,
+} from "../interfaces/official";
+import type { ISuperHTMLCollection } from "../interfaces/super";
+import NodeFactory from "../NodeFactory";
+import StateMachine from "../StateMachine";
+import {
+	HTMLElementConstantKeys,
+	HTMLElementPropertyKeys,
+	type IHTMLElementProperties,
+} from "./HTMLElement";
 
 // tslint:disable:variable-name
-export const { getState, setState } = StateMachine<IHTMLTableRowElement, IHTMLTableRowElementProperties>();
-export const awaitedHandler = new AwaitedHandler<IHTMLTableRowElement>('HTMLTableRowElement', getState, setState);
-export const nodeFactory = new NodeFactory<IHTMLTableRowElement>(getState, setState, awaitedHandler);
+export const { getState, setState } = StateMachine<
+	IHTMLTableRowElement,
+	IHTMLTableRowElementProperties
+>();
+export const awaitedHandler = new AwaitedHandler<IHTMLTableRowElement>(
+	"HTMLTableRowElement",
+	getState,
+	setState,
+);
+export const nodeFactory = new NodeFactory<IHTMLTableRowElement>(
+	getState,
+	setState,
+	awaitedHandler,
+);
 
-export function HTMLTableRowElementGenerator(HTMLElement: Constructable<IHTMLElement>) {
-  return class HTMLTableRowElement extends HTMLElement implements IHTMLTableRowElement, PromiseLike<IHTMLTableRowElement> {
-    constructor() {
-      super();
-      setState(this, {
-        createInstanceName: 'createHTMLTableRowElement',
-      });
-    }
+export function HTMLTableRowElementGenerator(
+	HTMLElement: Constructable<IHTMLElement>,
+) {
+	return class HTMLTableRowElement
+		extends HTMLElement
+		implements IHTMLTableRowElement, PromiseLike<IHTMLTableRowElement>
+	{
+		constructor() {
+			super();
+			setState(this, {
+				createInstanceName: "createHTMLTableRowElement",
+			});
+		}
 
-    // properties
+		// properties
 
-    public get align(): Promise<string> {
-      return awaitedHandler.getProperty<string>(this, 'align', false);
-    }
+		public get align(): Promise<string> {
+			return awaitedHandler.getProperty<string>(this, "align", false);
+		}
 
-    public get bgColor(): Promise<string> {
-      return awaitedHandler.getProperty<string>(this, 'bgColor', false);
-    }
+		public get bgColor(): Promise<string> {
+			return awaitedHandler.getProperty<string>(this, "bgColor", false);
+		}
 
-    public get cells(): ISuperHTMLCollection {
-      throw new Error('HTMLTableRowElement.cells getter not implemented');
-    }
+		public get cells(): ISuperHTMLCollection {
+			throw new Error("HTMLTableRowElement.cells getter not implemented");
+		}
 
-    public get ch(): Promise<string> {
-      return awaitedHandler.getProperty<string>(this, 'ch', false);
-    }
+		public get ch(): Promise<string> {
+			return awaitedHandler.getProperty<string>(this, "ch", false);
+		}
 
-    public get chOff(): Promise<string> {
-      return awaitedHandler.getProperty<string>(this, 'chOff', false);
-    }
+		public get chOff(): Promise<string> {
+			return awaitedHandler.getProperty<string>(this, "chOff", false);
+		}
 
-    public get rowIndex(): Promise<number> {
-      return awaitedHandler.getProperty<number>(this, 'rowIndex', false);
-    }
+		public get rowIndex(): Promise<number> {
+			return awaitedHandler.getProperty<number>(this, "rowIndex", false);
+		}
 
-    public get sectionRowIndex(): Promise<number> {
-      return awaitedHandler.getProperty<number>(this, 'sectionRowIndex', false);
-    }
+		public get sectionRowIndex(): Promise<number> {
+			return awaitedHandler.getProperty<number>(this, "sectionRowIndex", false);
+		}
 
-    public get vAlign(): Promise<string> {
-      return awaitedHandler.getProperty<string>(this, 'vAlign', false);
-    }
+		public get vAlign(): Promise<string> {
+			return awaitedHandler.getProperty<string>(this, "vAlign", false);
+		}
 
-    // methods
+		// methods
 
-    public deleteCell(index: number): Promise<void> {
-      return awaitedHandler.runMethod<void>(this, 'deleteCell', [index]);
-    }
+		public deleteCell(index: number): Promise<void> {
+			return awaitedHandler.runMethod<void>(this, "deleteCell", [index]);
+		}
 
-    public insertCell(index?: number): IHTMLTableCellElement {
-      throw new Error('HTMLTableRowElement.insertCell not implemented');
-    }
+		public insertCell(index?: number): IHTMLTableCellElement {
+			throw new Error("HTMLTableRowElement.insertCell not implemented");
+		}
 
-    public then<TResult1 = IHTMLTableRowElement, TResult2 = never>(onfulfilled?: ((value: IHTMLTableRowElement) => (PromiseLike<TResult1> | TResult1)) | undefined | null, onrejected?: ((reason: any) => (PromiseLike<TResult2> | TResult2)) | undefined | null): Promise<TResult1 | TResult2> {
-      return nodeFactory.createInstanceWithNodePointer(this).then(onfulfilled, onrejected);
-    }
+		public then<TResult1 = IHTMLTableRowElement, TResult2 = never>(
+			onfulfilled?:
+				| ((value: IHTMLTableRowElement) => PromiseLike<TResult1> | TResult1)
+				| undefined
+				| null,
+			onrejected?:
+				| ((reason: any) => PromiseLike<TResult2> | TResult2)
+				| undefined
+				| null,
+		): Promise<TResult1 | TResult2> {
+			return nodeFactory
+				.createInstanceWithNodePointer(this)
+				.then(onfulfilled, onrejected);
+		}
 
-    public [Symbol.for('nodejs.util.inspect.custom')]() {
-      return inspectInstanceProperties(this, HTMLTableRowElementPropertyKeys, HTMLTableRowElementConstantKeys);
-    }
-  };
+		public [Symbol.for("nodejs.util.inspect.custom")]() {
+			return inspectInstanceProperties(
+				this,
+				HTMLTableRowElementPropertyKeys,
+				HTMLTableRowElementConstantKeys,
+			);
+		}
+	};
 }
 
 // INTERFACES RELATED TO STATE MACHINE PROPERTIES ////////////////////////////
 
 export interface IHTMLTableRowElementProperties extends IHTMLElementProperties {
-  awaitedPath: AwaitedPath;
-  awaitedOptions: any;
-  createInstanceName: string;
+	awaitedPath: AwaitedPath;
+	awaitedOptions: any;
+	createInstanceName: string;
 
-  readonly align?: Promise<string>;
-  readonly bgColor?: Promise<string>;
-  readonly cells?: ISuperHTMLCollection;
-  readonly ch?: Promise<string>;
-  readonly chOff?: Promise<string>;
-  readonly rowIndex?: Promise<number>;
-  readonly sectionRowIndex?: Promise<number>;
-  readonly vAlign?: Promise<string>;
+	readonly align?: Promise<string>;
+	readonly bgColor?: Promise<string>;
+	readonly cells?: ISuperHTMLCollection;
+	readonly ch?: Promise<string>;
+	readonly chOff?: Promise<string>;
+	readonly rowIndex?: Promise<number>;
+	readonly sectionRowIndex?: Promise<number>;
+	readonly vAlign?: Promise<string>;
 }
 
-export const HTMLTableRowElementPropertyKeys = [...HTMLElementPropertyKeys, 'align', 'bgColor', 'cells', 'ch', 'chOff', 'rowIndex', 'sectionRowIndex', 'vAlign'];
+export const HTMLTableRowElementPropertyKeys = [
+	...HTMLElementPropertyKeys,
+	"align",
+	"bgColor",
+	"cells",
+	"ch",
+	"chOff",
+	"rowIndex",
+	"sectionRowIndex",
+	"vAlign",
+];
 
 export const HTMLTableRowElementConstantKeys = [...HTMLElementConstantKeys];

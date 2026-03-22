@@ -1,55 +1,90 @@
-import StateMachine from '../../base/StateMachine';
-import { IRange, IDocumentFragment, IDOMRect, IDOMRectList } from '../../base/interfaces/official';
-import { ISuperNode } from '../../base/interfaces/super';
-import { RangeGenerator, IRangeProperties } from '../../base/official-klasses/Range';
-import { createSuperNode, createDocumentFragment, createRange, createDOMRect, createDOMRectList } from '../create';
-import AbstractRange from './AbstractRange';
+import type {
+	IDOMRect,
+	IDOMRectList,
+	IDocumentFragment,
+	IRange,
+} from "../../base/interfaces/official";
+import type { ISuperNode } from "../../base/interfaces/super";
+import {
+	type IRangeProperties,
+	RangeGenerator,
+} from "../../base/official-klasses/Range";
+import StateMachine from "../../base/StateMachine";
+import {
+	createDOMRect,
+	createDOMRectList,
+	createDocumentFragment,
+	createRange,
+	createSuperNode,
+} from "../create";
+import AbstractRange from "./AbstractRange";
 
 // tslint:disable:variable-name
 export const { getState, setState } = StateMachine<IRange, IRangeProperties>();
 const RangeBaseClass = RangeGenerator(AbstractRange);
 
 export default class Range extends RangeBaseClass implements IRange {
-  constructor() {
-    super();
-  }
+	constructor() {
+		super();
+	}
 
-  // properties
+	// properties
 
-  public get commonAncestorContainer(): ISuperNode {
-    const { awaitedPath, awaitedOptions } = getState(this);
-    return createSuperNode(awaitedPath.addProperty(this, 'commonAncestorContainer'), awaitedOptions);
-  }
+	public get commonAncestorContainer(): ISuperNode {
+		const { awaitedPath, awaitedOptions } = getState(this);
+		return createSuperNode(
+			awaitedPath.addProperty(this, "commonAncestorContainer"),
+			awaitedOptions,
+		);
+	}
 
-  // methods
+	// methods
 
-  public cloneContents(): IDocumentFragment {
-    const { awaitedPath, awaitedOptions } = getState(this);
-    return createDocumentFragment(awaitedPath.addMethod(this, 'cloneContents', ), awaitedOptions);
-  }
+	public cloneContents(): IDocumentFragment {
+		const { awaitedPath, awaitedOptions } = getState(this);
+		return createDocumentFragment(
+			awaitedPath.addMethod(this, "cloneContents"),
+			awaitedOptions,
+		);
+	}
 
-  public cloneRange(): IRange {
-    const { awaitedPath, awaitedOptions } = getState(this);
-    return createRange(awaitedPath.addMethod(this, 'cloneRange', ), awaitedOptions);
-  }
+	public cloneRange(): IRange {
+		const { awaitedPath, awaitedOptions } = getState(this);
+		return createRange(
+			awaitedPath.addMethod(this, "cloneRange"),
+			awaitedOptions,
+		);
+	}
 
-  public createContextualFragment(fragment: string): IDocumentFragment {
-    const { awaitedPath, awaitedOptions } = getState(this);
-    return createDocumentFragment(awaitedPath.addMethod(this, 'createContextualFragment', fragment), awaitedOptions);
-  }
+	public createContextualFragment(fragment: string): IDocumentFragment {
+		const { awaitedPath, awaitedOptions } = getState(this);
+		return createDocumentFragment(
+			awaitedPath.addMethod(this, "createContextualFragment", fragment),
+			awaitedOptions,
+		);
+	}
 
-  public extractContents(): IDocumentFragment {
-    const { awaitedPath, awaitedOptions } = getState(this);
-    return createDocumentFragment(awaitedPath.addMethod(this, 'extractContents', ), awaitedOptions);
-  }
+	public extractContents(): IDocumentFragment {
+		const { awaitedPath, awaitedOptions } = getState(this);
+		return createDocumentFragment(
+			awaitedPath.addMethod(this, "extractContents"),
+			awaitedOptions,
+		);
+	}
 
-  public getBoundingClientRect(): IDOMRect {
-    const { awaitedPath, awaitedOptions } = getState(this);
-    return createDOMRect(awaitedPath.addMethod(this, 'getBoundingClientRect', ), awaitedOptions);
-  }
+	public getBoundingClientRect(): IDOMRect {
+		const { awaitedPath, awaitedOptions } = getState(this);
+		return createDOMRect(
+			awaitedPath.addMethod(this, "getBoundingClientRect"),
+			awaitedOptions,
+		);
+	}
 
-  public getClientRects(): IDOMRectList {
-    const { awaitedPath, awaitedOptions } = getState(this);
-    return createDOMRectList(awaitedPath.addMethod(this, 'getClientRects', ), awaitedOptions);
-  }
+	public getClientRects(): IDOMRectList {
+		const { awaitedPath, awaitedOptions } = getState(this);
+		return createDOMRectList(
+			awaitedPath.addMethod(this, "getClientRects"),
+			awaitedOptions,
+		);
+	}
 }

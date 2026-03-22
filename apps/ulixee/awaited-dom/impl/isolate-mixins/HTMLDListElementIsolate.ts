@@ -1,8 +1,15 @@
-import StateMachine from '../../base/StateMachine';
-import { IHTMLDListElementIsolate } from '../../base/interfaces/isolate';
-import HTMLDListElementIsolateBase, { IHTMLDListElementIsolateProperties } from '../../base/isolate-mixins/HTMLDListElementIsolate';
+import type { IHTMLDListElementIsolate } from "../../base/interfaces/isolate";
+import HTMLDListElementIsolateBase, {
+	type IHTMLDListElementIsolateProperties,
+} from "../../base/isolate-mixins/HTMLDListElementIsolate";
+import StateMachine from "../../base/StateMachine";
 
 // tslint:disable:variable-name
-export const { getState, setState } = StateMachine<IHTMLDListElementIsolate, IHTMLDListElementIsolateProperties>();
+export const { getState, setState } = StateMachine<
+	IHTMLDListElementIsolate,
+	IHTMLDListElementIsolateProperties
+>();
 
-export default class HTMLDListElementIsolate extends HTMLDListElementIsolateBase implements IHTMLDListElementIsolate {}
+export default class HTMLDListElementIsolate
+	extends HTMLDListElementIsolateBase
+	implements IHTMLDListElementIsolate {}

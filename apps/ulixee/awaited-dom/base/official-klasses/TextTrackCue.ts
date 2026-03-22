@@ -1,59 +1,75 @@
-import AwaitedHandler from '../AwaitedHandler';
-import inspectInstanceProperties from '../inspectInstanceProperties';
-import StateMachine from '../StateMachine';
-import AwaitedPath from '../AwaitedPath';
-import Constructable from '../Constructable';
-import { ITextTrackCue, ITextTrack } from '../interfaces/official';
+import AwaitedHandler from "../AwaitedHandler";
+import type AwaitedPath from "../AwaitedPath";
+import Constructable from "../Constructable";
+import inspectInstanceProperties from "../inspectInstanceProperties";
+import type { ITextTrack, ITextTrackCue } from "../interfaces/official";
+import StateMachine from "../StateMachine";
 
 // tslint:disable:variable-name
-export const { getState, setState } = StateMachine<ITextTrackCue, ITextTrackCueProperties>();
-export const awaitedHandler = new AwaitedHandler<ITextTrackCue>('TextTrackCue', getState, setState);
+export const { getState, setState } = StateMachine<
+	ITextTrackCue,
+	ITextTrackCueProperties
+>();
+export const awaitedHandler = new AwaitedHandler<ITextTrackCue>(
+	"TextTrackCue",
+	getState,
+	setState,
+);
 
 export function TextTrackCueGenerator() {
-  return class TextTrackCue implements ITextTrackCue {
-    constructor() {
-    }
+	return class TextTrackCue implements ITextTrackCue {
+		constructor() {}
 
-    // properties
+		// properties
 
-    public get endTime(): Promise<number> {
-      return awaitedHandler.getProperty<number>(this, 'endTime', false);
-    }
+		public get endTime(): Promise<number> {
+			return awaitedHandler.getProperty<number>(this, "endTime", false);
+		}
 
-    public get id(): Promise<string> {
-      return awaitedHandler.getProperty<string>(this, 'id', false);
-    }
+		public get id(): Promise<string> {
+			return awaitedHandler.getProperty<string>(this, "id", false);
+		}
 
-    public get pauseOnExit(): Promise<boolean> {
-      return awaitedHandler.getProperty<boolean>(this, 'pauseOnExit', false);
-    }
+		public get pauseOnExit(): Promise<boolean> {
+			return awaitedHandler.getProperty<boolean>(this, "pauseOnExit", false);
+		}
 
-    public get startTime(): Promise<number> {
-      return awaitedHandler.getProperty<number>(this, 'startTime', false);
-    }
+		public get startTime(): Promise<number> {
+			return awaitedHandler.getProperty<number>(this, "startTime", false);
+		}
 
-    public get track(): ITextTrack {
-      throw new Error('TextTrackCue.track getter not implemented');
-    }
+		public get track(): ITextTrack {
+			throw new Error("TextTrackCue.track getter not implemented");
+		}
 
-    public [Symbol.for('nodejs.util.inspect.custom')]() {
-      return inspectInstanceProperties(this, TextTrackCuePropertyKeys, TextTrackCueConstantKeys);
-    }
-  };
+		public [Symbol.for("nodejs.util.inspect.custom")]() {
+			return inspectInstanceProperties(
+				this,
+				TextTrackCuePropertyKeys,
+				TextTrackCueConstantKeys,
+			);
+		}
+	};
 }
 
 // INTERFACES RELATED TO STATE MACHINE PROPERTIES ////////////////////////////
 
 export interface ITextTrackCueProperties {
-  awaitedPath: AwaitedPath;
-  awaitedOptions: any;
-  readonly endTime?: Promise<number>;
-  readonly id?: Promise<string>;
-  readonly pauseOnExit?: Promise<boolean>;
-  readonly startTime?: Promise<number>;
-  readonly track?: ITextTrack;
+	awaitedPath: AwaitedPath;
+	awaitedOptions: any;
+	readonly endTime?: Promise<number>;
+	readonly id?: Promise<string>;
+	readonly pauseOnExit?: Promise<boolean>;
+	readonly startTime?: Promise<number>;
+	readonly track?: ITextTrack;
 }
 
-export const TextTrackCuePropertyKeys = ['endTime', 'id', 'pauseOnExit', 'startTime', 'track'];
+export const TextTrackCuePropertyKeys = [
+	"endTime",
+	"id",
+	"pauseOnExit",
+	"startTime",
+	"track",
+];
 
 export const TextTrackCueConstantKeys = [];

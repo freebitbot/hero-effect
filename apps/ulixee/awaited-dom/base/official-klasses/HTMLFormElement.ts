@@ -1,110 +1,156 @@
-import AwaitedHandler from '../AwaitedHandler';
-import inspectInstanceProperties from '../inspectInstanceProperties';
-import StateMachine from '../StateMachine';
-import AwaitedPath from '../AwaitedPath';
-import Constructable from '../Constructable';
-import NodeFactory from '../NodeFactory';
-import { IHTMLFormElement, IHTMLElement } from '../interfaces/official';
-import { IHTMLElementProperties, HTMLElementPropertyKeys, HTMLElementConstantKeys } from './HTMLElement';
+import AwaitedHandler from "../AwaitedHandler";
+import type AwaitedPath from "../AwaitedPath";
+import type Constructable from "../Constructable";
+import inspectInstanceProperties from "../inspectInstanceProperties";
+import type { IHTMLElement, IHTMLFormElement } from "../interfaces/official";
+import NodeFactory from "../NodeFactory";
+import StateMachine from "../StateMachine";
+import {
+	HTMLElementConstantKeys,
+	HTMLElementPropertyKeys,
+	type IHTMLElementProperties,
+} from "./HTMLElement";
 
 // tslint:disable:variable-name
-export const { getState, setState } = StateMachine<IHTMLFormElement, IHTMLFormElementProperties>();
-export const awaitedHandler = new AwaitedHandler<IHTMLFormElement>('HTMLFormElement', getState, setState);
-export const nodeFactory = new NodeFactory<IHTMLFormElement>(getState, setState, awaitedHandler);
+export const { getState, setState } = StateMachine<
+	IHTMLFormElement,
+	IHTMLFormElementProperties
+>();
+export const awaitedHandler = new AwaitedHandler<IHTMLFormElement>(
+	"HTMLFormElement",
+	getState,
+	setState,
+);
+export const nodeFactory = new NodeFactory<IHTMLFormElement>(
+	getState,
+	setState,
+	awaitedHandler,
+);
 
-export function HTMLFormElementGenerator(HTMLElement: Constructable<IHTMLElement>) {
-  return class HTMLFormElement extends HTMLElement implements IHTMLFormElement, PromiseLike<IHTMLFormElement> {
-    constructor() {
-      super();
-      setState(this, {
-        createInstanceName: 'createHTMLFormElement',
-      });
-    }
+export function HTMLFormElementGenerator(
+	HTMLElement: Constructable<IHTMLElement>,
+) {
+	return class HTMLFormElement
+		extends HTMLElement
+		implements IHTMLFormElement, PromiseLike<IHTMLFormElement>
+	{
+		constructor() {
+			super();
+			setState(this, {
+				createInstanceName: "createHTMLFormElement",
+			});
+		}
 
-    // properties
+		// properties
 
-    public get acceptCharset(): Promise<string> {
-      return awaitedHandler.getProperty<string>(this, 'acceptCharset', false);
-    }
+		public get acceptCharset(): Promise<string> {
+			return awaitedHandler.getProperty<string>(this, "acceptCharset", false);
+		}
 
-    public get action(): Promise<string> {
-      return awaitedHandler.getProperty<string>(this, 'action', false);
-    }
+		public get action(): Promise<string> {
+			return awaitedHandler.getProperty<string>(this, "action", false);
+		}
 
-    public get autocomplete(): Promise<string> {
-      return awaitedHandler.getProperty<string>(this, 'autocomplete', false);
-    }
+		public get autocomplete(): Promise<string> {
+			return awaitedHandler.getProperty<string>(this, "autocomplete", false);
+		}
 
-    public get encoding(): Promise<string> {
-      return awaitedHandler.getProperty<string>(this, 'encoding', false);
-    }
+		public get encoding(): Promise<string> {
+			return awaitedHandler.getProperty<string>(this, "encoding", false);
+		}
 
-    public get enctype(): Promise<string> {
-      return awaitedHandler.getProperty<string>(this, 'enctype', false);
-    }
+		public get enctype(): Promise<string> {
+			return awaitedHandler.getProperty<string>(this, "enctype", false);
+		}
 
-    public get length(): Promise<number> {
-      return awaitedHandler.getProperty<number>(this, 'length', false);
-    }
+		public get length(): Promise<number> {
+			return awaitedHandler.getProperty<number>(this, "length", false);
+		}
 
-    public get name(): Promise<string> {
-      return awaitedHandler.getProperty<string>(this, 'name', false);
-    }
+		public get name(): Promise<string> {
+			return awaitedHandler.getProperty<string>(this, "name", false);
+		}
 
-    public get noValidate(): Promise<boolean> {
-      return awaitedHandler.getProperty<boolean>(this, 'noValidate', false);
-    }
+		public get noValidate(): Promise<boolean> {
+			return awaitedHandler.getProperty<boolean>(this, "noValidate", false);
+		}
 
-    public get target(): Promise<string> {
-      return awaitedHandler.getProperty<string>(this, 'target', false);
-    }
+		public get target(): Promise<string> {
+			return awaitedHandler.getProperty<string>(this, "target", false);
+		}
 
-    // methods
+		// methods
 
-    public checkValidity(): Promise<boolean> {
-      return awaitedHandler.runMethod<boolean>(this, 'checkValidity', []);
-    }
+		public checkValidity(): Promise<boolean> {
+			return awaitedHandler.runMethod<boolean>(this, "checkValidity", []);
+		}
 
-    public reportValidity(): Promise<boolean> {
-      return awaitedHandler.runMethod<boolean>(this, 'reportValidity', []);
-    }
+		public reportValidity(): Promise<boolean> {
+			return awaitedHandler.runMethod<boolean>(this, "reportValidity", []);
+		}
 
-    public reset(): Promise<void> {
-      return awaitedHandler.runMethod<void>(this, 'reset', []);
-    }
+		public reset(): Promise<void> {
+			return awaitedHandler.runMethod<void>(this, "reset", []);
+		}
 
-    public submit(): Promise<void> {
-      return awaitedHandler.runMethod<void>(this, 'submit', []);
-    }
+		public submit(): Promise<void> {
+			return awaitedHandler.runMethod<void>(this, "submit", []);
+		}
 
-    public then<TResult1 = IHTMLFormElement, TResult2 = never>(onfulfilled?: ((value: IHTMLFormElement) => (PromiseLike<TResult1> | TResult1)) | undefined | null, onrejected?: ((reason: any) => (PromiseLike<TResult2> | TResult2)) | undefined | null): Promise<TResult1 | TResult2> {
-      return nodeFactory.createInstanceWithNodePointer(this).then(onfulfilled, onrejected);
-    }
+		public then<TResult1 = IHTMLFormElement, TResult2 = never>(
+			onfulfilled?:
+				| ((value: IHTMLFormElement) => PromiseLike<TResult1> | TResult1)
+				| undefined
+				| null,
+			onrejected?:
+				| ((reason: any) => PromiseLike<TResult2> | TResult2)
+				| undefined
+				| null,
+		): Promise<TResult1 | TResult2> {
+			return nodeFactory
+				.createInstanceWithNodePointer(this)
+				.then(onfulfilled, onrejected);
+		}
 
-    public [Symbol.for('nodejs.util.inspect.custom')]() {
-      return inspectInstanceProperties(this, HTMLFormElementPropertyKeys, HTMLFormElementConstantKeys);
-    }
-  };
+		public [Symbol.for("nodejs.util.inspect.custom")]() {
+			return inspectInstanceProperties(
+				this,
+				HTMLFormElementPropertyKeys,
+				HTMLFormElementConstantKeys,
+			);
+		}
+	};
 }
 
 // INTERFACES RELATED TO STATE MACHINE PROPERTIES ////////////////////////////
 
 export interface IHTMLFormElementProperties extends IHTMLElementProperties {
-  awaitedPath: AwaitedPath;
-  awaitedOptions: any;
-  createInstanceName: string;
+	awaitedPath: AwaitedPath;
+	awaitedOptions: any;
+	createInstanceName: string;
 
-  readonly acceptCharset?: Promise<string>;
-  readonly action?: Promise<string>;
-  readonly autocomplete?: Promise<string>;
-  readonly encoding?: Promise<string>;
-  readonly enctype?: Promise<string>;
-  readonly length?: Promise<number>;
-  readonly name?: Promise<string>;
-  readonly noValidate?: Promise<boolean>;
-  readonly target?: Promise<string>;
+	readonly acceptCharset?: Promise<string>;
+	readonly action?: Promise<string>;
+	readonly autocomplete?: Promise<string>;
+	readonly encoding?: Promise<string>;
+	readonly enctype?: Promise<string>;
+	readonly length?: Promise<number>;
+	readonly name?: Promise<string>;
+	readonly noValidate?: Promise<boolean>;
+	readonly target?: Promise<string>;
 }
 
-export const HTMLFormElementPropertyKeys = [...HTMLElementPropertyKeys, 'acceptCharset', 'action', 'autocomplete', 'encoding', 'enctype', 'length', 'name', 'noValidate', 'target'];
+export const HTMLFormElementPropertyKeys = [
+	...HTMLElementPropertyKeys,
+	"acceptCharset",
+	"action",
+	"autocomplete",
+	"encoding",
+	"enctype",
+	"length",
+	"name",
+	"noValidate",
+	"target",
+];
 
 export const HTMLFormElementConstantKeys = [...HTMLElementConstantKeys];

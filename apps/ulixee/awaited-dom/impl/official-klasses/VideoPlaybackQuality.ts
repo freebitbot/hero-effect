@@ -1,9 +1,17 @@
-import StateMachine from '../../base/StateMachine';
-import { IVideoPlaybackQuality } from '../../base/interfaces/official';
-import { VideoPlaybackQualityGenerator, IVideoPlaybackQualityProperties } from '../../base/official-klasses/VideoPlaybackQuality';
+import type { IVideoPlaybackQuality } from "../../base/interfaces/official";
+import {
+	type IVideoPlaybackQualityProperties,
+	VideoPlaybackQualityGenerator,
+} from "../../base/official-klasses/VideoPlaybackQuality";
+import StateMachine from "../../base/StateMachine";
 
 // tslint:disable:variable-name
-export const { getState, setState } = StateMachine<IVideoPlaybackQuality, IVideoPlaybackQualityProperties>();
+export const { getState, setState } = StateMachine<
+	IVideoPlaybackQuality,
+	IVideoPlaybackQualityProperties
+>();
 const VideoPlaybackQualityBaseClass = VideoPlaybackQualityGenerator();
 
-export default class VideoPlaybackQuality extends VideoPlaybackQualityBaseClass implements IVideoPlaybackQuality {}
+export default class VideoPlaybackQuality
+	extends VideoPlaybackQualityBaseClass
+	implements IVideoPlaybackQuality {}

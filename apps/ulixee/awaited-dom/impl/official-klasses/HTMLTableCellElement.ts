@@ -1,14 +1,24 @@
-import StateMachine from '../../base/StateMachine';
-import { IHTMLTableCellElement } from '../../base/interfaces/official';
-import { HTMLTableCellElementGenerator, IHTMLTableCellElementProperties } from '../../base/official-klasses/HTMLTableCellElement';
-import HTMLElement from './HTMLElement';
+import type { IHTMLTableCellElement } from "../../base/interfaces/official";
+import {
+	HTMLTableCellElementGenerator,
+	type IHTMLTableCellElementProperties,
+} from "../../base/official-klasses/HTMLTableCellElement";
+import StateMachine from "../../base/StateMachine";
+import HTMLElement from "./HTMLElement";
 
 // tslint:disable:variable-name
-export const { getState, setState } = StateMachine<IHTMLTableCellElement, IHTMLTableCellElementProperties>();
-const HTMLTableCellElementBaseClass = HTMLTableCellElementGenerator(HTMLElement);
+export const { getState, setState } = StateMachine<
+	IHTMLTableCellElement,
+	IHTMLTableCellElementProperties
+>();
+const HTMLTableCellElementBaseClass =
+	HTMLTableCellElementGenerator(HTMLElement);
 
-export default class HTMLTableCellElement extends HTMLTableCellElementBaseClass implements IHTMLTableCellElement {
-  constructor() {
-    super();
-  }
+export default class HTMLTableCellElement
+	extends HTMLTableCellElementBaseClass
+	implements IHTMLTableCellElement
+{
+	constructor() {
+		super();
+	}
 }

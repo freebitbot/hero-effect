@@ -1,52 +1,90 @@
-import AwaitedHandler from '../AwaitedHandler';
-import inspectInstanceProperties from '../inspectInstanceProperties';
-import StateMachine from '../StateMachine';
-import AwaitedPath from '../AwaitedPath';
-import Constructable from '../Constructable';
-import NodeFactory from '../NodeFactory';
-import { IHTMLDetailsElement, IHTMLElement } from '../interfaces/official';
-import { IHTMLElementProperties, HTMLElementPropertyKeys, HTMLElementConstantKeys } from './HTMLElement';
+import AwaitedHandler from "../AwaitedHandler";
+import type AwaitedPath from "../AwaitedPath";
+import type Constructable from "../Constructable";
+import inspectInstanceProperties from "../inspectInstanceProperties";
+import type { IHTMLDetailsElement, IHTMLElement } from "../interfaces/official";
+import NodeFactory from "../NodeFactory";
+import StateMachine from "../StateMachine";
+import {
+	HTMLElementConstantKeys,
+	HTMLElementPropertyKeys,
+	type IHTMLElementProperties,
+} from "./HTMLElement";
 
 // tslint:disable:variable-name
-export const { getState, setState } = StateMachine<IHTMLDetailsElement, IHTMLDetailsElementProperties>();
-export const awaitedHandler = new AwaitedHandler<IHTMLDetailsElement>('HTMLDetailsElement', getState, setState);
-export const nodeFactory = new NodeFactory<IHTMLDetailsElement>(getState, setState, awaitedHandler);
+export const { getState, setState } = StateMachine<
+	IHTMLDetailsElement,
+	IHTMLDetailsElementProperties
+>();
+export const awaitedHandler = new AwaitedHandler<IHTMLDetailsElement>(
+	"HTMLDetailsElement",
+	getState,
+	setState,
+);
+export const nodeFactory = new NodeFactory<IHTMLDetailsElement>(
+	getState,
+	setState,
+	awaitedHandler,
+);
 
-export function HTMLDetailsElementGenerator(HTMLElement: Constructable<IHTMLElement>) {
-  return class HTMLDetailsElement extends HTMLElement implements IHTMLDetailsElement, PromiseLike<IHTMLDetailsElement> {
-    constructor() {
-      super();
-      setState(this, {
-        createInstanceName: 'createHTMLDetailsElement',
-      });
-    }
+export function HTMLDetailsElementGenerator(
+	HTMLElement: Constructable<IHTMLElement>,
+) {
+	return class HTMLDetailsElement
+		extends HTMLElement
+		implements IHTMLDetailsElement, PromiseLike<IHTMLDetailsElement>
+	{
+		constructor() {
+			super();
+			setState(this, {
+				createInstanceName: "createHTMLDetailsElement",
+			});
+		}
 
-    // properties
+		// properties
 
-    public get open(): Promise<boolean> {
-      return awaitedHandler.getProperty<boolean>(this, 'open', false);
-    }
+		public get open(): Promise<boolean> {
+			return awaitedHandler.getProperty<boolean>(this, "open", false);
+		}
 
-    public then<TResult1 = IHTMLDetailsElement, TResult2 = never>(onfulfilled?: ((value: IHTMLDetailsElement) => (PromiseLike<TResult1> | TResult1)) | undefined | null, onrejected?: ((reason: any) => (PromiseLike<TResult2> | TResult2)) | undefined | null): Promise<TResult1 | TResult2> {
-      return nodeFactory.createInstanceWithNodePointer(this).then(onfulfilled, onrejected);
-    }
+		public then<TResult1 = IHTMLDetailsElement, TResult2 = never>(
+			onfulfilled?:
+				| ((value: IHTMLDetailsElement) => PromiseLike<TResult1> | TResult1)
+				| undefined
+				| null,
+			onrejected?:
+				| ((reason: any) => PromiseLike<TResult2> | TResult2)
+				| undefined
+				| null,
+		): Promise<TResult1 | TResult2> {
+			return nodeFactory
+				.createInstanceWithNodePointer(this)
+				.then(onfulfilled, onrejected);
+		}
 
-    public [Symbol.for('nodejs.util.inspect.custom')]() {
-      return inspectInstanceProperties(this, HTMLDetailsElementPropertyKeys, HTMLDetailsElementConstantKeys);
-    }
-  };
+		public [Symbol.for("nodejs.util.inspect.custom")]() {
+			return inspectInstanceProperties(
+				this,
+				HTMLDetailsElementPropertyKeys,
+				HTMLDetailsElementConstantKeys,
+			);
+		}
+	};
 }
 
 // INTERFACES RELATED TO STATE MACHINE PROPERTIES ////////////////////////////
 
 export interface IHTMLDetailsElementProperties extends IHTMLElementProperties {
-  awaitedPath: AwaitedPath;
-  awaitedOptions: any;
-  createInstanceName: string;
+	awaitedPath: AwaitedPath;
+	awaitedOptions: any;
+	createInstanceName: string;
 
-  readonly open?: Promise<boolean>;
+	readonly open?: Promise<boolean>;
 }
 
-export const HTMLDetailsElementPropertyKeys = [...HTMLElementPropertyKeys, 'open'];
+export const HTMLDetailsElementPropertyKeys = [
+	...HTMLElementPropertyKeys,
+	"open",
+];
 
 export const HTMLDetailsElementConstantKeys = [...HTMLElementConstantKeys];

@@ -1,9 +1,17 @@
-import StateMachine from '../../base/StateMachine';
-import { IMediaList } from '../../base/interfaces/official';
-import { MediaListGenerator, IMediaListProperties } from '../../base/official-klasses/MediaList';
+import type { IMediaList } from "../../base/interfaces/official";
+import {
+	type IMediaListProperties,
+	MediaListGenerator,
+} from "../../base/official-klasses/MediaList";
+import StateMachine from "../../base/StateMachine";
 
 // tslint:disable:variable-name
-export const { getState, setState } = StateMachine<IMediaList, IMediaListProperties>();
+export const { getState, setState } = StateMachine<
+	IMediaList,
+	IMediaListProperties
+>();
 const MediaListBaseClass = MediaListGenerator();
 
-export default class MediaList extends MediaListBaseClass implements IMediaList {}
+export default class MediaList
+	extends MediaListBaseClass
+	implements IMediaList {}

@@ -1,44 +1,56 @@
-import AwaitedHandler from '../AwaitedHandler';
-import StateMachine from '../StateMachine';
-import AwaitedPath from '../AwaitedPath';
-import AwaitedIterator from '../AwaitedIterator';
-import { IHTMLCollectionBaseIsolate } from '../interfaces/isolate';
-import { ISuperElement } from '../interfaces/super';
+import AwaitedHandler from "../AwaitedHandler";
+import AwaitedIterator from "../AwaitedIterator";
+import type AwaitedPath from "../AwaitedPath";
+import type { IHTMLCollectionBaseIsolate } from "../interfaces/isolate";
+import type { ISuperElement } from "../interfaces/super";
+import StateMachine from "../StateMachine";
 
 // tslint:disable:variable-name
-export const { getState, setState } = StateMachine<IHTMLCollectionBaseIsolate, IHTMLCollectionBaseIsolateProperties>();
-export const awaitedHandler = new AwaitedHandler<IHTMLCollectionBaseIsolate>('HTMLCollectionBaseIsolate', getState, setState);
-export const awaitedIterator = new AwaitedIterator<IHTMLCollectionBaseIsolate, ISuperElement>(getState, setState, awaitedHandler);
+export const { getState, setState } = StateMachine<
+	IHTMLCollectionBaseIsolate,
+	IHTMLCollectionBaseIsolateProperties
+>();
+export const awaitedHandler = new AwaitedHandler<IHTMLCollectionBaseIsolate>(
+	"HTMLCollectionBaseIsolate",
+	getState,
+	setState,
+);
+export const awaitedIterator = new AwaitedIterator<
+	IHTMLCollectionBaseIsolate,
+	ISuperElement
+>(getState, setState, awaitedHandler);
 
-export default class HTMLCollectionBaseIsolate implements IHTMLCollectionBaseIsolate {
-  public get length(): Promise<number> {
-    return awaitedHandler.getProperty<number>(this, 'length', false);
-  }
+export default class HTMLCollectionBaseIsolate
+	implements IHTMLCollectionBaseIsolate
+{
+	public get length(): Promise<number> {
+		return awaitedHandler.getProperty<number>(this, "length", false);
+	}
 
-  // methods
+	// methods
 
-  public item(index: number): ISuperElement {
-    throw new Error('HTMLCollectionBaseIsolate.item not implemented');
-  }
+	public item(index: number): ISuperElement {
+		throw new Error("HTMLCollectionBaseIsolate.item not implemented");
+	}
 
-  public [Symbol.iterator](): Iterator<ISuperElement> {
-    return awaitedIterator.iterateNodePointers(this);
-  }
+	public [Symbol.iterator](): Iterator<ISuperElement> {
+		return awaitedIterator.iterateNodePointers(this);
+	}
 
-  [index: number]: ISuperElement;
+	[index: number]: ISuperElement;
 }
 
 // INTERFACES RELATED TO STATE MACHINE PROPERTIES ////////////////////////////
 
 export interface IHTMLCollectionBaseIsolateProperties {
-  awaitedPath: AwaitedPath;
-  awaitedOptions: any;
-  createInstanceName: string;
-  createIterableName: string;
+	awaitedPath: AwaitedPath;
+	awaitedOptions: any;
+	createInstanceName: string;
+	createIterableName: string;
 
-  readonly length?: Promise<number>;
+	readonly length?: Promise<number>;
 }
 
-export const HTMLCollectionBaseIsolatePropertyKeys = ['length'];
+export const HTMLCollectionBaseIsolatePropertyKeys = ["length"];
 
 export const HTMLCollectionBaseIsolateConstantKeys = [];

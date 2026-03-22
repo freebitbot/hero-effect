@@ -1,37 +1,48 @@
-import AwaitedHandler from '../AwaitedHandler';
-import inspectInstanceProperties from '../inspectInstanceProperties';
-import StateMachine from '../StateMachine';
-import AwaitedPath from '../AwaitedPath';
-import Constructable from '../Constructable';
-import { IDOMParser, ISupportedType } from '../interfaces/official';
-import { ISuperDocument } from '../interfaces/super';
+import AwaitedHandler from "../AwaitedHandler";
+import type AwaitedPath from "../AwaitedPath";
+import Constructable from "../Constructable";
+import inspectInstanceProperties from "../inspectInstanceProperties";
+import type { IDOMParser, ISupportedType } from "../interfaces/official";
+import type { ISuperDocument } from "../interfaces/super";
+import StateMachine from "../StateMachine";
 
 // tslint:disable:variable-name
-export const { getState, setState } = StateMachine<IDOMParser, IDOMParserProperties>();
-export const awaitedHandler = new AwaitedHandler<IDOMParser>('DOMParser', getState, setState);
+export const { getState, setState } = StateMachine<
+	IDOMParser,
+	IDOMParserProperties
+>();
+export const awaitedHandler = new AwaitedHandler<IDOMParser>(
+	"DOMParser",
+	getState,
+	setState,
+);
 
 export function DOMParserGenerator() {
-  return class DOMParser implements IDOMParser {
-    constructor() {
-    }
+	return class DOMParser implements IDOMParser {
+		constructor() {}
 
-    // methods
+		// methods
 
-    public parseFromString(str: string, type: ISupportedType): ISuperDocument {
-      throw new Error('DOMParser.parseFromString not implemented');
-    }
+		public parseFromString(str: string, type: ISupportedType): ISuperDocument {
+			throw new Error("DOMParser.parseFromString not implemented");
+		}
 
-    public [Symbol.for('nodejs.util.inspect.custom')]() {
-      return inspectInstanceProperties(this, DOMParserPropertyKeys, DOMParserConstantKeys);
-    }
-  };
+		public [Symbol.for("nodejs.util.inspect.custom")]() {
+			return inspectInstanceProperties(
+				this,
+				DOMParserPropertyKeys,
+				DOMParserConstantKeys,
+			);
+		}
+	};
 }
 
 // INTERFACES RELATED TO STATE MACHINE PROPERTIES ////////////////////////////
 
 export interface IDOMParserProperties {
-  awaitedPath: AwaitedPath;
-  awaitedOptions: any;}
+	awaitedPath: AwaitedPath;
+	awaitedOptions: any;
+}
 
 export const DOMParserPropertyKeys = [];
 

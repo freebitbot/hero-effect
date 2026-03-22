@@ -1,24 +1,32 @@
-import AwaitedHandler from '../AwaitedHandler';
-import StateMachine from '../StateMachine';
-import AwaitedPath from '../AwaitedPath';
-import { INonElementParentNode } from '../interfaces/official';
-import { ISuperElement } from '../interfaces/super';
+import AwaitedHandler from "../AwaitedHandler";
+import type AwaitedPath from "../AwaitedPath";
+import type { INonElementParentNode } from "../interfaces/official";
+import type { ISuperElement } from "../interfaces/super";
+import StateMachine from "../StateMachine";
 
 // tslint:disable:variable-name
-export const { getState, setState } = StateMachine<INonElementParentNode, INonElementParentNodeProperties>();
-export const awaitedHandler = new AwaitedHandler<INonElementParentNode>('NonElementParentNode', getState, setState);
+export const { getState, setState } = StateMachine<
+	INonElementParentNode,
+	INonElementParentNodeProperties
+>();
+export const awaitedHandler = new AwaitedHandler<INonElementParentNode>(
+	"NonElementParentNode",
+	getState,
+	setState,
+);
 
 export default class NonElementParentNode implements INonElementParentNode {
-  public getElementById(elementId: string): ISuperElement {
-    throw new Error('NonElementParentNode.getElementById not implemented');
-  }
+	public getElementById(elementId: string): ISuperElement {
+		throw new Error("NonElementParentNode.getElementById not implemented");
+	}
 }
 
 // INTERFACES RELATED TO STATE MACHINE PROPERTIES ////////////////////////////
 
 export interface INonElementParentNodeProperties {
-  awaitedPath: AwaitedPath;
-  awaitedOptions: any;}
+	awaitedPath: AwaitedPath;
+	awaitedOptions: any;
+}
 
 export const NonElementParentNodePropertyKeys = [];
 

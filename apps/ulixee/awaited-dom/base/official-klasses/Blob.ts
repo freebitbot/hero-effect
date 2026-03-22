@@ -1,58 +1,80 @@
-import AwaitedHandler from '../AwaitedHandler';
-import inspectInstanceProperties from '../inspectInstanceProperties';
-import StateMachine from '../StateMachine';
-import AwaitedPath from '../AwaitedPath';
-import Constructable from '../Constructable';
-import { IBlob, IBlobPart, IBlobPropertyBag } from '../interfaces/official';
+import AwaitedHandler from "../AwaitedHandler";
+import type AwaitedPath from "../AwaitedPath";
+import Constructable from "../Constructable";
+import inspectInstanceProperties from "../inspectInstanceProperties";
+import type {
+	IBlob,
+	IBlobPart,
+	IBlobPropertyBag,
+} from "../interfaces/official";
+import StateMachine from "../StateMachine";
 
 // tslint:disable:variable-name
 export const { getState, setState } = StateMachine<IBlob, IBlobProperties>();
-export const awaitedHandler = new AwaitedHandler<IBlob>('Blob', getState, setState);
+export const awaitedHandler = new AwaitedHandler<IBlob>(
+	"Blob",
+	getState,
+	setState,
+);
 
 export function BlobGenerator() {
-  return class Blob implements IBlob {
-    constructor(_blobParts?: Iterable<IBlobPart>, _options?: IBlobPropertyBag) {
-    }
+	return class Blob implements IBlob {
+		constructor(
+			_blobParts?: Iterable<IBlobPart>,
+			_options?: IBlobPropertyBag,
+		) {}
 
-    // properties
+		// properties
 
-    public get size(): Promise<number> {
-      return awaitedHandler.getProperty<number>(this, 'size', false);
-    }
+		public get size(): Promise<number> {
+			return awaitedHandler.getProperty<number>(this, "size", false);
+		}
 
-    public get type(): Promise<string> {
-      return awaitedHandler.getProperty<string>(this, 'type', false);
-    }
+		public get type(): Promise<string> {
+			return awaitedHandler.getProperty<string>(this, "type", false);
+		}
 
-    // methods
+		// methods
 
-    public arrayBuffer(): Promise<ArrayBuffer> {
-      return awaitedHandler.runMethod<ArrayBuffer>(this, 'arrayBuffer', []);
-    }
+		public arrayBuffer(): Promise<ArrayBuffer> {
+			return awaitedHandler.runMethod<ArrayBuffer>(this, "arrayBuffer", []);
+		}
 
-    public slice(start?: number, end?: number, contentType?: string): Promise<IBlob> {
-      return awaitedHandler.runMethod<IBlob>(this, 'slice', [start, end, contentType]);
-    }
+		public slice(
+			start?: number,
+			end?: number,
+			contentType?: string,
+		): Promise<IBlob> {
+			return awaitedHandler.runMethod<IBlob>(this, "slice", [
+				start,
+				end,
+				contentType,
+			]);
+		}
 
-    public text(): Promise<string> {
-      return awaitedHandler.runMethod<string>(this, 'text', []);
-    }
+		public text(): Promise<string> {
+			return awaitedHandler.runMethod<string>(this, "text", []);
+		}
 
-    public [Symbol.for('nodejs.util.inspect.custom')]() {
-      return inspectInstanceProperties(this, BlobPropertyKeys, BlobConstantKeys);
-    }
-  };
+		public [Symbol.for("nodejs.util.inspect.custom")]() {
+			return inspectInstanceProperties(
+				this,
+				BlobPropertyKeys,
+				BlobConstantKeys,
+			);
+		}
+	};
 }
 
 // INTERFACES RELATED TO STATE MACHINE PROPERTIES ////////////////////////////
 
 export interface IBlobProperties {
-  awaitedPath: AwaitedPath;
-  awaitedOptions: any;
-  readonly size?: Promise<number>;
-  readonly type?: Promise<string>;
+	awaitedPath: AwaitedPath;
+	awaitedOptions: any;
+	readonly size?: Promise<number>;
+	readonly type?: Promise<string>;
 }
 
-export const BlobPropertyKeys = ['size', 'type'];
+export const BlobPropertyKeys = ["size", "type"];
 
 export const BlobConstantKeys = [];

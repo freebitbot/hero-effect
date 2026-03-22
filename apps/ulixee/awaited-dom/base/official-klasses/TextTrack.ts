@@ -1,30 +1,41 @@
-import AwaitedHandler from '../AwaitedHandler';
-import inspectInstanceProperties from '../inspectInstanceProperties';
-import StateMachine from '../StateMachine';
-import AwaitedPath from '../AwaitedPath';
-import Constructable from '../Constructable';
-import { ITextTrack } from '../interfaces/official';
+import AwaitedHandler from "../AwaitedHandler";
+import type AwaitedPath from "../AwaitedPath";
+import Constructable from "../Constructable";
+import inspectInstanceProperties from "../inspectInstanceProperties";
+import type { ITextTrack } from "../interfaces/official";
+import StateMachine from "../StateMachine";
 
 // tslint:disable:variable-name
-export const { getState, setState } = StateMachine<ITextTrack, ITextTrackProperties>();
-export const awaitedHandler = new AwaitedHandler<ITextTrack>('TextTrack', getState, setState);
+export const { getState, setState } = StateMachine<
+	ITextTrack,
+	ITextTrackProperties
+>();
+export const awaitedHandler = new AwaitedHandler<ITextTrack>(
+	"TextTrack",
+	getState,
+	setState,
+);
 
 export function TextTrackGenerator() {
-  return class TextTrack implements ITextTrack {
-    constructor() {
-    }
+	return class TextTrack implements ITextTrack {
+		constructor() {}
 
-    public [Symbol.for('nodejs.util.inspect.custom')]() {
-      return inspectInstanceProperties(this, TextTrackPropertyKeys, TextTrackConstantKeys);
-    }
-  };
+		public [Symbol.for("nodejs.util.inspect.custom")]() {
+			return inspectInstanceProperties(
+				this,
+				TextTrackPropertyKeys,
+				TextTrackConstantKeys,
+			);
+		}
+	};
 }
 
 // INTERFACES RELATED TO STATE MACHINE PROPERTIES ////////////////////////////
 
 export interface ITextTrackProperties {
-  awaitedPath: AwaitedPath;
-  awaitedOptions: any;}
+	awaitedPath: AwaitedPath;
+	awaitedOptions: any;
+}
 
 export const TextTrackPropertyKeys = [];
 
