@@ -1,4 +1,4 @@
-import * as os from "node:os";
+import { tmpdir } from "node:os";
 import * as Path from "node:path";
 import { CanceledPromiseError } from "@ulixee/commons/interfaces/IPendingWaitEvent";
 import { TypedEventEmitter } from "@ulixee/commons/lib/eventUtils";
@@ -324,7 +324,7 @@ export default class Browser
 
 		if (!launchArgs.some((x) => x.startsWith("--user-data-dir"))) {
 			const dataDir = Path.join(
-				os.tmpdir(),
+				tmpdir(),
 				`${instanceId}-${browserIdCounter}-${this.engine.fullVersion.replace(/\./g, "-")}`,
 			);
 			this.engine.launchArguments.push(`--user-data-dir=${dataDir}`); // required to allow multiple browsers to be headed
@@ -400,16 +400,6 @@ export default class Browser
 
 		if (options.noChromeSandbox === true) {
 			launchArgs.push("--no-sandbox");
-		} else if (os.platform() === "linux") {
-			const runningAsRoot = process.geteuid && process.geteuid() === 0;
-			if (runningAsRoot) {
-				// eslint-disable-next-line no-console
-				console.warn(
-					'WARNING: Agent is being run under "root" user - disabling Chrome sandbox! ' +
-						"Run under regular user to get rid of this warning, or pass in `noChromeSandbox: true` to the constructor arguments.",
-				);
-				launchArgs.push("--no-sandbox");
-			}
 		}
 		if (options.useRemoteDebuggingPort) {
 			this.engine.useRemoteDebuggingPort = true;
