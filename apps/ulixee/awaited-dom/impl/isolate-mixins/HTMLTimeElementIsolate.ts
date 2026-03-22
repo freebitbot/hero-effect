@@ -1,8 +1,15 @@
-import StateMachine from '../../base/StateMachine';
-import { IHTMLTimeElementIsolate } from '../../base/interfaces/isolate';
-import HTMLTimeElementIsolateBase, { IHTMLTimeElementIsolateProperties } from '../../base/isolate-mixins/HTMLTimeElementIsolate';
+import type { IHTMLTimeElementIsolate } from "../../base/interfaces/isolate";
+import HTMLTimeElementIsolateBase, {
+	type IHTMLTimeElementIsolateProperties,
+} from "../../base/isolate-mixins/HTMLTimeElementIsolate";
+import StateMachine from "../../base/StateMachine";
 
 // tslint:disable:variable-name
-export const { getState, setState } = StateMachine<IHTMLTimeElementIsolate, IHTMLTimeElementIsolateProperties>();
+export const { getState, setState } = StateMachine<
+	IHTMLTimeElementIsolate,
+	IHTMLTimeElementIsolateProperties
+>();
 
-export default class HTMLTimeElementIsolate extends HTMLTimeElementIsolateBase implements IHTMLTimeElementIsolate {}
+export default class HTMLTimeElementIsolate
+	extends HTMLTimeElementIsolateBase
+	implements IHTMLTimeElementIsolate {}

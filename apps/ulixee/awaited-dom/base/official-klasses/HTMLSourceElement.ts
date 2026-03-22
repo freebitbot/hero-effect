@@ -1,72 +1,114 @@
-import AwaitedHandler from '../AwaitedHandler';
-import inspectInstanceProperties from '../inspectInstanceProperties';
-import StateMachine from '../StateMachine';
-import AwaitedPath from '../AwaitedPath';
-import Constructable from '../Constructable';
-import NodeFactory from '../NodeFactory';
-import { IHTMLSourceElement, IHTMLElement } from '../interfaces/official';
-import { IHTMLElementProperties, HTMLElementPropertyKeys, HTMLElementConstantKeys } from './HTMLElement';
+import AwaitedHandler from "../AwaitedHandler";
+import type AwaitedPath from "../AwaitedPath";
+import type Constructable from "../Constructable";
+import inspectInstanceProperties from "../inspectInstanceProperties";
+import type { IHTMLElement, IHTMLSourceElement } from "../interfaces/official";
+import NodeFactory from "../NodeFactory";
+import StateMachine from "../StateMachine";
+import {
+	HTMLElementConstantKeys,
+	HTMLElementPropertyKeys,
+	type IHTMLElementProperties,
+} from "./HTMLElement";
 
 // tslint:disable:variable-name
-export const { getState, setState } = StateMachine<IHTMLSourceElement, IHTMLSourceElementProperties>();
-export const awaitedHandler = new AwaitedHandler<IHTMLSourceElement>('HTMLSourceElement', getState, setState);
-export const nodeFactory = new NodeFactory<IHTMLSourceElement>(getState, setState, awaitedHandler);
+export const { getState, setState } = StateMachine<
+	IHTMLSourceElement,
+	IHTMLSourceElementProperties
+>();
+export const awaitedHandler = new AwaitedHandler<IHTMLSourceElement>(
+	"HTMLSourceElement",
+	getState,
+	setState,
+);
+export const nodeFactory = new NodeFactory<IHTMLSourceElement>(
+	getState,
+	setState,
+	awaitedHandler,
+);
 
-export function HTMLSourceElementGenerator(HTMLElement: Constructable<IHTMLElement>) {
-  return class HTMLSourceElement extends HTMLElement implements IHTMLSourceElement, PromiseLike<IHTMLSourceElement> {
-    constructor() {
-      super();
-      setState(this, {
-        createInstanceName: 'createHTMLSourceElement',
-      });
-    }
+export function HTMLSourceElementGenerator(
+	HTMLElement: Constructable<IHTMLElement>,
+) {
+	return class HTMLSourceElement
+		extends HTMLElement
+		implements IHTMLSourceElement, PromiseLike<IHTMLSourceElement>
+	{
+		constructor() {
+			super();
+			setState(this, {
+				createInstanceName: "createHTMLSourceElement",
+			});
+		}
 
-    // properties
+		// properties
 
-    public get media(): Promise<string> {
-      return awaitedHandler.getProperty<string>(this, 'media', false);
-    }
+		public get media(): Promise<string> {
+			return awaitedHandler.getProperty<string>(this, "media", false);
+		}
 
-    public get sizes(): Promise<string> {
-      return awaitedHandler.getProperty<string>(this, 'sizes', false);
-    }
+		public get sizes(): Promise<string> {
+			return awaitedHandler.getProperty<string>(this, "sizes", false);
+		}
 
-    public get src(): Promise<string> {
-      return awaitedHandler.getProperty<string>(this, 'src', false);
-    }
+		public get src(): Promise<string> {
+			return awaitedHandler.getProperty<string>(this, "src", false);
+		}
 
-    public get srcset(): Promise<string> {
-      return awaitedHandler.getProperty<string>(this, 'srcset', false);
-    }
+		public get srcset(): Promise<string> {
+			return awaitedHandler.getProperty<string>(this, "srcset", false);
+		}
 
-    public get type(): Promise<string> {
-      return awaitedHandler.getProperty<string>(this, 'type', false);
-    }
+		public get type(): Promise<string> {
+			return awaitedHandler.getProperty<string>(this, "type", false);
+		}
 
-    public then<TResult1 = IHTMLSourceElement, TResult2 = never>(onfulfilled?: ((value: IHTMLSourceElement) => (PromiseLike<TResult1> | TResult1)) | undefined | null, onrejected?: ((reason: any) => (PromiseLike<TResult2> | TResult2)) | undefined | null): Promise<TResult1 | TResult2> {
-      return nodeFactory.createInstanceWithNodePointer(this).then(onfulfilled, onrejected);
-    }
+		public then<TResult1 = IHTMLSourceElement, TResult2 = never>(
+			onfulfilled?:
+				| ((value: IHTMLSourceElement) => PromiseLike<TResult1> | TResult1)
+				| undefined
+				| null,
+			onrejected?:
+				| ((reason: any) => PromiseLike<TResult2> | TResult2)
+				| undefined
+				| null,
+		): Promise<TResult1 | TResult2> {
+			return nodeFactory
+				.createInstanceWithNodePointer(this)
+				.then(onfulfilled, onrejected);
+		}
 
-    public [Symbol.for('nodejs.util.inspect.custom')]() {
-      return inspectInstanceProperties(this, HTMLSourceElementPropertyKeys, HTMLSourceElementConstantKeys);
-    }
-  };
+		public [Symbol.for("nodejs.util.inspect.custom")]() {
+			return inspectInstanceProperties(
+				this,
+				HTMLSourceElementPropertyKeys,
+				HTMLSourceElementConstantKeys,
+			);
+		}
+	};
 }
 
 // INTERFACES RELATED TO STATE MACHINE PROPERTIES ////////////////////////////
 
 export interface IHTMLSourceElementProperties extends IHTMLElementProperties {
-  awaitedPath: AwaitedPath;
-  awaitedOptions: any;
-  createInstanceName: string;
+	awaitedPath: AwaitedPath;
+	awaitedOptions: any;
+	createInstanceName: string;
 
-  readonly media?: Promise<string>;
-  readonly sizes?: Promise<string>;
-  readonly src?: Promise<string>;
-  readonly srcset?: Promise<string>;
-  readonly type?: Promise<string>;
+	readonly media?: Promise<string>;
+	readonly sizes?: Promise<string>;
+	readonly src?: Promise<string>;
+	readonly srcset?: Promise<string>;
+	readonly type?: Promise<string>;
 }
 
-export const HTMLSourceElementPropertyKeys = [...HTMLElementPropertyKeys, 'media', 'sizes', 'src', 'srcset', 'type'];
+export const HTMLSourceElementPropertyKeys = [
+	...HTMLElementPropertyKeys,
+	"media",
+	"sizes",
+	"src",
+	"srcset",
+	"type",
+];
 
 export const HTMLSourceElementConstantKeys = [...HTMLElementConstantKeys];

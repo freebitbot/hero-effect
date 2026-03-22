@@ -1,42 +1,77 @@
-import AwaitedHandler from '../AwaitedHandler';
-import inspectInstanceProperties from '../inspectInstanceProperties';
-import StateMachine from '../StateMachine';
-import AwaitedPath from '../AwaitedPath';
-import Constructable from '../Constructable';
-import NodeFactory from '../NodeFactory';
-import { IHTMLBRElement, IHTMLElement } from '../interfaces/official';
-import { IHTMLElementProperties, HTMLElementPropertyKeys, HTMLElementConstantKeys } from './HTMLElement';
+import AwaitedHandler from "../AwaitedHandler";
+import type AwaitedPath from "../AwaitedPath";
+import type Constructable from "../Constructable";
+import inspectInstanceProperties from "../inspectInstanceProperties";
+import type { IHTMLBRElement, IHTMLElement } from "../interfaces/official";
+import NodeFactory from "../NodeFactory";
+import StateMachine from "../StateMachine";
+import {
+	HTMLElementConstantKeys,
+	HTMLElementPropertyKeys,
+	type IHTMLElementProperties,
+} from "./HTMLElement";
 
 // tslint:disable:variable-name
-export const { getState, setState } = StateMachine<IHTMLBRElement, IHTMLBRElementProperties>();
-export const awaitedHandler = new AwaitedHandler<IHTMLBRElement>('HTMLBRElement', getState, setState);
-export const nodeFactory = new NodeFactory<IHTMLBRElement>(getState, setState, awaitedHandler);
+export const { getState, setState } = StateMachine<
+	IHTMLBRElement,
+	IHTMLBRElementProperties
+>();
+export const awaitedHandler = new AwaitedHandler<IHTMLBRElement>(
+	"HTMLBRElement",
+	getState,
+	setState,
+);
+export const nodeFactory = new NodeFactory<IHTMLBRElement>(
+	getState,
+	setState,
+	awaitedHandler,
+);
 
-export function HTMLBRElementGenerator(HTMLElement: Constructable<IHTMLElement>) {
-  return class HTMLBRElement extends HTMLElement implements IHTMLBRElement, PromiseLike<IHTMLBRElement> {
-    constructor() {
-      super();
-      setState(this, {
-        createInstanceName: 'createHTMLBRElement',
-      });
-    }
+export function HTMLBRElementGenerator(
+	HTMLElement: Constructable<IHTMLElement>,
+) {
+	return class HTMLBRElement
+		extends HTMLElement
+		implements IHTMLBRElement, PromiseLike<IHTMLBRElement>
+	{
+		constructor() {
+			super();
+			setState(this, {
+				createInstanceName: "createHTMLBRElement",
+			});
+		}
 
-    public then<TResult1 = IHTMLBRElement, TResult2 = never>(onfulfilled?: ((value: IHTMLBRElement) => (PromiseLike<TResult1> | TResult1)) | undefined | null, onrejected?: ((reason: any) => (PromiseLike<TResult2> | TResult2)) | undefined | null): Promise<TResult1 | TResult2> {
-      return nodeFactory.createInstanceWithNodePointer(this).then(onfulfilled, onrejected);
-    }
+		public then<TResult1 = IHTMLBRElement, TResult2 = never>(
+			onfulfilled?:
+				| ((value: IHTMLBRElement) => PromiseLike<TResult1> | TResult1)
+				| undefined
+				| null,
+			onrejected?:
+				| ((reason: any) => PromiseLike<TResult2> | TResult2)
+				| undefined
+				| null,
+		): Promise<TResult1 | TResult2> {
+			return nodeFactory
+				.createInstanceWithNodePointer(this)
+				.then(onfulfilled, onrejected);
+		}
 
-    public [Symbol.for('nodejs.util.inspect.custom')]() {
-      return inspectInstanceProperties(this, HTMLBRElementPropertyKeys, HTMLBRElementConstantKeys);
-    }
-  };
+		public [Symbol.for("nodejs.util.inspect.custom")]() {
+			return inspectInstanceProperties(
+				this,
+				HTMLBRElementPropertyKeys,
+				HTMLBRElementConstantKeys,
+			);
+		}
+	};
 }
 
 // INTERFACES RELATED TO STATE MACHINE PROPERTIES ////////////////////////////
 
 export interface IHTMLBRElementProperties extends IHTMLElementProperties {
-  awaitedPath: AwaitedPath;
-  awaitedOptions: any;
-  createInstanceName: string;
+	awaitedPath: AwaitedPath;
+	awaitedOptions: any;
+	createInstanceName: string;
 }
 
 export const HTMLBRElementPropertyKeys = [...HTMLElementPropertyKeys];

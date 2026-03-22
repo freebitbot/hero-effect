@@ -1,8 +1,15 @@
-import StateMachine from '../../base/StateMachine';
-import { IDocumentFragmentIsolate } from '../../base/interfaces/isolate';
-import DocumentFragmentIsolateBase, { IDocumentFragmentIsolateProperties } from '../../base/isolate-mixins/DocumentFragmentIsolate';
+import type { IDocumentFragmentIsolate } from "../../base/interfaces/isolate";
+import DocumentFragmentIsolateBase, {
+	type IDocumentFragmentIsolateProperties,
+} from "../../base/isolate-mixins/DocumentFragmentIsolate";
+import StateMachine from "../../base/StateMachine";
 
 // tslint:disable:variable-name
-export const { getState, setState } = StateMachine<IDocumentFragmentIsolate, IDocumentFragmentIsolateProperties>();
+export const { getState, setState } = StateMachine<
+	IDocumentFragmentIsolate,
+	IDocumentFragmentIsolateProperties
+>();
 
-export default class DocumentFragmentIsolate extends DocumentFragmentIsolateBase implements IDocumentFragmentIsolate {}
+export default class DocumentFragmentIsolate
+	extends DocumentFragmentIsolateBase
+	implements IDocumentFragmentIsolate {}

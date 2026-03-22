@@ -1,32 +1,48 @@
-import AwaitedHandler from '../AwaitedHandler';
-import inspectInstanceProperties from '../inspectInstanceProperties';
-import StateMachine from '../StateMachine';
-import AwaitedPath from '../AwaitedPath';
-import Constructable from '../Constructable';
-import { IHTMLDocument, IDocument } from '../interfaces/official';
-import { IDocumentProperties, DocumentPropertyKeys, DocumentConstantKeys } from './Document';
+import AwaitedHandler from "../AwaitedHandler";
+import type AwaitedPath from "../AwaitedPath";
+import type Constructable from "../Constructable";
+import inspectInstanceProperties from "../inspectInstanceProperties";
+import type { IDocument, IHTMLDocument } from "../interfaces/official";
+import StateMachine from "../StateMachine";
+import {
+	DocumentConstantKeys,
+	DocumentPropertyKeys,
+	type IDocumentProperties,
+} from "./Document";
 
 // tslint:disable:variable-name
-export const { getState, setState } = StateMachine<IHTMLDocument, IHTMLDocumentProperties>();
-export const awaitedHandler = new AwaitedHandler<IHTMLDocument>('HTMLDocument', getState, setState);
+export const { getState, setState } = StateMachine<
+	IHTMLDocument,
+	IHTMLDocumentProperties
+>();
+export const awaitedHandler = new AwaitedHandler<IHTMLDocument>(
+	"HTMLDocument",
+	getState,
+	setState,
+);
 
 export function HTMLDocumentGenerator(Document: Constructable<IDocument>) {
-  return class HTMLDocument extends Document implements IHTMLDocument {
-    constructor() {
-      super();
-    }
+	return class HTMLDocument extends Document implements IHTMLDocument {
+		constructor() {
+			super();
+		}
 
-    public [Symbol.for('nodejs.util.inspect.custom')]() {
-      return inspectInstanceProperties(this, HTMLDocumentPropertyKeys, HTMLDocumentConstantKeys);
-    }
-  };
+		public [Symbol.for("nodejs.util.inspect.custom")]() {
+			return inspectInstanceProperties(
+				this,
+				HTMLDocumentPropertyKeys,
+				HTMLDocumentConstantKeys,
+			);
+		}
+	};
 }
 
 // INTERFACES RELATED TO STATE MACHINE PROPERTIES ////////////////////////////
 
 export interface IHTMLDocumentProperties extends IDocumentProperties {
-  awaitedPath: AwaitedPath;
-  awaitedOptions: any;}
+	awaitedPath: AwaitedPath;
+	awaitedOptions: any;
+}
 
 export const HTMLDocumentPropertyKeys = [...DocumentPropertyKeys];
 

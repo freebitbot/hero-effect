@@ -1,57 +1,100 @@
-import AwaitedHandler from '../AwaitedHandler';
-import inspectInstanceProperties from '../inspectInstanceProperties';
-import StateMachine from '../StateMachine';
-import AwaitedPath from '../AwaitedPath';
-import Constructable from '../Constructable';
-import NodeFactory from '../NodeFactory';
-import { IHTMLLegendElement, IHTMLElement, IHTMLFormElement } from '../interfaces/official';
-import { IHTMLElementProperties, HTMLElementPropertyKeys, HTMLElementConstantKeys } from './HTMLElement';
+import AwaitedHandler from "../AwaitedHandler";
+import type AwaitedPath from "../AwaitedPath";
+import type Constructable from "../Constructable";
+import inspectInstanceProperties from "../inspectInstanceProperties";
+import type {
+	IHTMLElement,
+	IHTMLFormElement,
+	IHTMLLegendElement,
+} from "../interfaces/official";
+import NodeFactory from "../NodeFactory";
+import StateMachine from "../StateMachine";
+import {
+	HTMLElementConstantKeys,
+	HTMLElementPropertyKeys,
+	type IHTMLElementProperties,
+} from "./HTMLElement";
 
 // tslint:disable:variable-name
-export const { getState, setState } = StateMachine<IHTMLLegendElement, IHTMLLegendElementProperties>();
-export const awaitedHandler = new AwaitedHandler<IHTMLLegendElement>('HTMLLegendElement', getState, setState);
-export const nodeFactory = new NodeFactory<IHTMLLegendElement>(getState, setState, awaitedHandler);
+export const { getState, setState } = StateMachine<
+	IHTMLLegendElement,
+	IHTMLLegendElementProperties
+>();
+export const awaitedHandler = new AwaitedHandler<IHTMLLegendElement>(
+	"HTMLLegendElement",
+	getState,
+	setState,
+);
+export const nodeFactory = new NodeFactory<IHTMLLegendElement>(
+	getState,
+	setState,
+	awaitedHandler,
+);
 
-export function HTMLLegendElementGenerator(HTMLElement: Constructable<IHTMLElement>) {
-  return class HTMLLegendElement extends HTMLElement implements IHTMLLegendElement, PromiseLike<IHTMLLegendElement> {
-    constructor() {
-      super();
-      setState(this, {
-        createInstanceName: 'createHTMLLegendElement',
-      });
-    }
+export function HTMLLegendElementGenerator(
+	HTMLElement: Constructable<IHTMLElement>,
+) {
+	return class HTMLLegendElement
+		extends HTMLElement
+		implements IHTMLLegendElement, PromiseLike<IHTMLLegendElement>
+	{
+		constructor() {
+			super();
+			setState(this, {
+				createInstanceName: "createHTMLLegendElement",
+			});
+		}
 
-    // properties
+		// properties
 
-    public get align(): Promise<string> {
-      return awaitedHandler.getProperty<string>(this, 'align', false);
-    }
+		public get align(): Promise<string> {
+			return awaitedHandler.getProperty<string>(this, "align", false);
+		}
 
-    public get form(): IHTMLFormElement {
-      throw new Error('HTMLLegendElement.form getter not implemented');
-    }
+		public get form(): IHTMLFormElement {
+			throw new Error("HTMLLegendElement.form getter not implemented");
+		}
 
-    public then<TResult1 = IHTMLLegendElement, TResult2 = never>(onfulfilled?: ((value: IHTMLLegendElement) => (PromiseLike<TResult1> | TResult1)) | undefined | null, onrejected?: ((reason: any) => (PromiseLike<TResult2> | TResult2)) | undefined | null): Promise<TResult1 | TResult2> {
-      return nodeFactory.createInstanceWithNodePointer(this).then(onfulfilled, onrejected);
-    }
+		public then<TResult1 = IHTMLLegendElement, TResult2 = never>(
+			onfulfilled?:
+				| ((value: IHTMLLegendElement) => PromiseLike<TResult1> | TResult1)
+				| undefined
+				| null,
+			onrejected?:
+				| ((reason: any) => PromiseLike<TResult2> | TResult2)
+				| undefined
+				| null,
+		): Promise<TResult1 | TResult2> {
+			return nodeFactory
+				.createInstanceWithNodePointer(this)
+				.then(onfulfilled, onrejected);
+		}
 
-    public [Symbol.for('nodejs.util.inspect.custom')]() {
-      return inspectInstanceProperties(this, HTMLLegendElementPropertyKeys, HTMLLegendElementConstantKeys);
-    }
-  };
+		public [Symbol.for("nodejs.util.inspect.custom")]() {
+			return inspectInstanceProperties(
+				this,
+				HTMLLegendElementPropertyKeys,
+				HTMLLegendElementConstantKeys,
+			);
+		}
+	};
 }
 
 // INTERFACES RELATED TO STATE MACHINE PROPERTIES ////////////////////////////
 
 export interface IHTMLLegendElementProperties extends IHTMLElementProperties {
-  awaitedPath: AwaitedPath;
-  awaitedOptions: any;
-  createInstanceName: string;
+	awaitedPath: AwaitedPath;
+	awaitedOptions: any;
+	createInstanceName: string;
 
-  readonly align?: Promise<string>;
-  readonly form?: IHTMLFormElement;
+	readonly align?: Promise<string>;
+	readonly form?: IHTMLFormElement;
 }
 
-export const HTMLLegendElementPropertyKeys = [...HTMLElementPropertyKeys, 'align', 'form'];
+export const HTMLLegendElementPropertyKeys = [
+	...HTMLElementPropertyKeys,
+	"align",
+	"form",
+];
 
 export const HTMLLegendElementConstantKeys = [...HTMLElementConstantKeys];

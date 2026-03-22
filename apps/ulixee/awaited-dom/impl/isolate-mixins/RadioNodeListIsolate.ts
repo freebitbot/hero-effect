@@ -1,9 +1,16 @@
-import StateMachine from '../../base/StateMachine';
-import { IRadioNodeListIsolate } from '../../base/interfaces/isolate';
-import { ISuperNode } from '../../base/interfaces/super';
-import RadioNodeListIsolateBase, { IRadioNodeListIsolateProperties } from '../../base/isolate-mixins/RadioNodeListIsolate';
+import type { IRadioNodeListIsolate } from "../../base/interfaces/isolate";
+import { ISuperNode } from "../../base/interfaces/super";
+import RadioNodeListIsolateBase, {
+	type IRadioNodeListIsolateProperties,
+} from "../../base/isolate-mixins/RadioNodeListIsolate";
+import StateMachine from "../../base/StateMachine";
 
 // tslint:disable:variable-name
-export const { getState, setState } = StateMachine<IRadioNodeListIsolate, IRadioNodeListIsolateProperties>();
+export const { getState, setState } = StateMachine<
+	IRadioNodeListIsolate,
+	IRadioNodeListIsolateProperties
+>();
 
-export default class RadioNodeListIsolate extends RadioNodeListIsolateBase implements IRadioNodeListIsolate {}
+export default class RadioNodeListIsolate
+	extends RadioNodeListIsolateBase
+	implements IRadioNodeListIsolate {}

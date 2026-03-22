@@ -1,93 +1,126 @@
-import AwaitedHandler from '../AwaitedHandler';
-import inspectInstanceProperties from '../inspectInstanceProperties';
-import StateMachine from '../StateMachine';
-import AwaitedPath from '../AwaitedPath';
-import Constructable from '../Constructable';
-import AwaitedIterator from '../AwaitedIterator';
-import NodeFactory from '../NodeFactory';
-import { IMediaList } from '../interfaces/official';
+import AwaitedHandler from "../AwaitedHandler";
+import AwaitedIterator from "../AwaitedIterator";
+import type AwaitedPath from "../AwaitedPath";
+import Constructable from "../Constructable";
+import inspectInstanceProperties from "../inspectInstanceProperties";
+import type { IMediaList } from "../interfaces/official";
+import NodeFactory from "../NodeFactory";
+import StateMachine from "../StateMachine";
 
 // tslint:disable:variable-name
-export const { getState, setState } = StateMachine<IMediaList, IMediaListProperties>();
-export const awaitedHandler = new AwaitedHandler<IMediaList>('MediaList', getState, setState);
-export const nodeFactory = new NodeFactory<IMediaList>(getState, setState, awaitedHandler);
-export const awaitedIterator = new AwaitedIterator<IMediaList, string>(getState, setState, awaitedHandler);
+export const { getState, setState } = StateMachine<
+	IMediaList,
+	IMediaListProperties
+>();
+export const awaitedHandler = new AwaitedHandler<IMediaList>(
+	"MediaList",
+	getState,
+	setState,
+);
+export const nodeFactory = new NodeFactory<IMediaList>(
+	getState,
+	setState,
+	awaitedHandler,
+);
+export const awaitedIterator = new AwaitedIterator<IMediaList, string>(
+	getState,
+	setState,
+	awaitedHandler,
+);
 
 export function MediaListGenerator() {
-  return class MediaList implements IMediaList, PromiseLike<IMediaList> {
-    constructor() {
-      setState(this, {
-        createInstanceName: 'createMediaList',
-        createIterableName: 'string',
-      });
-      // proxy supports indexed property access
-      const proxy = new Proxy(this, {
-        get(target, prop) {
-          if (prop in target) {
-            // @ts-ignore
-            const value: any = target[prop];
-            if (typeof value === 'function') return value.bind(target);
-            return value;
-          }
+	return class MediaList implements IMediaList, PromiseLike<IMediaList> {
+		constructor() {
+			setState(this, {
+				createInstanceName: "createMediaList",
+				createIterableName: "string",
+			});
+			// proxy supports indexed property access
+			const proxy = new Proxy(this, {
+				get(target, prop) {
+					if (prop in target) {
+						// @ts-expect-error
+						const value: any = target[prop];
+						if (typeof value === "function") return value.bind(target);
+						return value;
+					}
 
-          // delegate to indexer property
-          if ((typeof prop === 'string' || typeof prop === 'number') && !isNaN(prop as unknown as number)) {
-            const param = parseInt(prop as string, 10);
-            return target.item(param);
-          }
-        },
-      });
+					// delegate to indexer property
+					if (
+						(typeof prop === "string" || typeof prop === "number") &&
+						!isNaN(prop as unknown as number)
+					) {
+						const param = parseInt(prop as string, 10);
+						return target.item(param);
+					}
+				},
+			});
 
-      return proxy;
-    }
+			return proxy;
+		}
 
-    // properties
+		// properties
 
-    public get length(): Promise<number> {
-      return awaitedHandler.getProperty<number>(this, 'length', false);
-    }
+		public get length(): Promise<number> {
+			return awaitedHandler.getProperty<number>(this, "length", false);
+		}
 
-    // methods
+		// methods
 
-    public appendMedium(medium: string): Promise<void> {
-      return awaitedHandler.runMethod<void>(this, 'appendMedium', [medium]);
-    }
+		public appendMedium(medium: string): Promise<void> {
+			return awaitedHandler.runMethod<void>(this, "appendMedium", [medium]);
+		}
 
-    public deleteMedium(medium: string): Promise<void> {
-      return awaitedHandler.runMethod<void>(this, 'deleteMedium', [medium]);
-    }
+		public deleteMedium(medium: string): Promise<void> {
+			return awaitedHandler.runMethod<void>(this, "deleteMedium", [medium]);
+		}
 
-    public item(index: number): Promise<string | null> {
-      return awaitedHandler.runMethod<string | null>(this, 'item', [index]);
-    }
+		public item(index: number): Promise<string | null> {
+			return awaitedHandler.runMethod<string | null>(this, "item", [index]);
+		}
 
-    public then<TResult1 = IMediaList, TResult2 = never>(onfulfilled?: ((value: IMediaList) => (PromiseLike<TResult1> | TResult1)) | undefined | null, onrejected?: ((reason: any) => (PromiseLike<TResult2> | TResult2)) | undefined | null): Promise<TResult1 | TResult2> {
-      return nodeFactory.createInstanceWithNodePointer(this).then(onfulfilled, onrejected);
-    }
+		public then<TResult1 = IMediaList, TResult2 = never>(
+			onfulfilled?:
+				| ((value: IMediaList) => PromiseLike<TResult1> | TResult1)
+				| undefined
+				| null,
+			onrejected?:
+				| ((reason: any) => PromiseLike<TResult2> | TResult2)
+				| undefined
+				| null,
+		): Promise<TResult1 | TResult2> {
+			return nodeFactory
+				.createInstanceWithNodePointer(this)
+				.then(onfulfilled, onrejected);
+		}
 
-    public [Symbol.iterator](): Iterator<string> {
-      return awaitedIterator.iterateNodePointers(this);
-    }
+		public [Symbol.iterator](): Iterator<string> {
+			return awaitedIterator.iterateNodePointers(this);
+		}
 
-    [index: number]: string;
+		[index: number]: string;
 
-    public [Symbol.for('nodejs.util.inspect.custom')]() {
-      return inspectInstanceProperties(this, MediaListPropertyKeys, MediaListConstantKeys);
-    }
-  };
+		public [Symbol.for("nodejs.util.inspect.custom")]() {
+			return inspectInstanceProperties(
+				this,
+				MediaListPropertyKeys,
+				MediaListConstantKeys,
+			);
+		}
+	};
 }
 
 // INTERFACES RELATED TO STATE MACHINE PROPERTIES ////////////////////////////
 
 export interface IMediaListProperties {
-  awaitedPath: AwaitedPath;
-  awaitedOptions: any;
-  createInstanceName: string;
-  createIterableName: string;
+	awaitedPath: AwaitedPath;
+	awaitedOptions: any;
+	createInstanceName: string;
+	createIterableName: string;
 
-  readonly length?: Promise<number>;
+	readonly length?: Promise<number>;
 }
 
-export const MediaListPropertyKeys = ['length'];
+export const MediaListPropertyKeys = ["length"];
 
 export const MediaListConstantKeys = [];

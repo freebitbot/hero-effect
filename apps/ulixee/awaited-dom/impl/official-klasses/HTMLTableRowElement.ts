@@ -1,30 +1,51 @@
-import StateMachine from '../../base/StateMachine';
-import { IHTMLTableRowElement, IHTMLTableCellElement } from '../../base/interfaces/official';
-import { ISuperHTMLCollection } from '../../base/interfaces/super';
-import { HTMLTableRowElementGenerator, IHTMLTableRowElementProperties } from '../../base/official-klasses/HTMLTableRowElement';
-import { createSuperHTMLCollection, createHTMLTableCellElement } from '../create';
-import HTMLElement from './HTMLElement';
+import type {
+	IHTMLTableCellElement,
+	IHTMLTableRowElement,
+} from "../../base/interfaces/official";
+import type { ISuperHTMLCollection } from "../../base/interfaces/super";
+import {
+	HTMLTableRowElementGenerator,
+	type IHTMLTableRowElementProperties,
+} from "../../base/official-klasses/HTMLTableRowElement";
+import StateMachine from "../../base/StateMachine";
+import {
+	createHTMLTableCellElement,
+	createSuperHTMLCollection,
+} from "../create";
+import HTMLElement from "./HTMLElement";
 
 // tslint:disable:variable-name
-export const { getState, setState } = StateMachine<IHTMLTableRowElement, IHTMLTableRowElementProperties>();
+export const { getState, setState } = StateMachine<
+	IHTMLTableRowElement,
+	IHTMLTableRowElementProperties
+>();
 const HTMLTableRowElementBaseClass = HTMLTableRowElementGenerator(HTMLElement);
 
-export default class HTMLTableRowElement extends HTMLTableRowElementBaseClass implements IHTMLTableRowElement {
-  constructor() {
-    super();
-  }
+export default class HTMLTableRowElement
+	extends HTMLTableRowElementBaseClass
+	implements IHTMLTableRowElement
+{
+	constructor() {
+		super();
+	}
 
-  // properties
+	// properties
 
-  public get cells(): ISuperHTMLCollection {
-    const { awaitedPath, awaitedOptions } = getState(this);
-    return createSuperHTMLCollection(awaitedPath.addProperty(this, 'cells'), awaitedOptions);
-  }
+	public get cells(): ISuperHTMLCollection {
+		const { awaitedPath, awaitedOptions } = getState(this);
+		return createSuperHTMLCollection(
+			awaitedPath.addProperty(this, "cells"),
+			awaitedOptions,
+		);
+	}
 
-  // methods
+	// methods
 
-  public insertCell(index?: number): IHTMLTableCellElement {
-    const { awaitedPath, awaitedOptions } = getState(this);
-    return createHTMLTableCellElement(awaitedPath.addMethod(this, 'insertCell', index), awaitedOptions);
-  }
+	public insertCell(index?: number): IHTMLTableCellElement {
+		const { awaitedPath, awaitedOptions } = getState(this);
+		return createHTMLTableCellElement(
+			awaitedPath.addMethod(this, "insertCell", index),
+			awaitedOptions,
+		);
+	}
 }

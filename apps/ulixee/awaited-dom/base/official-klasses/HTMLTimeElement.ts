@@ -1,52 +1,90 @@
-import AwaitedHandler from '../AwaitedHandler';
-import inspectInstanceProperties from '../inspectInstanceProperties';
-import StateMachine from '../StateMachine';
-import AwaitedPath from '../AwaitedPath';
-import Constructable from '../Constructable';
-import NodeFactory from '../NodeFactory';
-import { IHTMLTimeElement, IHTMLElement } from '../interfaces/official';
-import { IHTMLElementProperties, HTMLElementPropertyKeys, HTMLElementConstantKeys } from './HTMLElement';
+import AwaitedHandler from "../AwaitedHandler";
+import type AwaitedPath from "../AwaitedPath";
+import type Constructable from "../Constructable";
+import inspectInstanceProperties from "../inspectInstanceProperties";
+import type { IHTMLElement, IHTMLTimeElement } from "../interfaces/official";
+import NodeFactory from "../NodeFactory";
+import StateMachine from "../StateMachine";
+import {
+	HTMLElementConstantKeys,
+	HTMLElementPropertyKeys,
+	type IHTMLElementProperties,
+} from "./HTMLElement";
 
 // tslint:disable:variable-name
-export const { getState, setState } = StateMachine<IHTMLTimeElement, IHTMLTimeElementProperties>();
-export const awaitedHandler = new AwaitedHandler<IHTMLTimeElement>('HTMLTimeElement', getState, setState);
-export const nodeFactory = new NodeFactory<IHTMLTimeElement>(getState, setState, awaitedHandler);
+export const { getState, setState } = StateMachine<
+	IHTMLTimeElement,
+	IHTMLTimeElementProperties
+>();
+export const awaitedHandler = new AwaitedHandler<IHTMLTimeElement>(
+	"HTMLTimeElement",
+	getState,
+	setState,
+);
+export const nodeFactory = new NodeFactory<IHTMLTimeElement>(
+	getState,
+	setState,
+	awaitedHandler,
+);
 
-export function HTMLTimeElementGenerator(HTMLElement: Constructable<IHTMLElement>) {
-  return class HTMLTimeElement extends HTMLElement implements IHTMLTimeElement, PromiseLike<IHTMLTimeElement> {
-    constructor() {
-      super();
-      setState(this, {
-        createInstanceName: 'createHTMLTimeElement',
-      });
-    }
+export function HTMLTimeElementGenerator(
+	HTMLElement: Constructable<IHTMLElement>,
+) {
+	return class HTMLTimeElement
+		extends HTMLElement
+		implements IHTMLTimeElement, PromiseLike<IHTMLTimeElement>
+	{
+		constructor() {
+			super();
+			setState(this, {
+				createInstanceName: "createHTMLTimeElement",
+			});
+		}
 
-    // properties
+		// properties
 
-    public get dateTime(): Promise<string> {
-      return awaitedHandler.getProperty<string>(this, 'dateTime', false);
-    }
+		public get dateTime(): Promise<string> {
+			return awaitedHandler.getProperty<string>(this, "dateTime", false);
+		}
 
-    public then<TResult1 = IHTMLTimeElement, TResult2 = never>(onfulfilled?: ((value: IHTMLTimeElement) => (PromiseLike<TResult1> | TResult1)) | undefined | null, onrejected?: ((reason: any) => (PromiseLike<TResult2> | TResult2)) | undefined | null): Promise<TResult1 | TResult2> {
-      return nodeFactory.createInstanceWithNodePointer(this).then(onfulfilled, onrejected);
-    }
+		public then<TResult1 = IHTMLTimeElement, TResult2 = never>(
+			onfulfilled?:
+				| ((value: IHTMLTimeElement) => PromiseLike<TResult1> | TResult1)
+				| undefined
+				| null,
+			onrejected?:
+				| ((reason: any) => PromiseLike<TResult2> | TResult2)
+				| undefined
+				| null,
+		): Promise<TResult1 | TResult2> {
+			return nodeFactory
+				.createInstanceWithNodePointer(this)
+				.then(onfulfilled, onrejected);
+		}
 
-    public [Symbol.for('nodejs.util.inspect.custom')]() {
-      return inspectInstanceProperties(this, HTMLTimeElementPropertyKeys, HTMLTimeElementConstantKeys);
-    }
-  };
+		public [Symbol.for("nodejs.util.inspect.custom")]() {
+			return inspectInstanceProperties(
+				this,
+				HTMLTimeElementPropertyKeys,
+				HTMLTimeElementConstantKeys,
+			);
+		}
+	};
 }
 
 // INTERFACES RELATED TO STATE MACHINE PROPERTIES ////////////////////////////
 
 export interface IHTMLTimeElementProperties extends IHTMLElementProperties {
-  awaitedPath: AwaitedPath;
-  awaitedOptions: any;
-  createInstanceName: string;
+	awaitedPath: AwaitedPath;
+	awaitedOptions: any;
+	createInstanceName: string;
 
-  readonly dateTime?: Promise<string>;
+	readonly dateTime?: Promise<string>;
 }
 
-export const HTMLTimeElementPropertyKeys = [...HTMLElementPropertyKeys, 'dateTime'];
+export const HTMLTimeElementPropertyKeys = [
+	...HTMLElementPropertyKeys,
+	"dateTime",
+];
 
 export const HTMLTimeElementConstantKeys = [...HTMLElementConstantKeys];

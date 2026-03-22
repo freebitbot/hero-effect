@@ -1,50 +1,60 @@
-import AwaitedHandler from '../AwaitedHandler';
-import inspectInstanceProperties from '../inspectInstanceProperties';
-import StateMachine from '../StateMachine';
-import AwaitedPath from '../AwaitedPath';
-import Constructable from '../Constructable';
-import { IMediaStream } from '../interfaces/official';
+import AwaitedHandler from "../AwaitedHandler";
+import type AwaitedPath from "../AwaitedPath";
+import Constructable from "../Constructable";
+import inspectInstanceProperties from "../inspectInstanceProperties";
+import type { IMediaStream } from "../interfaces/official";
+import StateMachine from "../StateMachine";
 
 // tslint:disable:variable-name
-export const { getState, setState } = StateMachine<IMediaStream, IMediaStreamProperties>();
-export const awaitedHandler = new AwaitedHandler<IMediaStream>('MediaStream', getState, setState);
+export const { getState, setState } = StateMachine<
+	IMediaStream,
+	IMediaStreamProperties
+>();
+export const awaitedHandler = new AwaitedHandler<IMediaStream>(
+	"MediaStream",
+	getState,
+	setState,
+);
 
 export function MediaStreamGenerator() {
-  return class MediaStream implements IMediaStream {
-    constructor(_stream?: IMediaStream) {
-    }
+	return class MediaStream implements IMediaStream {
+		constructor(_stream?: IMediaStream) {}
 
-    // properties
+		// properties
 
-    public get active(): Promise<boolean> {
-      return awaitedHandler.getProperty<boolean>(this, 'active', false);
-    }
+		public get active(): Promise<boolean> {
+			return awaitedHandler.getProperty<boolean>(this, "active", false);
+		}
 
-    public get id(): Promise<string> {
-      return awaitedHandler.getProperty<string>(this, 'id', false);
-    }
+		public get id(): Promise<string> {
+			return awaitedHandler.getProperty<string>(this, "id", false);
+		}
 
-    // methods
+		// methods
 
-    public clone(): IMediaStream {
-      throw new Error('MediaStream.clone not implemented');
-    }
+		public clone(): IMediaStream {
+			throw new Error("MediaStream.clone not implemented");
+		}
 
-    public [Symbol.for('nodejs.util.inspect.custom')]() {
-      return inspectInstanceProperties(this, MediaStreamPropertyKeys, MediaStreamConstantKeys);
-    }
-  };
+		public [Symbol.for("nodejs.util.inspect.custom")]() {
+			return inspectInstanceProperties(
+				this,
+				MediaStreamPropertyKeys,
+				MediaStreamConstantKeys,
+			);
+		}
+	};
 }
 
 // INTERFACES RELATED TO STATE MACHINE PROPERTIES ////////////////////////////
 
 export interface IMediaStreamProperties {
-  awaitedPath: AwaitedPath;
-  awaitedOptions: any;
-  readonly active?: Promise<boolean>;
-  readonly id?: Promise<string>;
+	awaitedPath: AwaitedPath;
+	awaitedOptions: any;
+	readonly active?: Promise<boolean>;
+	readonly id?: Promise<string>;
 }
 
-export const MediaStreamPropertyKeys = ['active', 'id'];
+export const MediaStreamPropertyKeys = ["active", "id"];
 
 export const MediaStreamConstantKeys = [];

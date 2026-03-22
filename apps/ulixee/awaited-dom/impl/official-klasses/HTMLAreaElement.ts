@@ -1,23 +1,41 @@
-import StateMachine from '../../base/StateMachine';
-import { IHTMLAreaElement, IDOMTokenList } from '../../base/interfaces/official';
-import { HTMLAreaElementGenerator, IHTMLAreaElementProperties } from '../../base/official-klasses/HTMLAreaElement';
-import { createDOMTokenList } from '../create';
-import HTMLElement from './HTMLElement';
-import HTMLHyperlinkElementUtils from '../official-mixins/HTMLHyperlinkElementUtils';
+import type {
+	IDOMTokenList,
+	IHTMLAreaElement,
+} from "../../base/interfaces/official";
+import {
+	HTMLAreaElementGenerator,
+	type IHTMLAreaElementProperties,
+} from "../../base/official-klasses/HTMLAreaElement";
+import StateMachine from "../../base/StateMachine";
+import { createDOMTokenList } from "../create";
+import HTMLHyperlinkElementUtils from "../official-mixins/HTMLHyperlinkElementUtils";
+import HTMLElement from "./HTMLElement";
 
 // tslint:disable:variable-name
-export const { getState, setState } = StateMachine<IHTMLAreaElement, IHTMLAreaElementProperties>();
-const HTMLAreaElementBaseClass = HTMLAreaElementGenerator(HTMLElement, HTMLHyperlinkElementUtils);
+export const { getState, setState } = StateMachine<
+	IHTMLAreaElement,
+	IHTMLAreaElementProperties
+>();
+const HTMLAreaElementBaseClass = HTMLAreaElementGenerator(
+	HTMLElement,
+	HTMLHyperlinkElementUtils,
+);
 
-export default class HTMLAreaElement extends HTMLAreaElementBaseClass implements IHTMLAreaElement {
-  constructor() {
-    super();
-  }
+export default class HTMLAreaElement
+	extends HTMLAreaElementBaseClass
+	implements IHTMLAreaElement
+{
+	constructor() {
+		super();
+	}
 
-  // properties
+	// properties
 
-  public get relList(): IDOMTokenList {
-    const { awaitedPath, awaitedOptions } = getState(this);
-    return createDOMTokenList(awaitedPath.addProperty(this, 'relList'), awaitedOptions);
-  }
+	public get relList(): IDOMTokenList {
+		const { awaitedPath, awaitedOptions } = getState(this);
+		return createDOMTokenList(
+			awaitedPath.addProperty(this, "relList"),
+			awaitedOptions,
+		);
+	}
 }

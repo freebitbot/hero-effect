@@ -1,58 +1,97 @@
-import AwaitedHandler from '../AwaitedHandler';
-import inspectInstanceProperties from '../inspectInstanceProperties';
-import StateMachine from '../StateMachine';
-import AwaitedPath from '../AwaitedPath';
-import Constructable from '../Constructable';
-import NodeFactory from '../NodeFactory';
-import { IHTMLMapElement, IHTMLElement } from '../interfaces/official';
-import { ISuperHTMLCollection } from '../interfaces/super';
-import { IHTMLElementProperties, HTMLElementPropertyKeys, HTMLElementConstantKeys } from './HTMLElement';
+import AwaitedHandler from "../AwaitedHandler";
+import type AwaitedPath from "../AwaitedPath";
+import type Constructable from "../Constructable";
+import inspectInstanceProperties from "../inspectInstanceProperties";
+import type { IHTMLElement, IHTMLMapElement } from "../interfaces/official";
+import type { ISuperHTMLCollection } from "../interfaces/super";
+import NodeFactory from "../NodeFactory";
+import StateMachine from "../StateMachine";
+import {
+	HTMLElementConstantKeys,
+	HTMLElementPropertyKeys,
+	type IHTMLElementProperties,
+} from "./HTMLElement";
 
 // tslint:disable:variable-name
-export const { getState, setState } = StateMachine<IHTMLMapElement, IHTMLMapElementProperties>();
-export const awaitedHandler = new AwaitedHandler<IHTMLMapElement>('HTMLMapElement', getState, setState);
-export const nodeFactory = new NodeFactory<IHTMLMapElement>(getState, setState, awaitedHandler);
+export const { getState, setState } = StateMachine<
+	IHTMLMapElement,
+	IHTMLMapElementProperties
+>();
+export const awaitedHandler = new AwaitedHandler<IHTMLMapElement>(
+	"HTMLMapElement",
+	getState,
+	setState,
+);
+export const nodeFactory = new NodeFactory<IHTMLMapElement>(
+	getState,
+	setState,
+	awaitedHandler,
+);
 
-export function HTMLMapElementGenerator(HTMLElement: Constructable<IHTMLElement>) {
-  return class HTMLMapElement extends HTMLElement implements IHTMLMapElement, PromiseLike<IHTMLMapElement> {
-    constructor() {
-      super();
-      setState(this, {
-        createInstanceName: 'createHTMLMapElement',
-      });
-    }
+export function HTMLMapElementGenerator(
+	HTMLElement: Constructable<IHTMLElement>,
+) {
+	return class HTMLMapElement
+		extends HTMLElement
+		implements IHTMLMapElement, PromiseLike<IHTMLMapElement>
+	{
+		constructor() {
+			super();
+			setState(this, {
+				createInstanceName: "createHTMLMapElement",
+			});
+		}
 
-    // properties
+		// properties
 
-    public get areas(): ISuperHTMLCollection {
-      throw new Error('HTMLMapElement.areas getter not implemented');
-    }
+		public get areas(): ISuperHTMLCollection {
+			throw new Error("HTMLMapElement.areas getter not implemented");
+		}
 
-    public get name(): Promise<string> {
-      return awaitedHandler.getProperty<string>(this, 'name', false);
-    }
+		public get name(): Promise<string> {
+			return awaitedHandler.getProperty<string>(this, "name", false);
+		}
 
-    public then<TResult1 = IHTMLMapElement, TResult2 = never>(onfulfilled?: ((value: IHTMLMapElement) => (PromiseLike<TResult1> | TResult1)) | undefined | null, onrejected?: ((reason: any) => (PromiseLike<TResult2> | TResult2)) | undefined | null): Promise<TResult1 | TResult2> {
-      return nodeFactory.createInstanceWithNodePointer(this).then(onfulfilled, onrejected);
-    }
+		public then<TResult1 = IHTMLMapElement, TResult2 = never>(
+			onfulfilled?:
+				| ((value: IHTMLMapElement) => PromiseLike<TResult1> | TResult1)
+				| undefined
+				| null,
+			onrejected?:
+				| ((reason: any) => PromiseLike<TResult2> | TResult2)
+				| undefined
+				| null,
+		): Promise<TResult1 | TResult2> {
+			return nodeFactory
+				.createInstanceWithNodePointer(this)
+				.then(onfulfilled, onrejected);
+		}
 
-    public [Symbol.for('nodejs.util.inspect.custom')]() {
-      return inspectInstanceProperties(this, HTMLMapElementPropertyKeys, HTMLMapElementConstantKeys);
-    }
-  };
+		public [Symbol.for("nodejs.util.inspect.custom")]() {
+			return inspectInstanceProperties(
+				this,
+				HTMLMapElementPropertyKeys,
+				HTMLMapElementConstantKeys,
+			);
+		}
+	};
 }
 
 // INTERFACES RELATED TO STATE MACHINE PROPERTIES ////////////////////////////
 
 export interface IHTMLMapElementProperties extends IHTMLElementProperties {
-  awaitedPath: AwaitedPath;
-  awaitedOptions: any;
-  createInstanceName: string;
+	awaitedPath: AwaitedPath;
+	awaitedOptions: any;
+	createInstanceName: string;
 
-  readonly areas?: ISuperHTMLCollection;
-  readonly name?: Promise<string>;
+	readonly areas?: ISuperHTMLCollection;
+	readonly name?: Promise<string>;
 }
 
-export const HTMLMapElementPropertyKeys = [...HTMLElementPropertyKeys, 'areas', 'name'];
+export const HTMLMapElementPropertyKeys = [
+	...HTMLElementPropertyKeys,
+	"areas",
+	"name",
+];
 
 export const HTMLMapElementConstantKeys = [...HTMLElementConstantKeys];

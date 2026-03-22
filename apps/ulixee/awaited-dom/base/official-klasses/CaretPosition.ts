@@ -1,51 +1,61 @@
-import AwaitedHandler from '../AwaitedHandler';
-import inspectInstanceProperties from '../inspectInstanceProperties';
-import StateMachine from '../StateMachine';
-import AwaitedPath from '../AwaitedPath';
-import Constructable from '../Constructable';
-import { ICaretPosition, IDOMRect } from '../interfaces/official';
-import { ISuperNode } from '../interfaces/super';
+import AwaitedHandler from "../AwaitedHandler";
+import type AwaitedPath from "../AwaitedPath";
+import Constructable from "../Constructable";
+import inspectInstanceProperties from "../inspectInstanceProperties";
+import type { ICaretPosition, IDOMRect } from "../interfaces/official";
+import type { ISuperNode } from "../interfaces/super";
+import StateMachine from "../StateMachine";
 
 // tslint:disable:variable-name
-export const { getState, setState } = StateMachine<ICaretPosition, ICaretPositionProperties>();
-export const awaitedHandler = new AwaitedHandler<ICaretPosition>('CaretPosition', getState, setState);
+export const { getState, setState } = StateMachine<
+	ICaretPosition,
+	ICaretPositionProperties
+>();
+export const awaitedHandler = new AwaitedHandler<ICaretPosition>(
+	"CaretPosition",
+	getState,
+	setState,
+);
 
 export function CaretPositionGenerator() {
-  return class CaretPosition implements ICaretPosition {
-    constructor() {
-    }
+	return class CaretPosition implements ICaretPosition {
+		constructor() {}
 
-    // properties
+		// properties
 
-    public get offset(): Promise<number> {
-      return awaitedHandler.getProperty<number>(this, 'offset', false);
-    }
+		public get offset(): Promise<number> {
+			return awaitedHandler.getProperty<number>(this, "offset", false);
+		}
 
-    public get offsetNode(): ISuperNode {
-      throw new Error('CaretPosition.offsetNode getter not implemented');
-    }
+		public get offsetNode(): ISuperNode {
+			throw new Error("CaretPosition.offsetNode getter not implemented");
+		}
 
-    // methods
+		// methods
 
-    public getClientRect(): IDOMRect {
-      throw new Error('CaretPosition.getClientRect not implemented');
-    }
+		public getClientRect(): IDOMRect {
+			throw new Error("CaretPosition.getClientRect not implemented");
+		}
 
-    public [Symbol.for('nodejs.util.inspect.custom')]() {
-      return inspectInstanceProperties(this, CaretPositionPropertyKeys, CaretPositionConstantKeys);
-    }
-  };
+		public [Symbol.for("nodejs.util.inspect.custom")]() {
+			return inspectInstanceProperties(
+				this,
+				CaretPositionPropertyKeys,
+				CaretPositionConstantKeys,
+			);
+		}
+	};
 }
 
 // INTERFACES RELATED TO STATE MACHINE PROPERTIES ////////////////////////////
 
 export interface ICaretPositionProperties {
-  awaitedPath: AwaitedPath;
-  awaitedOptions: any;
-  readonly offset?: Promise<number>;
-  readonly offsetNode?: ISuperNode;
+	awaitedPath: AwaitedPath;
+	awaitedOptions: any;
+	readonly offset?: Promise<number>;
+	readonly offsetNode?: ISuperNode;
 }
 
-export const CaretPositionPropertyKeys = ['offset', 'offsetNode'];
+export const CaretPositionPropertyKeys = ["offset", "offsetNode"];
 
 export const CaretPositionConstantKeys = [];

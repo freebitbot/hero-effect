@@ -1,14 +1,24 @@
-import StateMachine from '../../base/StateMachine';
-import { IHTMLParagraphElement } from '../../base/interfaces/official';
-import { HTMLParagraphElementGenerator, IHTMLParagraphElementProperties } from '../../base/official-klasses/HTMLParagraphElement';
-import HTMLElement from './HTMLElement';
+import type { IHTMLParagraphElement } from "../../base/interfaces/official";
+import {
+	HTMLParagraphElementGenerator,
+	type IHTMLParagraphElementProperties,
+} from "../../base/official-klasses/HTMLParagraphElement";
+import StateMachine from "../../base/StateMachine";
+import HTMLElement from "./HTMLElement";
 
 // tslint:disable:variable-name
-export const { getState, setState } = StateMachine<IHTMLParagraphElement, IHTMLParagraphElementProperties>();
-const HTMLParagraphElementBaseClass = HTMLParagraphElementGenerator(HTMLElement);
+export const { getState, setState } = StateMachine<
+	IHTMLParagraphElement,
+	IHTMLParagraphElementProperties
+>();
+const HTMLParagraphElementBaseClass =
+	HTMLParagraphElementGenerator(HTMLElement);
 
-export default class HTMLParagraphElement extends HTMLParagraphElementBaseClass implements IHTMLParagraphElement {
-  constructor() {
-    super();
-  }
+export default class HTMLParagraphElement
+	extends HTMLParagraphElementBaseClass
+	implements IHTMLParagraphElement
+{
+	constructor() {
+		super();
+	}
 }

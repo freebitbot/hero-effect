@@ -1,91 +1,145 @@
-import AwaitedHandler from '../AwaitedHandler';
-import inspectInstanceProperties from '../inspectInstanceProperties';
-import StateMachine from '../StateMachine';
-import AwaitedPath from '../AwaitedPath';
-import Constructable from '../Constructable';
-import NodeFactory from '../NodeFactory';
-import { IHTMLTrackElement, IHTMLElement, ITextTrack } from '../interfaces/official';
-import { IHTMLElementProperties, HTMLElementPropertyKeys, HTMLElementConstantKeys } from './HTMLElement';
+import AwaitedHandler from "../AwaitedHandler";
+import type AwaitedPath from "../AwaitedPath";
+import type Constructable from "../Constructable";
+import inspectInstanceProperties from "../inspectInstanceProperties";
+import type {
+	IHTMLElement,
+	IHTMLTrackElement,
+	ITextTrack,
+} from "../interfaces/official";
+import NodeFactory from "../NodeFactory";
+import StateMachine from "../StateMachine";
+import {
+	HTMLElementConstantKeys,
+	HTMLElementPropertyKeys,
+	type IHTMLElementProperties,
+} from "./HTMLElement";
 
 // tslint:disable:variable-name
-export const { getState, setState } = StateMachine<IHTMLTrackElement, IHTMLTrackElementProperties>();
-export const awaitedHandler = new AwaitedHandler<IHTMLTrackElement>('HTMLTrackElement', getState, setState);
-export const nodeFactory = new NodeFactory<IHTMLTrackElement>(getState, setState, awaitedHandler);
+export const { getState, setState } = StateMachine<
+	IHTMLTrackElement,
+	IHTMLTrackElementProperties
+>();
+export const awaitedHandler = new AwaitedHandler<IHTMLTrackElement>(
+	"HTMLTrackElement",
+	getState,
+	setState,
+);
+export const nodeFactory = new NodeFactory<IHTMLTrackElement>(
+	getState,
+	setState,
+	awaitedHandler,
+);
 
-export function HTMLTrackElementGenerator(HTMLElement: Constructable<IHTMLElement>) {
-  return class HTMLTrackElement extends HTMLElement implements IHTMLTrackElement, PromiseLike<IHTMLTrackElement> {
-    public static readonly ERROR: number = 3;
-    public static readonly LOADED: number = 2;
-    public static readonly LOADING: number = 1;
-    public static readonly NONE: number = 0;
+export function HTMLTrackElementGenerator(
+	HTMLElement: Constructable<IHTMLElement>,
+) {
+	return class HTMLTrackElement
+		extends HTMLElement
+		implements IHTMLTrackElement, PromiseLike<IHTMLTrackElement>
+	{
+		public static readonly ERROR: number = 3;
+		public static readonly LOADED: number = 2;
+		public static readonly LOADING: number = 1;
+		public static readonly NONE: number = 0;
 
-    public readonly ERROR: number = 3;
-    public readonly LOADED: number = 2;
-    public readonly LOADING: number = 1;
-    public readonly NONE: number = 0;
-    constructor() {
-      super();
-      setState(this, {
-        createInstanceName: 'createHTMLTrackElement',
-      });
-    }
+		public readonly ERROR: number = 3;
+		public readonly LOADED: number = 2;
+		public readonly LOADING: number = 1;
+		public readonly NONE: number = 0;
+		constructor() {
+			super();
+			setState(this, {
+				createInstanceName: "createHTMLTrackElement",
+			});
+		}
 
-    // properties
+		// properties
 
-    public get default(): Promise<boolean> {
-      return awaitedHandler.getProperty<boolean>(this, 'default', false);
-    }
+		public get default(): Promise<boolean> {
+			return awaitedHandler.getProperty<boolean>(this, "default", false);
+		}
 
-    public get kind(): Promise<string> {
-      return awaitedHandler.getProperty<string>(this, 'kind', false);
-    }
+		public get kind(): Promise<string> {
+			return awaitedHandler.getProperty<string>(this, "kind", false);
+		}
 
-    public get label(): Promise<string> {
-      return awaitedHandler.getProperty<string>(this, 'label', false);
-    }
+		public get label(): Promise<string> {
+			return awaitedHandler.getProperty<string>(this, "label", false);
+		}
 
-    public get readyState(): Promise<number> {
-      return awaitedHandler.getProperty<number>(this, 'readyState', false);
-    }
+		public get readyState(): Promise<number> {
+			return awaitedHandler.getProperty<number>(this, "readyState", false);
+		}
 
-    public get src(): Promise<string> {
-      return awaitedHandler.getProperty<string>(this, 'src', false);
-    }
+		public get src(): Promise<string> {
+			return awaitedHandler.getProperty<string>(this, "src", false);
+		}
 
-    public get srclang(): Promise<string> {
-      return awaitedHandler.getProperty<string>(this, 'srclang', false);
-    }
+		public get srclang(): Promise<string> {
+			return awaitedHandler.getProperty<string>(this, "srclang", false);
+		}
 
-    public get track(): Promise<ITextTrack> {
-      return awaitedHandler.getProperty<ITextTrack>(this, 'track', false);
-    }
+		public get track(): Promise<ITextTrack> {
+			return awaitedHandler.getProperty<ITextTrack>(this, "track", false);
+		}
 
-    public then<TResult1 = IHTMLTrackElement, TResult2 = never>(onfulfilled?: ((value: IHTMLTrackElement) => (PromiseLike<TResult1> | TResult1)) | undefined | null, onrejected?: ((reason: any) => (PromiseLike<TResult2> | TResult2)) | undefined | null): Promise<TResult1 | TResult2> {
-      return nodeFactory.createInstanceWithNodePointer(this).then(onfulfilled, onrejected);
-    }
+		public then<TResult1 = IHTMLTrackElement, TResult2 = never>(
+			onfulfilled?:
+				| ((value: IHTMLTrackElement) => PromiseLike<TResult1> | TResult1)
+				| undefined
+				| null,
+			onrejected?:
+				| ((reason: any) => PromiseLike<TResult2> | TResult2)
+				| undefined
+				| null,
+		): Promise<TResult1 | TResult2> {
+			return nodeFactory
+				.createInstanceWithNodePointer(this)
+				.then(onfulfilled, onrejected);
+		}
 
-    public [Symbol.for('nodejs.util.inspect.custom')]() {
-      return inspectInstanceProperties(this, HTMLTrackElementPropertyKeys, HTMLTrackElementConstantKeys);
-    }
-  };
+		public [Symbol.for("nodejs.util.inspect.custom")]() {
+			return inspectInstanceProperties(
+				this,
+				HTMLTrackElementPropertyKeys,
+				HTMLTrackElementConstantKeys,
+			);
+		}
+	};
 }
 
 // INTERFACES RELATED TO STATE MACHINE PROPERTIES ////////////////////////////
 
 export interface IHTMLTrackElementProperties extends IHTMLElementProperties {
-  awaitedPath: AwaitedPath;
-  awaitedOptions: any;
-  createInstanceName: string;
+	awaitedPath: AwaitedPath;
+	awaitedOptions: any;
+	createInstanceName: string;
 
-  readonly default?: Promise<boolean>;
-  readonly kind?: Promise<string>;
-  readonly label?: Promise<string>;
-  readonly readyState?: Promise<number>;
-  readonly src?: Promise<string>;
-  readonly srclang?: Promise<string>;
-  readonly track?: Promise<ITextTrack>;
+	readonly default?: Promise<boolean>;
+	readonly kind?: Promise<string>;
+	readonly label?: Promise<string>;
+	readonly readyState?: Promise<number>;
+	readonly src?: Promise<string>;
+	readonly srclang?: Promise<string>;
+	readonly track?: Promise<ITextTrack>;
 }
 
-export const HTMLTrackElementPropertyKeys = [...HTMLElementPropertyKeys, 'default', 'kind', 'label', 'readyState', 'src', 'srclang', 'track'];
+export const HTMLTrackElementPropertyKeys = [
+	...HTMLElementPropertyKeys,
+	"default",
+	"kind",
+	"label",
+	"readyState",
+	"src",
+	"srclang",
+	"track",
+];
 
-export const HTMLTrackElementConstantKeys = [...HTMLElementConstantKeys, 'ERROR', 'LOADED', 'LOADING', 'NONE'];
+export const HTMLTrackElementConstantKeys = [
+	...HTMLElementConstantKeys,
+	"ERROR",
+	"LOADED",
+	"LOADING",
+	"NONE",
+];

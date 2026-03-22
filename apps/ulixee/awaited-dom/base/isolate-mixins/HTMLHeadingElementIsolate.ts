@@ -1,26 +1,35 @@
-import AwaitedHandler from '../AwaitedHandler';
-import StateMachine from '../StateMachine';
-import AwaitedPath from '../AwaitedPath';
-import { IHTMLHeadingElementIsolate } from '../interfaces/isolate';
+import AwaitedHandler from "../AwaitedHandler";
+import type AwaitedPath from "../AwaitedPath";
+import type { IHTMLHeadingElementIsolate } from "../interfaces/isolate";
+import StateMachine from "../StateMachine";
 
 // tslint:disable:variable-name
-export const { getState, setState } = StateMachine<IHTMLHeadingElementIsolate, IHTMLHeadingElementIsolateProperties>();
-export const awaitedHandler = new AwaitedHandler<IHTMLHeadingElementIsolate>('HTMLHeadingElementIsolate', getState, setState);
+export const { getState, setState } = StateMachine<
+	IHTMLHeadingElementIsolate,
+	IHTMLHeadingElementIsolateProperties
+>();
+export const awaitedHandler = new AwaitedHandler<IHTMLHeadingElementIsolate>(
+	"HTMLHeadingElementIsolate",
+	getState,
+	setState,
+);
 
-export default class HTMLHeadingElementIsolate implements IHTMLHeadingElementIsolate {
-  public get align(): Promise<string> {
-    return awaitedHandler.getProperty<string>(this, 'align', false);
-  }
+export default class HTMLHeadingElementIsolate
+	implements IHTMLHeadingElementIsolate
+{
+	public get align(): Promise<string> {
+		return awaitedHandler.getProperty<string>(this, "align", false);
+	}
 }
 
 // INTERFACES RELATED TO STATE MACHINE PROPERTIES ////////////////////////////
 
 export interface IHTMLHeadingElementIsolateProperties {
-  awaitedPath: AwaitedPath;
-  awaitedOptions: any;
-  readonly align?: Promise<string>;
+	awaitedPath: AwaitedPath;
+	awaitedOptions: any;
+	readonly align?: Promise<string>;
 }
 
-export const HTMLHeadingElementIsolatePropertyKeys = ['align'];
+export const HTMLHeadingElementIsolatePropertyKeys = ["align"];
 
 export const HTMLHeadingElementIsolateConstantKeys = [];

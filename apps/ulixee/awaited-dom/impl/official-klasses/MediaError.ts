@@ -1,9 +1,17 @@
-import StateMachine from '../../base/StateMachine';
-import { IMediaError } from '../../base/interfaces/official';
-import { MediaErrorGenerator, IMediaErrorProperties } from '../../base/official-klasses/MediaError';
+import type { IMediaError } from "../../base/interfaces/official";
+import {
+	type IMediaErrorProperties,
+	MediaErrorGenerator,
+} from "../../base/official-klasses/MediaError";
+import StateMachine from "../../base/StateMachine";
 
 // tslint:disable:variable-name
-export const { getState, setState } = StateMachine<IMediaError, IMediaErrorProperties>();
+export const { getState, setState } = StateMachine<
+	IMediaError,
+	IMediaErrorProperties
+>();
 const MediaErrorBaseClass = MediaErrorGenerator();
 
-export default class MediaError extends MediaErrorBaseClass implements IMediaError {}
+export default class MediaError
+	extends MediaErrorBaseClass
+	implements IMediaError {}
