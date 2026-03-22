@@ -1,5 +1,5 @@
 {
-	"$schema": "https://biomejs.dev/schemas/2.4.7/schema.json",
+	"$schema": "https://biomejs.dev/schemas/2.4.8/schema.json",
 	"vcs": {
 		"enabled": true,
 		"clientKind": "git",
@@ -10,13 +10,11 @@
 		"includes": [
 			"**",
 			"!**/test/*",
-			"!**/docs/*",
 			"!qdrant_storage/*",
 			"!apps/testing/*",
 			"!**/tsconfig.json",
 			"!**/package.json",
-			"!apps/examples/*",
-			"!apps/ulixee/noderdom/scripts/1-process/site/*"
+			"!research/*"
 		]
 	},
 	"formatter": {
