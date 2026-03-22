@@ -1,14 +1,12 @@
 import type { ChildProcess } from "node:child_process";
 import * as childProcess from "node:child_process";
 import * as Fs from "node:fs";
-import { arch } from "node:os";
 import * as readline from "node:readline";
 import { TypedEventEmitter } from "@ulixee/commons/lib/eventUtils";
 import Resolvable from "@ulixee/commons/lib/Resolvable";
 import ShutdownHandler from "@ulixee/commons/lib/ShutdownHandler";
 import { bindFunctions } from "@ulixee/commons/lib/utils";
 import type IBrowserEngine from "@ulixee/unblocked-specification/agent/browser/IBrowserEngine";
-import env from "../env";
 import { PipeTransport } from "./PipeTransport";
 import { WebsocketTransport } from "./WebsocketTransport";
 
@@ -62,17 +60,7 @@ export default class BrowserProcess extends TypedEventEmitter<{ close: void }> {
 		const { name, executablePath, launchArguments } = this.browserEngine;
 		console.log("[BrowserProcess]", { name, action: "LaunchProcess", executablePath, launchArguments });
 
-		let spawnFile = executablePath;
-		if (
-			env.useRosettaChromeOnMac &&
-			process.platform === "darwin" &&
-			arch() === "arm64"
-		) {
-			this.processEnv ??= process.env;
-			this.processEnv.ARCHPREFERENCE = "x86_64";
-			spawnFile = "arch"; // we need to launch through arch to force Chrome to use Rosetta
-			launchArguments.unshift(executablePath);
-		}
+		const spawnFile = executablePath;
 
 		// Combine all features
 		const disabledFeatures = new Set<string>();

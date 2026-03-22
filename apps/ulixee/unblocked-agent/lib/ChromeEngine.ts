@@ -1,11 +1,16 @@
-import type ChromeApp from "@ulixee/chrome-app";
-import { existsAsync } from "@ulixee/chrome-app/lib/dirUtils";
+import { existsSync } from "node:fs";
 import type IBrowserEngine from "@ulixee/unblocked-specification/agent/browser/IBrowserEngine";
-import env from "../env";
+
+interface IChromeSource {
+	isInstalled: boolean;
+	fullVersion: string;
+	executablePath: string;
+	executablePathEnvVar: string;
+	launchArgs?: string[];
+	validateHostRequirements(): Promise<void>;
+}
 
 export default class ChromeEngine implements IBrowserEngine {
-	public static defaultPackageName = `@ulixee/${env.defaultChromeId}`;
-
 	public name = "chrome";
 	public fullVersion: string;
 	public executablePath: string;
@@ -16,8 +21,7 @@ export default class ChromeEngine implements IBrowserEngine {
 	public doesBrowserAnimateScrolling = false;
 	public isHeaded?: boolean;
 
-	constructor(readonly source: ChromeApp) {
-		this.doesBrowserAnimateScrolling = false;
+	constructor(readonly source: IChromeSource) {
 		this.isInstalled = source.isInstalled;
 		this.fullVersion = source.fullVersion;
 		this.executablePath = source.executablePath;
@@ -25,42 +29,10 @@ export default class ChromeEngine implements IBrowserEngine {
 		if (source.launchArgs) this.launchArguments = [...source.launchArgs];
 	}
 
-	async verifyLaunchable(): Promise<any> {
-		if (!(await existsAsync(this.executablePath))) {
-			let remedyMessage = `No executable exists at "${this.executablePath}"`;
-
-			const isCustomInstall =
-				this.executablePathEnvVar && process.env[this.executablePathEnvVar];
-			if (!isCustomInstall) {
-				remedyMessage = `Please re-install the browser engine:
--------------------------------------------------
--------------- NPM INSTALL ----------------------
--------------------------------------------------
-
- npm install @ulixee/${this.fullVersion.split(".").slice(0, 2).join("-")}
-
--------------------------------------------------
-`;
-			}
-			throw new Error(`Failed to launch ${this.name} ${this.fullVersion}:
-
-${remedyMessage}`);
+	async verifyLaunchable(): Promise<void> {
+		if (!existsSync(this.executablePath)) {
+			throw new Error(`Chrome executable not found at "${this.executablePath}"`);
 		}
-		// exists, validate that host requirements exist
 		await this.source.validateHostRequirements();
-	}
-
-	static fromPackageName(npmPackage: string): ChromeEngine {
-		// eslint-disable-next-line import/no-dynamic-require
-		const Chrome = require(npmPackage) as any;
-		const engine = new Chrome();
-		return new ChromeEngine(engine);
-	}
-
-	static default(): ChromeEngine {
-		// eslint-disable-next-line import/no-dynamic-require
-		const Chrome = require(ChromeEngine.defaultPackageName) as any;
-		const engine = new Chrome();
-		return new ChromeEngine(engine);
 	}
 }

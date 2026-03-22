@@ -19,7 +19,6 @@
 		"ws": "^8.18.0"
 	},
 	"devDependencies": {
-		"@ulixee/chrome-app": "1.0.3",
 		"@ulixee/hero": "workspace:*"
 	}
 }
