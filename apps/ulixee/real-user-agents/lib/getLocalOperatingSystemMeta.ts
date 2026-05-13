@@ -1,4 +1,4 @@
-import * as Os from "os";
+import * as Os from "node:os";
 import * as darwinToMacOsVersionMap from "../data/os-mappings/darwinToMacOsVersionMap.json";
 import * as windowsToWindowsVersionMap from "../data/os-mappings/windowsToWindowsVersionMap.json";
 import { convertMacOsVersionString } from "./OsUtils";
