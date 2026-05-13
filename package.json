@@ -1,8 +1,6 @@
 {
 	"name": "hero-effect",
 	"module": "index.ts",
-	"type": "module",
-	"private": true,
 	"devDependencies": {
 		"@tsconfig/bun": "1.0.10",
 		"@types/bun": "latest",
@@ -11,10 +9,8 @@
 	"peerDependencies": {
 		"typescript": "^5"
 	},
-	"dependencies": {
-		"fingerprint-generator": "2.1.81",
-		"ts-morph": "^27.0.2"
-	},
+	"private": true,
+	"type": "module",
 	"workspaces": [
 		"apps/double-agent/*",
 		"apps/double-agent-analyze-plugins/*",
