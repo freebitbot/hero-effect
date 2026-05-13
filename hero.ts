@@ -7,9 +7,21 @@ const heroApp = new Hero({
 	},
 	showChrome: true,
 	showDevtools: true,
+	showChromeInteractions: true,
 });
 
 await heroApp.goto("https://www.google.com/");
+
+const form = heroApp.document.querySelector("form textarea");
+
+await form.$type("test");
+
+// inspect(form, {
+// 	colors: true,
+// 	depth: 2,
+// });
+
+// console.log(res);
 
 // Wait a bit to see if resources load
 // await new Promise(resolve => setTimeout(resolve, 5000));
